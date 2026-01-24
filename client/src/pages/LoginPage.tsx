@@ -3,18 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
-import { INDIAN_STATES } from '../constants/states'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
-  const { signUp, user } = useAuth()
+  const { signUp, signIn, user } = useAuth()
 
+  const [mode, setMode] = useState<'signup' | 'signin'>('signup')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [state, setState] = useState('')
+  const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // If already authenticated, redirect to student dashboard
@@ -28,13 +27,20 @@ export default function LoginPage() {
     setError(null)
     setSubmitting(true)
 
-    const result = await signUp(email, name, state)
+    let result: { error: string | null }
+
+    if (mode === 'signup') {
+      result = await signUp(email, password, name)
+    } else {
+      result = await signIn(email, password)
+    }
+
     setSubmitting(false)
 
     if (result.error) {
       setError(result.error)
     } else {
-      setSent(true)
+      navigate('/student')
     }
   }
 
@@ -61,44 +67,42 @@ export default function LoginPage() {
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center px-4 pb-12">
         <div className="max-w-md w-full">
-          {sent ? (
-            /* Success: Magic link sent */
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 text-center animate-[fadeIn_0.3s_ease-out]">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('Check your email!', 'अपना ईमेल देखें!')}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                {t(
-                  `We've sent a magic link to ${email}. Click the link in your email to sign in.`,
-                  `हमने ${email} पर एक मैजिक लिंक भेजा है। साइन इन करने के लिए अपने ईमेल में लिंक पर क्लिक करें।`
-                )}
-              </p>
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 animate-[fadeIn_0.3s_ease-out]">
+            {/* Tabs */}
+            <div className="flex mb-6 border-b border-gray-200">
               <button
-                onClick={() => setSent(false)}
-                className="text-sm text-indigo-600 hover:text-indigo-800"
+                type="button"
+                onClick={() => { setMode('signup'); setError(null) }}
+                className={`flex-1 pb-3 text-sm font-medium border-b-2 transition-colors ${
+                  mode === 'signup'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
               >
-                {t('Try a different email', 'दूसरा ईमेल आज़माएं')}
+                {t('Sign Up', 'साइन अप')}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setMode('signin'); setError(null) }}
+                className={`flex-1 pb-3 text-sm font-medium border-b-2 transition-colors ${
+                  mode === 'signin'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {t('Sign In', 'साइन इन')}
               </button>
             </div>
-          ) : (
-            /* Registration Form */
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 animate-[fadeIn_0.3s_ease-out]">
-              <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                {t('Get Started', 'शुरू करें')}
-              </h3>
-              <p className="text-sm text-gray-500 mb-6">
-                {t(
-                  "Enter your details and we'll send you a magic link to sign in.",
-                  'अपना विवरण दर्ज करें और हम आपको साइन इन करने के लिए एक मैजिक लिंक भेजेंगे।'
-                )}
-              </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <p className="text-sm text-gray-500 mb-6">
+              {mode === 'signup'
+                ? t('Create an account to find scholarships.', 'छात्रवृत्ति खोजने के लिए एक खाता बनाएं।')
+                : t('Sign in to your account.', 'अपने खाते में साइन इन करें।')
+              }
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {mode === 'signup' && (
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     {t('Full Name', 'पूरा नाम')}
@@ -113,65 +117,66 @@ export default function LoginPage() {
                     required
                   />
                 </div>
+              )}
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('Email', 'ईमेल')}
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
-                    placeholder={t('you@example.com', 'you@example.com')}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('State', 'राज्य')}
-                  </label>
-                  <select
-                    id="state"
-                    value={state}
-                    onChange={e => setState(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm bg-white"
-                    required
-                  >
-                    <option value="">{t('Select your state', 'अपना राज्य चुनें')}</option>
-                    {INDIAN_STATES.map(s => (
-                      <option key={s.en} value={s.en}>{s.en}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {error && (
-                  <p className="text-sm text-red-600">{error}</p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting
-                    ? t('Sending...', 'भेज रहे हैं...')
-                    : t('Send Magic Link', 'मैजिक लिंक भेजें')}
-                </button>
-              </form>
-
-              <div className="mt-4 text-center">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                >
-                  {t('← Back to home', '← होम पर वापस जाएं')}
-                </button>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('Email', 'ईमेल')}
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
+                  placeholder={t('you@example.com', 'you@example.com')}
+                  required
+                />
               </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('Password', 'पासवर्ड')}
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
+                  placeholder={t('Enter your password', 'अपना पासवर्ड दर्ज करें')}
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              {error && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submitting
+                  ? t('Please wait...', 'कृपया प्रतीक्षा करें...')
+                  : mode === 'signup'
+                    ? t('Create Account', 'खाता बनाएं')
+                    : t('Sign In', 'साइन इन')
+                }
+              </button>
+            </form>
+
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => navigate('/')}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                {t('← Back to home', '← होम पर वापस जाएं')}
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </main>
     </div>

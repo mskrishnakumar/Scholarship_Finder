@@ -13,7 +13,8 @@ interface AuthContextType {
   session: Session | null
   profile: UserProfile | null
   loading: boolean
-  signUp: (email: string, name: string, state: string) => Promise<{ error: string | null }>
+  signUp: (email: string, password: string, name: string) => Promise<{ error: string | null }>
+  signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
 }
 
@@ -44,13 +45,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ? { name: user.user_metadata.name || '', state: user.user_metadata.state || '' }
     : null
 
-  const signUp = async (email: string, name: string, state: string): Promise<{ error: string | null }> => {
-    const { error } = await supabase.auth.signInWithOtp({
+  const signUp = async (email: string, password: string, name: string): Promise<{ error: string | null }> => {
+    const { error } = await supabase.auth.signUp({
       email,
+      password,
       options: {
-        data: { name, state },
-        emailRedirectTo: `${window.location.origin}/student`
+        data: { name }
       }
+    })
+    if (error) {
+      return { error: error.message }
+    }
+    return { error: null }
+  }
+
+  const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
     })
     if (error) {
       return { error: error.message }
@@ -65,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )
