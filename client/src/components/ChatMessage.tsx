@@ -1,8 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
 import { translateText } from '../services/apiClient'
+
+const TRANSLATE_LANGUAGES = [
+  { code: 'hi', label: 'Hindi', native: 'हिंदी' },
+  { code: 'ta', label: 'Tamil', native: 'தமிழ்' },
+  { code: 'te', label: 'Telugu', native: 'తెలుగు' },
+]
 
 interface ChatMessageProps {
   role: 'user' | 'assistant'
@@ -17,19 +23,39 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
   const [translatedContent, setTranslatedContent] = useState<string | null>(null)
   const [translating, setTranslating] = useState(false)
   const [showTranslation, setShowTranslation] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [translatedTo, setTranslatedTo] = useState<string | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const userInitial = profile?.name ? profile.name.charAt(0).toUpperCase() : 'U'
 
-  const handleTranslate = async () => {
-    if (translatedContent) {
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownOpen])
+
+  const handleTranslate = async (langCode: string) => {
+    setDropdownOpen(false)
+
+    // If already translated to this language, toggle visibility
+    if (translatedTo === langCode && translatedContent) {
       setShowTranslation(!showTranslation)
       return
     }
 
     setTranslating(true)
     try {
-      const res = await translateText(content, 'hi')
+      const res = await translateText(content, langCode)
       setTranslatedContent(res.translatedText)
+      setTranslatedTo(langCode)
       setShowTranslation(true)
     } catch {
       // Silently fail - button stays available for retry
@@ -39,6 +65,10 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
   }
 
   const displayContent = showTranslation && translatedContent ? translatedContent : content
+
+  const currentLangLabel = translatedTo
+    ? TRANSLATE_LANGUAGES.find(l => l.code === translatedTo)?.native
+    : null
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3 animate-[fadeIn_0.3s_ease-out]`}>
@@ -81,34 +111,55 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
             </ReactMarkdown>
           )}
         </div>
-        {/* Translate button for bot messages */}
+        {/* Translate dropdown for bot messages */}
         {!isUser && (
-          <button
-            onClick={handleTranslate}
-            disabled={translating}
-            className="mt-1 ml-1 text-xs text-gray-400 hover:text-indigo-600 transition-colors inline-flex items-center gap-1 disabled:opacity-50"
-          >
+          <div className="relative mt-1.5 ml-1" ref={dropdownRef}>
             {translating ? (
-              <>
-                <span className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" />
-                {t('Translating...', 'अनुवाद हो रहा है...')}
-              </>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg">
+                <span className="w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+                {t('Translating...', 'अनुवाद हो रहा है...', 'மொழிபெயர்க்கிறது...', 'అనువదిస్తోంది...')}
+              </span>
             ) : showTranslation ? (
-              <>
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button
+                onClick={() => setShowTranslation(false)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
-                {t('Show Original', 'मूल दिखाएं')}
-              </>
+                {t('Show Original', 'मूल दिखाएं', 'அசலைக் காட்டு', 'అసలు చూపించు')} ({currentLangLabel})
+              </button>
             ) : (
-              <>
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
-                {t('Translate to Hindi', 'हिंदी में अनुवाद करें')}
-              </>
+                {t('Translate', 'अनुवाद करें', 'மொழிபெயர்', 'అనువదించు')}
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
             )}
-          </button>
+
+            {/* Dropdown menu */}
+            {dropdownOpen && (
+              <div className="absolute left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1 animate-[fadeIn_0.15s_ease-out]">
+                {TRANSLATE_LANGUAGES.map(lang => (
+                  <button
+                    key={lang.code}
+                    onClick={() => handleTranslate(lang.code)}
+                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center justify-between"
+                  >
+                    <span>{lang.label}</span>
+                    <span className="text-xs text-gray-400">{lang.native}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
       {isUser && (

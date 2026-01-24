@@ -3,7 +3,7 @@ import { sendGuidedFlowStep } from '../services/apiClient'
 import type { ScholarshipResult } from '../services/apiClient'
 import { useLanguage } from '../context/LanguageContext'
 
-function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t: (en: string, hi: string) => string }) {
+function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t: (en: string, hi?: string, ta?: string, te?: string) => string }) {
   const [expanded, setExpanded] = useState(false)
   const stepsToShow = expanded ? scholarship.applicationSteps : scholarship.applicationSteps.slice(0, 2)
   const hasMore = scholarship.applicationSteps.length > 2
@@ -19,12 +19,12 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
             {scholarship.benefits}
           </span>
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-            {t('Deadline:', 'अंतिम तिथि:')} {scholarship.deadline}
+            {t('Deadline:', 'अंतिम तिथि:', 'காலக்கெடு:', 'గడువు:')} {scholarship.deadline}
           </span>
         </div>
 
         <div className="mt-3">
-          <p className="text-xs font-medium text-gray-700 mb-1">{t('How to Apply:', 'आवेदन कैसे करें:')}</p>
+          <p className="text-xs font-medium text-gray-700 mb-1">{t('How to Apply:', 'आवेदन कैसे करें:', 'எப்படி விண்ணப்பிப்பது:', 'ఎలా దరఖాస్తు చేయాలి:')}</p>
           <ol className="list-decimal list-inside text-xs text-gray-600 space-y-0.5">
             {stepsToShow.map((step, i) => (
               <li key={i}>{step}</li>
@@ -36,8 +36,8 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
               className="text-xs text-indigo-600 hover:text-indigo-800 mt-1"
             >
               {expanded
-                ? t('Show less', 'कम दिखाएं')
-                : t(`+${scholarship.applicationSteps.length - 2} more steps`, `+${scholarship.applicationSteps.length - 2} और चरण`)}
+                ? t('Show less', 'कम दिखाएं', 'குறைவாகக் காட்டு', 'తక్కువ చూపించు')
+                : t(`+${scholarship.applicationSteps.length - 2} more steps`, `+${scholarship.applicationSteps.length - 2} और चरण`, `+${scholarship.applicationSteps.length - 2} மேலும் படிகள்`, `+${scholarship.applicationSteps.length - 2} మరిన్ని దశలు`)}
             </button>
           )}
         </div>
@@ -49,7 +49,7 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 mt-3 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            {t('Apply Now', 'अभी आवेदन करें')}
+            {t('Apply Now', 'अभी आवेदन करें', 'இப்போது விண்ணப்பிக்கவும்', 'ఇప్పుడు దరఖాస్తు చేయండి')}
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
@@ -91,7 +91,7 @@ export default function GuidedFlow() {
       })
       setStarted(true)
     } catch {
-      setError(t('Failed to start. Please try again.', 'शुरू करने में विफल। कृपया पुनः प्रयास करें।'))
+      setError(t('Failed to start. Please try again.', 'शुरू करने में विफल। कृपया पुनः प्रयास करें।', 'தொடங்குவதில் தோல்வி. மீண்டும் முயற்சிக்கவும்.', 'ప్రారంభించడంలో విఫలమైంది. దయచేసి మళ్ళీ ప్రయత్నించండి.'))
     } finally {
       setLoading(false)
     }
@@ -121,7 +121,7 @@ export default function GuidedFlow() {
         })
       }
     } catch {
-      setError(t('Something went wrong. Please try again.', 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।'))
+      setError(t('Something went wrong. Please try again.', 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।', 'ஏதோ தவறு ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.', 'ఏదో తప్పు జరిగింది. దయచేసి మళ్ళీ ప్రయత్నించండి.'))
     } finally {
       setLoading(false)
     }
@@ -143,7 +143,9 @@ export default function GuidedFlow() {
           <h3 className="text-lg font-semibold text-gray-800 mb-3">
             {t(
               `Found ${results.length} scholarship${results.length !== 1 ? 's' : ''} for you`,
-              `आपके लिए ${results.length} छात्रवृत्ति मिली`
+              `आपके लिए ${results.length} छात्रवृत्ति मिली`,
+              `உங்களுக்கு ${results.length} உதவித்தொகை${results.length !== 1 ? 'கள்' : ''} கிடைத்தது`,
+              `మీ కోసం ${results.length} స్కాలర్‌షిప్${results.length !== 1 ? 'లు' : ''} దొరికింది`
             )}
           </h3>
           {results.length === 0 ? (
@@ -151,7 +153,9 @@ export default function GuidedFlow() {
               <p className="text-gray-500 text-sm mb-3">
                 {t(
                   'No matching scholarships found. Try the free chat for a broader search.',
-                  'कोई मिलती-जुलती छात्रवृत्ति नहीं मिली। व्यापक खोज के लिए फ्री चैट आज़माएं।'
+                  'कोई मिलती-जुलती छात्रवृत्ति नहीं मिली। व्यापक खोज के लिए फ्री चैट आज़माएं।',
+                  'பொருந்தும் உதவித்தொகைகள் எதுவும் கிடைக்கவில்லை. பரந்த தேடலுக்கு சாட் முயற்சிக்கவும்.',
+                  'సరిపోలిన స్కాలర్‌షిప్‌లు కనుగొనబడలేదు. విస్తృత శోధన కోసం చాట్ ప్రయత్నించండి.'
                 )}
               </p>
             </div>
@@ -168,7 +172,7 @@ export default function GuidedFlow() {
             onClick={reset}
             className="w-full py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors"
           >
-            {t('Start Over', 'फिर से शुरू करें')}
+            {t('Start Over', 'फिर से शुरू करें', 'மீண்டும் தொடங்கு', 'మళ్ళీ ప్రారంభించు')}
           </button>
         </div>
       </div>
@@ -185,12 +189,14 @@ export default function GuidedFlow() {
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-gray-800 mb-2">
-          {t('Guided Scholarship Search', 'निर्देशित छात्रवृत्ति खोज')}
+          {t('Guided Scholarship Search', 'निर्देशित छात्रवृत्ति खोज', 'வழிகாட்டப்பட்ட உதவித்தொகை தேடல்', 'మార్గదర్శక స్కాలర్‌షిప్ శోధన')}
         </h3>
         <p className="text-sm text-gray-500 mb-6 max-w-xs">
           {t(
             "Answer a few questions about yourself and we'll find scholarships you're eligible for.",
-            'अपने बारे में कुछ सवालों के जवाब दें और हम आपके लिए योग्य छात्रवृत्ति खोजेंगे।'
+            'अपने बारे में कुछ सवालों के जवाब दें और हम आपके लिए योग्य छात्रवृत्ति खोजेंगे।',
+            'உங்களைப் பற்றிய சில கேள்விகளுக்கு பதிலளியுங்கள், நீங்கள் தகுதியான உதவித்தொகைகளை நாங்கள் கண்டறிவோம்.',
+            'మీ గురించి కొన్ని ప్రశ్నలకు సమాధానం ఇవ్వండి, మీకు అర్హమైన స్కాలర్‌షిప్‌లను మేము కనుగొంటాము.'
           )}
         </p>
         <button
@@ -198,7 +204,7 @@ export default function GuidedFlow() {
           disabled={loading}
           className="px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
         >
-          {loading ? t('Loading...', 'लोड हो रहा...') : t('Start', 'शुरू करें')}
+          {loading ? t('Loading...', 'लोड हो रहा...', 'ஏற்றுகிறது...', 'లోడ్ అవుతోంది...') : t('Start', 'शुरू करें', 'தொடங்கு', 'ప్రారంభించు')}
         </button>
       </div>
     )
@@ -212,7 +218,7 @@ export default function GuidedFlow() {
         {currentStep && (
           <div className="mb-4">
             <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>{t('Step', 'चरण')} {currentStep.stepIndex + 1}/{currentStep.totalSteps}</span>
+              <span>{t('Step', 'चरण', 'படி', 'దశ')} {currentStep.stepIndex + 1}/{currentStep.totalSteps}</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5">
               <div
@@ -259,7 +265,7 @@ export default function GuidedFlow() {
           onClick={reset}
           className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
-          {t('Cancel', 'रद्द करें')}
+          {t('Cancel', 'रद्द करें', 'ரத்துசெய்', 'రద్దు చేయి')}
         </button>
       </div>
     </div>

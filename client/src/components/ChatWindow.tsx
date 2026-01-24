@@ -21,11 +21,15 @@ export default function ChatWindow() {
     content: profile?.name
       ? t(
           `Hi ${profile.name}! I'm ready to help you find scholarships${profile.state ? ` in ${profile.state}` : ''}. Ask me anything — like "scholarships for SC students" or "post-matric schemes"!`,
-          `नमस्ते ${profile.name}! मैं आपको छात्रवृत्ति खोजने में मदद के लिए तैयार हूं${profile.state ? ` ${profile.state} में` : ''}। कुछ भी पूछें — जैसे "SC छात्रों के लिए छात्रवृत्ति" या "पोस्ट-मैट्रिक योजनाएं"!`
+          `नमस्ते ${profile.name}! मैं आपको छात्रवृत्ति खोजने में मदद के लिए तैयार हूं${profile.state ? ` ${profile.state} में` : ''}। कुछ भी पूछें — जैसे "SC छात्रों के लिए छात्रवृत्ति" या "पोस्ट-मैट्रिक योजनाएं"!`,
+          `வணக்கம் ${profile.name}! உதவித்தொகைகளைக் கண்டறிய நான் தயாராக இருக்கிறேன்${profile.state ? ` ${profile.state} இல்` : ''}. எதையும் கேளுங்கள்!`,
+          `హాయ్ ${profile.name}! స్కాలర్‌షిప్‌లను కనుగొనడంలో సహాయం చేయడానికి నేను సిద్ధంగా ఉన్నాను${profile.state ? ` ${profile.state} లో` : ''}. ఏదైనా అడగండి!`
         )
       : t(
           'Hello! I can help you find scholarships. Ask me anything!',
-          'नमस्ते! मैं आपको छात्रवृत्ति खोजने में मदद कर सकता हूं। कुछ भी पूछें!'
+          'नमस्ते! मैं आपको छात्रवृत्ति खोजने में मदद कर सकता हूं। कुछ भी पूछें!',
+          'வணக்கம்! உதவித்தொகைகளைக் கண்டறிய நான் உதவ முடியும். எதையும் கேளுங்கள்!',
+          'హలో! స్కాలర్‌షిప్‌లను కనుగొనడంలో నేను మీకు సహాయం చేయగలను. ఏదైనా అడగండి!'
         )
   }
 
@@ -72,7 +76,9 @@ export default function ChatWindow() {
         role: 'assistant',
         content: t(
           'Sorry, something went wrong. Please try again.',
-          'क्षमा करें, कुछ गलत हो गया। कृपया पुनः प्रयास करें।'
+          'क्षमा करें, कुछ गलत हो गया। कृपया पुनः प्रयास करें।',
+          'மன்னிக்கவும், ஏதோ தவறு ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
+          'క్షమించండి, ఏదో తప్పు జరిగింది. దయచేసి మళ్ళీ ప్రయత్నించండి.'
         )
       }
       setMessages(prev => [...prev, errMsg])
@@ -115,7 +121,7 @@ export default function ChatWindow() {
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
-                <span className="text-xs text-gray-400">{t('Thinking...', 'सोच रहा हूं...')}</span>
+                <span className="text-xs text-gray-400">{t('Thinking...', 'सोच रहा हूं...', 'யோசிக்கிறது...', 'ఆలోచిస్తోంది...')}</span>
               </div>
             </div>
           </div>
@@ -129,7 +135,7 @@ export default function ChatWindow() {
           <textarea
             className="flex-1 resize-none rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             rows={1}
-            placeholder={t('Ask about scholarships...', 'छात्रवृत्ति के बारे में पूछें...')}
+            placeholder={t('Ask about scholarships...', 'छात्रवृत्ति के बारे में पूछें...', 'உதவித்தொகைகளைப் பற்றி கேளுங்கள்...', 'స్కాలర్‌షిప్‌ల గురించి అడగండి...')}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -140,7 +146,7 @@ export default function ChatWindow() {
             disabled={loading || !input.trim()}
             className="px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {t('Send', 'भेजें')}
+            {t('Send', 'भेजें', 'அனுப்பு', 'పంపు')}
           </button>
         </div>
       </div>

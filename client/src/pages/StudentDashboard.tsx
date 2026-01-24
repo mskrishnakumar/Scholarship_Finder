@@ -12,7 +12,7 @@ export default function StudentDashboard() {
   const navigate = useNavigate()
   const { t } = useLanguage()
   const { profile, signOut } = useAuth()
-  const [activeTab, setActiveTab] = useState<Tab>('chat')
+  const [activeTab, setActiveTab] = useState<Tab>('guided')
 
   const handleLogout = async () => {
     await signOut()
@@ -33,11 +33,11 @@ export default function StudentDashboard() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
-                {t('Scholarship Finder', 'छात्रवृत्ति खोजक')}
+                {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
               </h1>
               {profile?.name && (
                 <span className="text-xs text-gray-500">
-                  {t(`Hi, ${profile.name}`, `नमस्ते, ${profile.name}`)}
+                  {t(`Hi, ${profile.name}`, `नमस्ते, ${profile.name}`, `வணக்கம், ${profile.name}`, `హాయ్, ${profile.name}`)}
                 </span>
               )}
             </div>
@@ -48,7 +48,7 @@ export default function StudentDashboard() {
               onClick={handleLogout}
               className="text-sm text-gray-500 hover:text-gray-700"
             >
-              {t('Logout', 'लॉगआउट')}
+              {t('Logout', 'लॉगआउट', 'வெளியேறு', 'లాగ్అవుట్')}
             </button>
           </div>
         </div>
@@ -58,16 +58,6 @@ export default function StudentDashboard() {
       <div className="bg-white border-b border-gray-200 px-4 shrink-0">
         <div className="max-w-4xl mx-auto flex">
           <button
-            onClick={() => setActiveTab('chat')}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'chat'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {t('Chat', 'चैट')}
-          </button>
-          <button
             onClick={() => setActiveTab('guided')}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'guided'
@@ -75,7 +65,17 @@ export default function StudentDashboard() {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            {t('Guided Search', 'निर्देशित खोज')}
+            {t('Guided Search', 'निर्देशित खोज', 'வழிகாட்டப்பட்ட தேடல்', 'మార్గదర్శక శోధన')}
+          </button>
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'chat'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {t('Chat', 'चैट', 'அரட்டை', 'చాట్')}
           </button>
         </div>
       </div>

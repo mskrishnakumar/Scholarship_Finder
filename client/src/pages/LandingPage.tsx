@@ -25,7 +25,7 @@ export default function LandingPage() {
               </svg>
             </div>
             <h1 className="text-xl font-bold text-gray-900">
-              {t('Scholarship Finder', 'छात्रवृत्ति खोजक')}
+              {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
             </h1>
           </div>
           <LanguageToggle />
@@ -38,12 +38,14 @@ export default function LandingPage() {
           {/* Hero Section */}
           <div className="mb-10">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {t('Find Scholarships You Deserve', 'आपके लायक छात्रवृत्ति खोजें')}
+              {t('Find Scholarships You Deserve', 'आपके लायक छात्रवृत्ति खोजें', 'நீங்கள் தகுதியான உதவித்தொகைகளைக் கண்டறியுங்கள்', 'మీకు అర్హమైన స్కాలర్‌షిప్‌లను కనుగొనండి')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               {t(
-                'Discover government schemes and scholarships tailored to your eligibility. Get step-by-step guidance to apply — in English or Hindi.',
-                'अपनी पात्रता के अनुसार सरकारी योजनाएं और छात्रवृत्तियां खोजें। आवेदन के लिए चरण-दर-चरण मार्गदर्शन प्राप्त करें — अंग्रेज़ी या हिंदी में।'
+                'Discover government schemes and scholarships tailored to your eligibility. Get step-by-step guidance to apply — in your preferred language.',
+                'अपनी पात्रता के अनुसार सरकारी योजनाएं और छात्रवृत्तियां खोजें। आवेदन के लिए चरण-दर-चरण मार्गदर्शन प्राप्त करें — अपनी पसंदीदा भाषा में।',
+                'உங்கள் தகுதிக்கு ஏற்ற அரசு திட்டங்களையும் உதவித்தொகைகளையும் கண்டறியுங்கள். விண்ணப்பிக்க படிப்படியான வழிகாட்டுதலைப் பெறுங்கள்.',
+                'మీ అర్హతకు అనుగుణంగా ప్రభుత్వ పథకాలు మరియు స్కాలర్‌షిప్‌లను కనుగొనండి. దరఖాస్తు చేయడానికి దశల వారీ మార్గదర్శకత్వం పొందండి.'
               )}
             </p>
           </div>
@@ -53,7 +55,7 @@ export default function LandingPage() {
             onClick={() => navigate(user ? '/student' : '/login')}
             className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white text-lg font-semibold rounded-xl hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
           >
-            {t('Start Finding Scholarships', 'छात्रवृत्ति खोजना शुरू करें')}
+            {t('Start Finding Scholarships', 'छात्रवृत्ति खोजना शुरू करें', 'உதவித்தொகைகளைக் கண்டறியத் தொடங்குங்கள்', 'స్కాలర్‌షిప్‌లను కనుగొనడం ప్రారంభించండి')}
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -68,12 +70,14 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Chat with AI', 'AI से चैट करें')}
+                {t('Chat with AI', 'AI से चैट करें', 'AI உடன் அரட்டை', 'AI తో చాట్')}
               </h3>
               <p className="text-sm text-gray-600">
                 {t(
                   'Ask questions in natural language and get personalized scholarship recommendations.',
-                  'प्राकृतिक भाषा में प्रश्न पूछें और व्यक्तिगत छात्रवृत्ति अनुशंसाएं प्राप्त करें।'
+                  'प्राकृतिक भाषा में प्रश्न पूछें और व्यक्तिगत छात्रवृत्ति अनुशंसाएं प्राप्त करें।',
+                  'இயல்பான மொழியில் கேள்விகளைக் கேளுங்கள், தனிப்பயனாக்கப்பட்ட உதவித்தொகை பரிந்துரைகளைப் பெறுங்கள்.',
+                  'సహజ భాషలో ప్రశ్నలు అడగండి మరియు వ్యక్తిగతీకరించిన స్కాలర్‌షిప్ సిఫార్సులు పొందండి.'
                 )}
               </p>
             </div>
@@ -85,12 +89,14 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Guided Search', 'निर्देशित खोज')}
+                {t('Guided Search', 'निर्देशित खोज', 'வழிகாட்டப்பட்ட தேடல்', 'మార్గదర్శక శోధన')}
               </h3>
               <p className="text-sm text-gray-600">
                 {t(
                   'Answer simple questions to find schemes matching your eligibility.',
-                  'अपनी पात्रता से मेल खाने वाली योजनाएं खोजने के लिए सरल प्रश्नों के उत्तर दें।'
+                  'अपनी पात्रता से मेल खाने वाली योजनाएं खोजने के लिए सरल प्रश्नों के उत्तर दें।',
+                  'உங்கள் தகுதிக்கு பொருந்தும் திட்டங்களைக் கண்டறிய எளிய கேள்விகளுக்கு பதிலளியுங்கள்.',
+                  'మీ అర్హతకు సరిపోయే పథకాలను కనుగొనడానికి సాధారణ ప్రశ్నలకు సమాధానం ఇవ్వండి.'
                 )}
               </p>
             </div>
@@ -102,12 +108,14 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Bilingual Support', 'द्विभाषी सहायता')}
+                {t('Multilingual Support', 'बहुभाषी सहायता', 'பன்மொழி ஆதரவு', 'బహుభాషా మద్దతు')}
               </h3>
               <p className="text-sm text-gray-600">
                 {t(
-                  'Use the app in English or Hindi — switch anytime.',
-                  'अंग्रेज़ी या हिंदी में ऐप का उपयोग करें — कभी भी स्विच करें।'
+                  'Use the app in English, Hindi, Tamil, or Telugu — switch anytime.',
+                  'अंग्रेज़ी, हिंदी, तमिल या तेलुगु में ऐप का उपयोग करें — कभी भी स्विच करें।',
+                  'ஆங்கிலம், இந்தி, தமிழ் அல்லது தெலுங்கில் பயன்படுத்துங்கள் — எப்போது வேண்டுமானாலும் மாற்றுங்கள்.',
+                  'ఆంగ్లం, హిందీ, తమిళం లేదా తెలుగులో యాప్ ఉపయోగించండి — ఎప్పుడైనా మార్చండి.'
                 )}
               </p>
             </div>
@@ -119,7 +127,7 @@ export default function LandingPage() {
               onClick={() => navigate('/admin')}
               className="text-sm text-gray-500 hover:text-gray-700 underline-offset-2 hover:underline"
             >
-              {t('Admin access', 'एडमिन एक्सेस')}
+              {t('Admin access', 'एडमिन एक्सेस', 'நிர்வாக அணுகல்', 'అడ్మిన్ యాక్సెస్')}
             </button>
           </div>
         </div>
@@ -127,7 +135,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-4 text-center text-sm text-gray-500">
-        {t('Built for Magic Bus Hackathon', 'Magic Bus हैकथॉन के लिए बनाया गया')}
+        {t('Built for Magic Bus Hackathon', 'Magic Bus हैकथॉन के लिए बनाया गया', 'Magic Bus ஹேக்கத்தானுக்காக உருவாக்கப்பட்டது', 'Magic Bus హ్యాకథాన్ కోసం నిర్మించబడింది')}
       </footer>
     </div>
   )

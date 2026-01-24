@@ -57,7 +57,7 @@ export default function LoginPage() {
               </svg>
             </div>
             <h1 className="text-xl font-bold text-gray-900">
-              {t('Scholarship Finder', 'छात्रवृत्ति खोजक')}
+              {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
             </h1>
           </div>
           <LanguageToggle />
@@ -79,7 +79,7 @@ export default function LoginPage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
-                {t('Sign Up', 'साइन अप')}
+                {t('Sign Up', 'साइन अप', 'பதிவு செய்', 'సైన్ అప్')}
               </button>
               <button
                 type="button"
@@ -90,14 +90,14 @@ export default function LoginPage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
-                {t('Sign In', 'साइन इन')}
+                {t('Sign In', 'साइन इन', 'உள்நுழை', 'సైన్ ఇన్')}
               </button>
             </div>
 
             <p className="text-sm text-gray-500 mb-6">
               {mode === 'signup'
-                ? t('Create an account to find scholarships.', 'छात्रवृत्ति खोजने के लिए एक खाता बनाएं।')
-                : t('Sign in to your account.', 'अपने खाते में साइन इन करें।')
+                ? t('Create an account to find scholarships.', 'छात्रवृत्ति खोजने के लिए एक खाता बनाएं।', 'உதவித்தொகைகளைக் கண்டறிய ஒரு கணக்கை உருவாக்கவும்.', 'స్కాలర్‌షిప్‌లను కనుగొనడానికి ఖాతాను సృష్టించండి.')
+                : t('Sign in to your account.', 'अपने खाते में साइन इन करें।', 'உங்கள் கணக்கில் உள்நுழையவும்.', 'మీ ఖాతాలో సైన్ ఇన్ చేయండి.')
               }
             </p>
 
@@ -105,7 +105,7 @@ export default function LoginPage() {
               {mode === 'signup' && (
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('Full Name', 'पूरा नाम')}
+                    {t('Full Name', 'पूरा नाम', 'முழு பெயர்', 'పూర్తి పేరు')}
                   </label>
                   <input
                     id="name"
@@ -113,7 +113,7 @@ export default function LoginPage() {
                     value={name}
                     onChange={e => setName(e.target.value)}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
-                    placeholder={t('Enter your name', 'अपना नाम दर्ज करें')}
+                    placeholder={t('Enter your name', 'अपना नाम दर्ज करें', 'உங்கள் பெயரை உள்ளிடவும்', 'మీ పేరును నమోదు చేయండి')}
                     required
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function LoginPage() {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('Email', 'ईमेल')}
+                  {t('Email', 'ईमेल', 'மின்னஞ்சல்', 'ఇమెయిల్')}
                 </label>
                 <input
                   id="email"
@@ -129,14 +129,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
-                  placeholder={t('you@example.com', 'you@example.com')}
+                  placeholder={t('you@example.com', 'you@example.com', 'you@example.com', 'you@example.com')}
                   required
                 />
               </div>
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('Password', 'पासवर्ड')}
+                  {t('Password', 'पासवर्ड', 'கடவுச்சொல்', 'పాస్‌వర్డ్')}
                 </label>
                 <input
                   id="password"
@@ -144,7 +144,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
-                  placeholder={t('Enter your password', 'अपना पासवर्ड दर्ज करें')}
+                  placeholder={t('Enter your password', 'अपना पासवर्ड दर्ज करें', 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்', 'మీ పాస్‌వర్డ్ నమోదు చేయండి')}
                   required
                   minLength={6}
                 />
@@ -160,10 +160,10 @@ export default function LoginPage() {
                 className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting
-                  ? t('Please wait...', 'कृपया प्रतीक्षा करें...')
+                  ? t('Please wait...', 'कृपया प्रतीक्षा करें...', 'தயவுசெய்து காத்திருங்கள்...', 'దయచేసి వేచి ఉండండి...')
                   : mode === 'signup'
-                    ? t('Create Account', 'खाता बनाएं')
-                    : t('Sign In', 'साइन इन')
+                    ? t('Create Account', 'खाता बनाएं', 'கணக்கை உருவாக்கு', 'ఖాతాను సృష్టించండి')
+                    : t('Sign In', 'साइन इन', 'உள்நுழை', 'సైన్ ఇన్')
                 }
               </button>
             </form>
@@ -173,7 +173,7 @@ export default function LoginPage() {
                 onClick={() => navigate('/')}
                 className="text-sm text-gray-500 hover:text-gray-700"
               >
-                {t('← Back to home', '← होम पर वापस जाएं')}
+                {t('← Back to home', '← होम पर वापस जाएं', '← முகப்புக்குத் திரும்பு', '← హోమ్‌కు తిరిగి వెళ్ళు')}
               </button>
             </div>
           </div>
