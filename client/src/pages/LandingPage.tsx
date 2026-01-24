@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
@@ -7,6 +7,10 @@ export default function LandingPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
   const { user } = useAuth()
+
+  if (user) {
+    return <Navigate to="/student" replace />
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
