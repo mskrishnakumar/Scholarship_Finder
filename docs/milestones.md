@@ -86,9 +86,37 @@
 
 ---
 
-## M3: Frontend + Chat (Open)
+## M3: Frontend + Chat (Completed)
 
 **Description:** React UI components, chat interface, guided flow, and language toggle
+
+### What Was Built
+- Full chat interface with message bubbles, typing indicator, and auto-scroll
+- 9-step guided eligibility wizard with progress bar and option buttons
+- EN/HI language toggle with React Context (persists across components)
+- Tab-based StudentDashboard (Chat | Guided Search)
+- API service layer connecting to all backend endpoints
+- Responsive layout (mobile-first with Tailwind)
+
+### Key Files
+| File | Purpose |
+|------|---------|
+| `client/src/services/apiClient.ts` | API client for chat, guided-flow, translate endpoints |
+| `client/src/context/LanguageContext.tsx` | Language provider + `useLanguage` hook |
+| `client/src/components/ChatWindow.tsx` | Chat UI with messages, input, and send logic |
+| `client/src/components/ChatMessage.tsx` | Individual message bubble (user/bot) |
+| `client/src/components/GuidedFlow.tsx` | Step-by-step wizard with results display |
+| `client/src/components/LanguageToggle.tsx` | EN/HI switcher button group |
+| `client/src/pages/StudentDashboard.tsx` | Tab layout integrating Chat + Guided Flow |
+| `client/src/App.tsx` | LanguageProvider wrapping the router |
+
+### Features
+- **Chat Tab:** Free-form natural language queries with conversation persistence
+- **Guided Tab:** 9 eligibility questions → filtered scholarship results with details
+- **Language Toggle:** Switches all UI text + sends language preference to API
+- **Scholarship Cards:** Name, description, benefits, deadline, application steps, official link
+- **Loading States:** Typing indicator (chat), spinner (guided), disabled inputs
+- **Error Handling:** Graceful fallback messages in both languages
 
 ---
 
