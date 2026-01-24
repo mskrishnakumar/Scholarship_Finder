@@ -1,31 +1,38 @@
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
+import type { UserRole } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
 
 export default function LandingPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
-  const { user } = useAuth()
+  const { user, role } = useAuth()
+
+  const getRoleHome = (r: UserRole | null) => {
+    if (r === 'donor') return '/donor'
+    if (r === 'admin') return '/admin'
+    return '/student'
+  }
 
   if (user) {
-    return <Navigate to="/student" replace />
+    return <Navigate to={getRoleHome(role)} replace />
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-amber-50 flex flex-col">
       {/* Header */}
       <header className="p-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-teal-700 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
               </svg>
             </div>
             <h1 className="text-xl font-bold text-gray-900">
-              {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
+              {t('Mission Possible', 'मिशन पॉसिबल', 'மிஷன் பாசிபிள்', 'మిషన్ పాసిబుల్')}
             </h1>
           </div>
           <LanguageToggle />
@@ -53,7 +60,7 @@ export default function LandingPage() {
           {/* CTA Button */}
           <button
             onClick={() => navigate(user ? '/student' : '/login')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white text-lg font-semibold rounded-xl hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-teal-700 text-white text-lg font-semibold rounded-xl hover:bg-teal-800 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
           >
             {t('Start Finding Scholarships', 'छात्रवृत्ति खोजना शुरू करें', 'உதவித்தொகைகளைக் கண்டறியத் தொடங்குங்கள்', 'స్కాలర్‌షిప్‌లను కనుగొనడం ప్రారంభించండి')}
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,8 +71,8 @@ export default function LandingPage() {
           {/* Features */}
           <div className="mt-16 grid md:grid-cols-3 gap-6 text-left">
             <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
+                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
@@ -83,8 +90,8 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
+                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
               </div>
@@ -102,8 +109,8 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
+                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
               </div>
@@ -135,7 +142,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-4 text-center text-sm text-gray-500">
-        {t('Built for Magic Bus Hackathon', 'Magic Bus हैकथॉन के लिए बनाया गया', 'Magic Bus ஹேக்கத்தானுக்காக உருவாக்கப்பட்டது', 'Magic Bus హ్యాకథాన్ కోసం నిర్మించబడింది')}
+        {t('Empowering students to find their path', 'छात्रों को उनका मार्ग खोजने में सशक्त बनाना', 'மாணவர்களுக்கு வழி காட்டுதல்', 'విద్యార్థులకు వారి మార్గం కనుగొనడంలో సహాయం')}
       </footer>
     </div>
   )

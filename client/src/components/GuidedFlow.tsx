@@ -10,8 +10,8 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
 
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
-      <div className="border-l-4 border-indigo-500 p-4">
-        <h4 className="font-semibold text-indigo-700 text-sm">{scholarship.name}</h4>
+      <div className="border-l-4 border-teal-600 p-4">
+        <h4 className="font-semibold text-teal-800 text-sm">{scholarship.name}</h4>
         <p className="text-xs text-gray-600 mt-1">{scholarship.description}</p>
 
         <div className="mt-3 flex flex-wrap gap-2">
@@ -33,7 +33,7 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
           {hasMore && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-xs text-indigo-600 hover:text-indigo-800 mt-1"
+              className="text-xs text-teal-700 hover:text-teal-900 mt-1"
             >
               {expanded
                 ? t('Show less', 'कम दिखाएं', 'குறைவாகக் காட்டு', 'తక్కువ చూపించు')
@@ -47,7 +47,7 @@ function ScholarshipCard({ scholarship, t }: { scholarship: ScholarshipResult; t
             href={scholarship.officialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 mt-3 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+            className="inline-flex items-center gap-1 mt-3 px-3 py-1.5 bg-teal-700 text-white text-xs font-medium rounded-lg hover:bg-teal-800 transition-colors"
           >
             {t('Apply Now', 'अभी आवेदन करें', 'இப்போது விண்ணப்பிக்கவும்', 'ఇప్పుడు దరఖాస్తు చేయండి')}
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +170,7 @@ export default function GuidedFlow() {
         <div className="border-t border-gray-200 p-3">
           <button
             onClick={reset}
-            className="w-full py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors"
+            className="w-full py-2.5 bg-teal-700 text-white text-sm font-medium rounded-xl hover:bg-teal-800 transition-colors"
           >
             {t('Start Over', 'फिर से शुरू करें', 'மீண்டும் தொடங்கு', 'మళ్ళీ ప్రారంభించు')}
           </button>
@@ -183,8 +183,8 @@ export default function GuidedFlow() {
   if (!started) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
         </div>
@@ -202,7 +202,7 @@ export default function GuidedFlow() {
         <button
           onClick={startFlow}
           disabled={loading}
-          className="px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="px-6 py-2.5 bg-teal-700 text-white text-sm font-medium rounded-xl hover:bg-teal-800 disabled:opacity-50 transition-colors"
         >
           {loading ? t('Loading...', 'लोड हो रहा...', 'ஏற்றுகிறது...', 'లోడ్ అవుతోంది...') : t('Start', 'शुरू करें', 'தொடங்கு', 'ప్రారంభించు')}
         </button>
@@ -222,7 +222,7 @@ export default function GuidedFlow() {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5">
               <div
-                className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+                className="bg-teal-700 h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep.stepIndex + 1) / currentStep.totalSteps) * 100}%` }}
               />
             </div>
@@ -240,7 +240,7 @@ export default function GuidedFlow() {
                   key={opt.value}
                   onClick={() => selectOption(opt.value)}
                   disabled={loading}
-                  className="w-full text-left px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-700 hover:border-indigo-400 hover:bg-indigo-50 disabled:opacity-50 transition-colors"
+                  className="w-full text-left px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-700 hover:border-teal-500 hover:bg-teal-50 disabled:opacity-50 transition-colors"
                 >
                   {opt.label}
                 </button>
@@ -255,7 +255,7 @@ export default function GuidedFlow() {
 
         {loading && !currentStep && (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-teal-700 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
       </div>

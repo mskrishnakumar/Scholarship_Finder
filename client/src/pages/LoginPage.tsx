@@ -2,12 +2,19 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
+import type { UserRole } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
-  const { signUp, signIn, user } = useAuth()
+  const { signUp, signIn, user, role } = useAuth()
+
+  const getRoleHome = (r: UserRole | null) => {
+    if (r === 'donor') return '/donor'
+    if (r === 'admin') return '/admin'
+    return '/student'
+  }
 
   const [mode, setMode] = useState<'signup' | 'signin'>('signup')
   const [name, setName] = useState('')
@@ -16,9 +23,9 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // If already authenticated, redirect to student dashboard
+  // If already authenticated, redirect to role-appropriate dashboard
   if (user) {
-    navigate('/student')
+    navigate(getRoleHome(role))
     return null
   }
 
@@ -39,25 +46,23 @@ export default function LoginPage() {
 
     if (result.error) {
       setError(result.error)
-    } else {
-      navigate('/student')
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-amber-50 flex flex-col">
       {/* Header */}
       <header className="p-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-teal-700 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
               </svg>
             </div>
             <h1 className="text-xl font-bold text-gray-900">
-              {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
+              {t('Mission Possible', 'मिशन पॉसिबल', 'மிஷன் பாசிபிள்', 'మిషన్ పాసిబుల్')}
             </h1>
           </div>
           <LanguageToggle />
@@ -75,7 +80,7 @@ export default function LoginPage() {
                 onClick={() => { setMode('signup'); setError(null) }}
                 className={`flex-1 pb-3 text-sm font-medium border-b-2 transition-colors ${
                   mode === 'signup'
-                    ? 'border-indigo-600 text-indigo-600'
+                    ? 'border-teal-700 text-teal-700'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -86,7 +91,7 @@ export default function LoginPage() {
                 onClick={() => { setMode('signin'); setError(null) }}
                 className={`flex-1 pb-3 text-sm font-medium border-b-2 transition-colors ${
                   mode === 'signin'
-                    ? 'border-indigo-600 text-indigo-600'
+                    ? 'border-teal-700 text-teal-700'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -112,7 +117,7 @@ export default function LoginPage() {
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-600 focus:border-teal-600 outline-none transition-shadow text-sm"
                     placeholder={t('Enter your name', 'अपना नाम दर्ज करें', 'உங்கள் பெயரை உள்ளிடவும்', 'మీ పేరును నమోదు చేయండి')}
                     required
                   />
@@ -128,7 +133,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-600 focus:border-teal-600 outline-none transition-shadow text-sm"
                   placeholder={t('you@example.com', 'you@example.com', 'you@example.com', 'you@example.com')}
                   required
                 />
@@ -143,7 +148,7 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-600 focus:border-teal-600 outline-none transition-shadow text-sm"
                   placeholder={t('Enter your password', 'अपना पासवर्ड दर्ज करें', 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்', 'మీ పాస్‌వర్డ్ నమోదు చేయండి')}
                   required
                   minLength={6}
@@ -157,7 +162,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-teal-700 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-teal-800 focus:ring-2 focus:ring-teal-600 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting
                   ? t('Please wait...', 'कृपया प्रतीक्षा करें...', 'தயவுசெய்து காத்திருங்கள்...', 'దయచేసి వేచి ఉండండి...')

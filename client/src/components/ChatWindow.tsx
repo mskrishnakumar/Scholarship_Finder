@@ -133,7 +133,7 @@ export default function ChatWindow() {
       <div className="border-t border-gray-200 p-3">
         <div className="flex gap-2">
           <textarea
-            className="flex-1 resize-none rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="flex-1 resize-none rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
             rows={1}
             placeholder={t('Ask about scholarships...', 'छात्रवृत्ति के बारे में पूछें...', 'உதவித்தொகைகளைப் பற்றி கேளுங்கள்...', 'స్కాలర్‌షిప్‌ల గురించి అడగండి...')}
             value={input}
@@ -144,7 +144,7 @@ export default function ChatWindow() {
           <button
             onClick={() => handleSend()}
             disabled={loading || !input.trim()}
-            className="px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2.5 bg-teal-700 text-white text-sm font-medium rounded-xl hover:bg-teal-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {t('Send', 'भेजें', 'அனுப்பு', 'పంపు')}
           </button>

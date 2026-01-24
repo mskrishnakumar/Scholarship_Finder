@@ -73,7 +73,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3 animate-[fadeIn_0.3s_ease-out]`}>
       {!isUser && (
-        <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center mr-2 mt-1 shrink-0">
+        <div className="w-7 h-7 rounded-full bg-teal-700 flex items-center justify-center mr-2 mt-1 shrink-0">
           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -84,7 +84,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
         <div
           className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
             isUser
-              ? 'bg-indigo-600 text-white rounded-br-md whitespace-pre-wrap'
+              ? 'bg-teal-700 text-white rounded-br-md whitespace-pre-wrap'
               : 'bg-gray-100 text-gray-800 rounded-bl-md'
           }`}
         >
@@ -100,7 +100,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
                 li: ({ children }) => <li className="leading-relaxed">{children}</li>,
                 p: ({ children }) => <p className="my-1.5">{children}</p>,
                 a: ({ href, children }) => (
-                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline hover:text-indigo-800">
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-700 underline hover:text-teal-900">
                     {children}
                   </a>
                 ),
@@ -115,14 +115,14 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
         {!isUser && (
           <div className="relative mt-1.5 ml-1" ref={dropdownRef}>
             {translating ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg">
-                <span className="w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-teal-700 bg-teal-50 rounded-lg">
+                <span className="w-3 h-3 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
                 {t('Translating...', 'अनुवाद हो रहा है...', 'மொழிபெயர்க்கிறது...', 'అనువదిస్తోంది...')}
               </span>
             ) : showTranslation ? (
               <button
                 onClick={() => setShowTranslation(false)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
@@ -132,7 +132,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
             ) : (
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
@@ -151,7 +151,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
                   <button
                     key={lang.code}
                     onClick={() => handleTranslate(lang.code)}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center justify-between"
+                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition-colors flex items-center justify-between"
                   >
                     <span>{lang.label}</span>
                     <span className="text-xs text-gray-400">{lang.native}</span>
@@ -163,8 +163,8 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
         )}
       </div>
       {isUser && (
-        <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center ml-2 mt-1 shrink-0">
-          <span className="text-xs font-bold text-indigo-700">{userInitial}</span>
+        <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center ml-2 mt-1 shrink-0">
+          <span className="text-xs font-bold text-teal-700">{userInitial}</span>
         </div>
       )}
     </div>

@@ -3,19 +3,25 @@ import type { ReactNode } from 'react'
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 
+export type UserRole = 'student' | 'donor' | 'admin'
+
 export interface UserProfile {
   name: string
   state: string
+  role: UserRole
 }
 
 interface AuthContextType {
   user: User | null
   session: Session | null
   profile: UserProfile | null
+  role: UserRole | null
+  profileComplete: boolean
   loading: boolean
-  signUp: (email: string, password: string, name: string) => Promise<{ error: string | null }>
+  signUp: (email: string, password: string, name: string, role?: UserRole) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
+  updateProfile: (data: Record<string, unknown>) => Promise<{ error: string | null }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -41,16 +47,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
+  const role: UserRole | null = user?.user_metadata?.role || (user ? 'student' : null)
+  const profileComplete: boolean = user?.user_metadata?.profileComplete ?? false
+
   const profile: UserProfile | null = user?.user_metadata
-    ? { name: user.user_metadata.name || '', state: user.user_metadata.state || '' }
+    ? {
+        name: user.user_metadata.name || '',
+        state: user.user_metadata.state || '',
+        role: (user.user_metadata.role as UserRole) || 'student'
+      }
     : null
 
-  const signUp = async (email: string, password: string, name: string): Promise<{ error: string | null }> => {
+  const signUp = async (email: string, password: string, name: string, role: UserRole = 'student'): Promise<{ error: string | null }> => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name }
+        data: { name, role }
       }
     })
     if (error) {
@@ -76,8 +89,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null)
   }
 
+  const updateProfile = async (data: Record<string, unknown>): Promise<{ error: string | null }> => {
+    const { error } = await supabase.auth.updateUser({
+      data
+    })
+    if (error) {
+      return { error: error.message }
+    }
+    return { error: null }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, role, profileComplete, loading, signUp, signIn, signOut, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

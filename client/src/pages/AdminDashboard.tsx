@@ -8,10 +8,10 @@ export default function AdminDashboard() {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-teal-700 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">S</span>
             </div>
-            <h1 className="text-lg font-semibold text-gray-900">Scholarship Finder</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Mission Possible</h1>
             <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
               Admin
             </span>
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl p-6 border border-gray-200 text-center">
-            <div className="text-3xl font-bold text-indigo-600">--</div>
+            <div className="text-3xl font-bold text-teal-700">--</div>
             <div className="text-sm text-gray-500 mt-1">Total Scholarships</div>
           </div>
           <div className="bg-white rounded-xl p-6 border border-gray-200 text-center">

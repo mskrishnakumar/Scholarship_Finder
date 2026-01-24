@@ -25,7 +25,7 @@ export default function StudentDashboard() {
       <header className="bg-white border-b border-gray-200 px-4 py-3 shrink-0">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-teal-700 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -33,7 +33,7 @@ export default function StudentDashboard() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
-                {t('Scholarship Finder', 'छात्रवृत्ति खोजक', 'உதவித்தொகை கண்டுபிடிப்பான்', 'స్కాలర్‌షిప్ ఫైండర్')}
+                {t('Mission Possible', 'मिशन पॉसिबल', 'மிஷன் பாசிபிள்', 'మిషన్ పాసిబుల్')}
               </h1>
               {profile?.name && (
                 <span className="text-xs text-gray-500">
@@ -61,7 +61,7 @@ export default function StudentDashboard() {
             onClick={() => setActiveTab('guided')}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'guided'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-teal-700 text-teal-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -71,7 +71,7 @@ export default function StudentDashboard() {
             onClick={() => setActiveTab('chat')}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'chat'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-teal-700 text-teal-700'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >

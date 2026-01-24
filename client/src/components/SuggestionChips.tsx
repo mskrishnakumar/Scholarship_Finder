@@ -25,7 +25,7 @@ export default function SuggestionChips({ studentState, language, onChipClick }:
         <button
           key={chip}
           onClick={() => onChipClick(chip)}
-          className="px-3 py-1.5 text-xs font-medium bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-colors"
+          className="px-3 py-1.5 text-xs font-medium bg-teal-50 text-teal-700 rounded-full border border-teal-200 hover:bg-teal-100 hover:border-teal-300 transition-colors"
         >
           {chip}
         </button>
