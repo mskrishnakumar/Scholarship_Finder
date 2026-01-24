@@ -107,3 +107,48 @@
 
 ## Implementation Order
 PI2.1 -> PI2.2 + PI2.4 (parallel) -> PI2.3 -> PI2.5 -> PI2.6
+
+---
+
+## Architecture Quick Reference (for next session)
+
+### Project Structure
+```
+client/                         # React + Vite + Tailwind v4
+  src/
+    pages/                      # Route pages (StudentDashboard, DonorDashboard, AdminDashboard, LoginPage, LandingPage, StudentOnboarding)
+    components/                 # UI (ChatWindow, GuidedFlow, ScholarshipCard, RecommendedScholarships, SuggestionChips, LanguageToggle)
+    context/                    # AuthContext (Supabase auth, UserProfile, role), LanguageContext (en/hi/ta/te)
+    services/apiClient.ts       # All API calls (chat, guided-flow, scholarships CRUD, recommendations, users)
+    constants/                  # states.ts (INDIAN_STATES), onboardingOptions.ts (step options with 4-lang labels)
+    lib/supabase.ts             # Supabase client init
+
+api/                            # Azure Functions (Node/TS)
+  src/
+    functions/                  # HTTP endpoints: chat, guidedFlow, scholarships, users, recommendations, health, translate
+    shared/                     # scholarshipData (load/filter/search/score), openai, translator, tableStorage, auth, supabaseAdmin
+  data/
+    scholarships.json           # 60+ public government schemes
+    private-scholarships.json   # Donor-created (initially empty)
+    embeddings.json             # Vector embeddings for RAG search
+```
+
+### Key Patterns
+- **Styling**: Tailwind — `teal-700` primary, `amber-500` donor accent, `gray-50` bg
+- **i18n**: `t('EN', 'HI', 'TA', 'TE')` via `useLanguage()` hook — all UI strings need 4 translations
+- **Auth**: Supabase email+password; user_metadata stores `{name, role, state, category, ...profileFields, profileComplete}`
+- **Auth headers for API**: `x-user-id` + `x-user-role` headers; validated by `requireRole()` in `api/src/shared/auth.ts`
+- **Routes**: `RoleProtectedRoute` in App.tsx — redirects by role; `/donor` requires `donor` role
+- **Scholarship types**: `public` (from JSON) vs `private` (donor-created); `status`: approved/pending/rejected
+- **CRUD API**: `POST/GET/PUT/DELETE /api/scholarships`, `PATCH /api/scholarships/{id}/status` — requires donor/admin role
+
+### What PI2.5 Needs (Donor Dashboard)
+- **#40 ScholarshipForm**: Create/edit form component for donors to submit scholarships. Fields: name, description, eligibility (states, categories, maxIncome, educationLevels, gender, disability, religion, area, courses), benefits, deadline, applicationSteps[], requiredDocuments[], officialUrl. Use `createScholarship()` and `updateScholarship()` from apiClient.
+- **#41 Donor Dashboard Page**: Replace placeholder `DonorDashboard.tsx` (`client/src/pages/DonorDashboard.tsx`). Show list of donor's own scholarships via `getScholarships({donorId: user.id}, userId, 'donor')`. Add "Create Scholarship" button → opens ScholarshipForm. Show status badges (pending/approved/rejected). Allow edit/delete of own scholarships.
+- **Existing client functions**: `createScholarship`, `getScholarships`, `updateScholarship`, `deleteScholarship` already exist in apiClient.ts
+- **Existing backend**: CRUD endpoints in `api/src/functions/scholarships.ts` already handle donor operations
+
+### What PI2.6 Needs (Admin Dashboard)
+- **#42 Admin CRUD/approvals**: Admin can see ALL scholarships (public + private), approve/reject pending ones via `updateScholarshipStatus()`. Admin can also manage users via `getUsers()`.
+- **#43 Cleanup**: Remove any dead code, unused imports, TODO placeholders.
+- **Existing pages**: `AdminDashboard.tsx` is a placeholder at `client/src/pages/AdminDashboard.tsx`
