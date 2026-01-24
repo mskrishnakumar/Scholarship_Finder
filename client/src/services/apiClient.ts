@@ -40,17 +40,27 @@ interface TranslateResponse {
   detectedLanguage?: string
 }
 
+export interface StudentProfileData {
+  state?: string
+  category?: string
+  educationLevel?: string
+  income?: string
+  gender?: string
+  disability?: boolean
+  course?: string
+}
+
 export async function sendChatMessage(
   message: string,
   conversationId?: string,
   language?: string,
   userId?: string,
-  studentState?: string
+  studentProfile?: StudentProfileData
 ): Promise<ChatResponse> {
   const res = await fetch(`${API_BASE}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message, conversationId, language, userId, studentState })
+    body: JSON.stringify({ message, conversationId, language, userId, studentProfile })
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
@@ -251,6 +261,41 @@ export async function updateScholarshipStatus(
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
     throw new Error(err.error || 'Failed to update status')
+  }
+  return res.json()
+}
+
+// --- Recommendations API ---
+
+export interface RecommendedScholarship {
+  id: string
+  name: string
+  description: string
+  benefits: string
+  deadline: string
+  applicationSteps: string[]
+  requiredDocuments: string[]
+  officialUrl: string
+  matchScore: number
+  matchReasons: string[]
+}
+
+export interface RecommendationsResponse {
+  recommendations: RecommendedScholarship[]
+  totalMatches: number
+}
+
+export async function getRecommendations(
+  profile: StudentProfileData
+): Promise<RecommendationsResponse> {
+  const res = await fetch(`${API_BASE}/recommendations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(profile)
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Failed to get recommendations')
   }
   return res.json()
 }

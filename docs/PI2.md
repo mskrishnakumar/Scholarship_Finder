@@ -39,14 +39,29 @@
 
 ---
 
-## PI2.3: Student Onboarding & Recommendations
+## PI2.3: Student Onboarding & Recommendations [COMPLETED]
 
 | Issue | Title | Status |
 |-------|-------|--------|
-| #32 | Student onboarding form | Pending |
-| #33 | Student dashboard update | Pending |
-| #34 | Recommendations API | Pending |
-| #35 | Chat update | Pending |
+| #32 | Student onboarding form | Done |
+| #33 | Student dashboard update | Done |
+| #34 | Recommendations API | Done |
+| #35 | Chat update | Done |
+
+### Changes delivered
+- Replaced placeholder `StudentOnboarding.tsx` with 9-step multi-step wizard (state, category, education, income, gender, disability, religion, area, course)
+- All onboarding options support 4 languages (EN/HI/TA/TE) via `onboardingOptions.ts` constants
+- Supports edit mode (`?edit=true`) to update existing profile data
+- Saves profile fields to Supabase `user_metadata` with `profileComplete: true`
+- Extended `UserProfile` interface in AuthContext with all onboarding fields
+- Added "Recommended" tab (default) to `StudentDashboard.tsx` alongside Guided Search and Chat
+- Created `RecommendedScholarships.tsx` component showing profile summary, edit link, and scored cards
+- Extracted `ScholarshipCard.tsx` as reusable component with optional `matchScore`/`matchReasons` display
+- Created `POST /api/recommendations` endpoint with scoring algorithm (0-100 scale across 9 criteria)
+- Added `getRecommendations()` and `StudentProfileData` type to `apiClient.ts`
+- Updated `ChatWindow.tsx` to pass full student profile to chat API
+- Updated `chat.ts` backend to accept `studentProfile`, build profile-aware system prompt, and enrich RAG search query
+- Updated `SuggestionChips.tsx` to generate profile-aware chips (category, course, state)
 
 ---
 

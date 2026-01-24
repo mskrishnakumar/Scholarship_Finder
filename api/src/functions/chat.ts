@@ -47,7 +47,15 @@ async function chat(request: HttpRequest, context: InvocationContext): Promise<H
       conversationId?: string
       language?: string
       userId?: string
-      studentState?: string
+      studentProfile?: {
+        state?: string
+        category?: string
+        educationLevel?: string
+        income?: string
+        gender?: string
+        disability?: boolean
+        course?: string
+      }
     }
 
     if (!body.message) {
@@ -85,16 +93,36 @@ async function chat(request: HttpRequest, context: InvocationContext): Promise<H
       }
     }
 
+    // Enrich search query with profile keywords for better RAG results
+    let enrichedQuery = queryText
+    if (body.studentProfile?.category) {
+      enrichedQuery = `${body.studentProfile.category} ${enrichedQuery}`
+    }
+    if (body.studentProfile?.educationLevel) {
+      enrichedQuery = `${body.studentProfile.educationLevel} ${enrichedQuery}`
+    }
+
     // Search for relevant scholarships using RAG
-    const relevantScholarships = await searchScholarships(queryText, 5)
+    const relevantScholarships = await searchScholarships(enrichedQuery, 5)
     const scholarshipContext = formatScholarshipContext(relevantScholarships)
 
-    // Build messages for GPT
-    const stateContext = body.studentState
-      ? `\nThe student is from ${body.studentState}. Prioritize scholarships available in this state.`
-      : ''
+    // Build profile context for system prompt
+    let profileContext = ''
+    if (body.studentProfile) {
+      const p = body.studentProfile
+      const parts: string[] = []
+      if (p.state) parts.push(`from ${p.state}`)
+      if (p.category) parts.push(`${p.category} category`)
+      if (p.educationLevel) parts.push(`education level: ${p.educationLevel}`)
+      if (p.income) parts.push(`family income: Rs. ${parseInt(p.income, 10).toLocaleString()}`)
+      if (p.gender) parts.push(`gender: ${p.gender}`)
+      if (p.course) parts.push(`interested in ${p.course}`)
+      if (parts.length > 0) {
+        profileContext = `\nStudent profile: ${parts.join(', ')}. Prioritize scholarships matching this profile.`
+      }
+    }
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
-      { role: 'system', content: SYSTEM_PROMPT + stateContext },
+      { role: 'system', content: SYSTEM_PROMPT + profileContext },
       {
         role: 'system',
         content: `Here are the most relevant scholarships based on the student's query:\n\n${scholarshipContext}`

@@ -9,6 +9,14 @@ export interface UserProfile {
   name: string
   state: string
   role: UserRole
+  category?: string
+  educationLevel?: string
+  income?: string
+  gender?: string
+  disability?: boolean
+  religion?: string
+  area?: string
+  course?: string
 }
 
 interface AuthContextType {
@@ -54,7 +62,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ? {
         name: user.user_metadata.name || '',
         state: user.user_metadata.state || '',
-        role: (user.user_metadata.role as UserRole) || 'student'
+        role: (user.user_metadata.role as UserRole) || 'student',
+        category: user.user_metadata.category,
+        educationLevel: user.user_metadata.educationLevel,
+        income: user.user_metadata.income,
+        gender: user.user_metadata.gender,
+        disability: user.user_metadata.disability,
+        religion: user.user_metadata.religion,
+        area: user.user_metadata.area,
+        course: user.user_metadata.course
       }
     : null
 

@@ -1,23 +1,45 @@
+import type { StudentProfileData } from '../services/apiClient'
+
 interface SuggestionChipsProps {
-  studentState?: string
+  studentProfile?: StudentProfileData
   language: string
   onChipClick: (text: string) => void
 }
 
-export default function SuggestionChips({ studentState, language, onChipClick }: SuggestionChipsProps) {
-  const chips = language === 'hi'
-    ? [
-        'SC छात्रों के लिए छात्रवृत्ति',
-        'पोस्ट-मैट्रिक योजनाएं',
-        'बिना आय सीमा वाली छात्रवृत्ति',
-        ...(studentState ? [`${studentState} की छात्रवृत्ति`] : [])
-      ]
-    : [
-        'Scholarships for SC students',
-        'Post-matric schemes',
-        'Scholarships with no income limit',
-        ...(studentState ? [`Scholarships in ${studentState}`] : [])
-      ]
+export default function SuggestionChips({ studentProfile, language, onChipClick }: SuggestionChipsProps) {
+  const chips: string[] = []
+
+  if (language === 'hi') {
+    if (studentProfile?.category) {
+      chips.push(`${studentProfile.category} छात्रों के लिए छात्रवृत्ति`)
+    } else {
+      chips.push('SC छात्रों के लिए छात्रवृत्ति')
+    }
+    chips.push('पोस्ट-मैट्रिक योजनाएं')
+    if (studentProfile?.course) {
+      chips.push(`${studentProfile.course} छात्रवृत्ति`)
+    } else {
+      chips.push('बिना आय सीमा वाली छात्रवृत्ति')
+    }
+    if (studentProfile?.state) {
+      chips.push(`${studentProfile.state} की छात्रवृत्ति`)
+    }
+  } else {
+    if (studentProfile?.category) {
+      chips.push(`Scholarships for ${studentProfile.category} students`)
+    } else {
+      chips.push('Scholarships for SC students')
+    }
+    chips.push('Post-matric schemes')
+    if (studentProfile?.course) {
+      chips.push(`${studentProfile.course} scholarships`)
+    } else {
+      chips.push('Scholarships with no income limit')
+    }
+    if (studentProfile?.state) {
+      chips.push(`Scholarships in ${studentProfile.state}`)
+    }
+  }
 
   return (
     <div className="flex flex-wrap gap-2 pl-10 mb-3 animate-[fadeIn_0.3s_ease-out]">

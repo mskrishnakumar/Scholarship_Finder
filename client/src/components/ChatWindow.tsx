@@ -61,7 +61,15 @@ export default function ChatWindow() {
         conversationId,
         language,
         user?.id,
-        profile?.state
+        {
+          state: user?.user_metadata?.state,
+          category: user?.user_metadata?.category,
+          educationLevel: user?.user_metadata?.educationLevel,
+          income: user?.user_metadata?.income,
+          gender: user?.user_metadata?.gender,
+          disability: user?.user_metadata?.disability,
+          course: user?.user_metadata?.course
+        }
       )
       setConversationId(res.conversationId)
       const botMsg: Message = {
@@ -107,7 +115,11 @@ export default function ChatWindow() {
         ))}
         {showChips && (
           <SuggestionChips
-            studentState={profile?.state}
+            studentProfile={{
+              state: user?.user_metadata?.state,
+              category: user?.user_metadata?.category,
+              course: user?.user_metadata?.course
+            }}
             language={language}
             onChipClick={handleChipClick}
           />

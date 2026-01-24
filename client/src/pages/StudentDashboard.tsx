@@ -2,17 +2,18 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ChatWindow from '../components/ChatWindow'
 import GuidedFlow from '../components/GuidedFlow'
+import RecommendedScholarships from '../components/RecommendedScholarships'
 import LanguageToggle from '../components/LanguageToggle'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 
-type Tab = 'chat' | 'guided'
+type Tab = 'recommended' | 'guided' | 'chat'
 
 export default function StudentDashboard() {
   const navigate = useNavigate()
   const { t } = useLanguage()
   const { profile, signOut } = useAuth()
-  const [activeTab, setActiveTab] = useState<Tab>('guided')
+  const [activeTab, setActiveTab] = useState<Tab>('recommended')
 
   const handleLogout = async () => {
     await signOut()
@@ -58,6 +59,16 @@ export default function StudentDashboard() {
       <div className="bg-white border-b border-gray-200 px-4 shrink-0">
         <div className="max-w-4xl mx-auto flex">
           <button
+            onClick={() => setActiveTab('recommended')}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'recommended'
+                ? 'border-teal-700 text-teal-700'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {t('Recommended', 'अनुशंसित', 'பரிந்துரைகள்', 'సిఫార్సు')}
+          </button>
+          <button
             onClick={() => setActiveTab('guided')}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'guided'
@@ -84,7 +95,9 @@ export default function StudentDashboard() {
       <main className="flex-1 overflow-hidden">
         <div className="max-w-4xl mx-auto h-full">
           <div className="h-full bg-white md:border-x border-gray-200">
-            {activeTab === 'chat' ? <ChatWindow /> : <GuidedFlow />}
+            {activeTab === 'recommended' && <RecommendedScholarships />}
+            {activeTab === 'guided' && <GuidedFlow />}
+            {activeTab === 'chat' && <ChatWindow />}
           </div>
         </div>
       </main>
