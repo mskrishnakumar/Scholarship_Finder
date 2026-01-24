@@ -43,12 +43,14 @@ interface TranslateResponse {
 export async function sendChatMessage(
   message: string,
   conversationId?: string,
-  language?: string
+  language?: string,
+  userId?: string,
+  studentState?: string
 ): Promise<ChatResponse> {
   const res = await fetch(`${API_BASE}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message, conversationId, language })
+    body: JSON.stringify({ message, conversationId, language, userId, studentState })
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))

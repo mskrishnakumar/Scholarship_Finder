@@ -47,6 +47,7 @@ async function chat(request: HttpRequest, context: InvocationContext): Promise<H
       conversationId?: string
       language?: string
       userId?: string
+      studentState?: string
     }
 
     if (!body.message) {
@@ -89,8 +90,11 @@ async function chat(request: HttpRequest, context: InvocationContext): Promise<H
     const scholarshipContext = formatScholarshipContext(relevantScholarships)
 
     // Build messages for GPT
+    const stateContext = body.studentState
+      ? `\nThe student is from ${body.studentState}. Prioritize scholarships available in this state.`
+      : ''
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: SYSTEM_PROMPT + stateContext },
       {
         role: 'system',
         content: `Here are the most relevant scholarships based on the student's query:\n\n${scholarshipContext}`

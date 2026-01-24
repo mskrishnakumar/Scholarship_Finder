@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import ChatMessage from './ChatMessage'
+import SuggestionChips from './SuggestionChips'
 import { sendChatMessage } from '../services/apiClient'
 import { useLanguage } from '../context/LanguageContext'
+import { useAuth } from '../context/AuthContext'
 
 interface Message {
   id: string
@@ -11,35 +13,52 @@ interface Message {
 
 export default function ChatWindow() {
   const { language, t } = useLanguage()
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: language === 'hi'
-        ? 'नमस्ते! मैं आपकी छात्रवृत्ति खोजने में मदद कर सकता हूं। अपना प्रश्न पूछें - जैसे "महाराष्ट्र में SC छात्रों के लिए छात्रवृत्ति"'
-        : 'Hello! I can help you find scholarships. Ask me anything — like "scholarships for SC students in Maharashtra"'
-    }
-  ])
+  const { user, profile } = useAuth()
+
+  const welcomeMessage: Message = {
+    id: 'welcome',
+    role: 'assistant',
+    content: profile?.name
+      ? t(
+          `Hi ${profile.name}! I'm ready to help you find scholarships${profile.state ? ` in ${profile.state}` : ''}. Ask me anything — like "scholarships for SC students" or "post-matric schemes"!`,
+          `नमस्ते ${profile.name}! मैं आपको छात्रवृत्ति खोजने में मदद के लिए तैयार हूं${profile.state ? ` ${profile.state} में` : ''}। कुछ भी पूछें — जैसे "SC छात्रों के लिए छात्रवृत्ति" या "पोस्ट-मैट्रिक योजनाएं"!`
+        )
+      : t(
+          'Hello! I can help you find scholarships. Ask me anything!',
+          'नमस्ते! मैं आपको छात्रवृत्ति खोजने में मदद कर सकता हूं। कुछ भी पूछें!'
+        )
+  }
+
+  const [messages, setMessages] = useState<Message[]>([welcomeMessage])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [conversationId, setConversationId] = useState<string | undefined>()
+  const [showChips, setShowChips] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSend = async () => {
-    const text = input.trim()
+  const handleSend = async (textOverride?: string) => {
+    const text = (textOverride || input).trim()
     if (!text || loading) return
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text }
     setMessages(prev => [...prev, userMsg])
-    setInput('')
+    if (!textOverride) setInput('')
+
+    setShowChips(false)
     setLoading(true)
 
     try {
-      const res = await sendChatMessage(text, conversationId, language)
+      const res = await sendChatMessage(
+        text,
+        conversationId,
+        language,
+        user?.id,
+        profile?.state
+      )
       setConversationId(res.conversationId)
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -69,6 +88,10 @@ export default function ChatWindow() {
     }
   }
 
+  const handleChipClick = (text: string) => {
+    handleSend(text)
+  }
+
   return (
     <div className="flex flex-col h-full">
       {/* Messages area */}
@@ -76,13 +99,23 @@ export default function ChatWindow() {
         {messages.map(msg => (
           <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
         ))}
+        {showChips && (
+          <SuggestionChips
+            studentState={profile?.state}
+            language={language}
+            onChipClick={handleChipClick}
+          />
+        )}
         {loading && (
           <div className="flex justify-start mb-3">
             <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <span className="text-xs text-gray-400">{t('Thinking...', 'सोच रहा हूं...')}</span>
               </div>
             </div>
           </div>
@@ -103,7 +136,7 @@ export default function ChatWindow() {
             disabled={loading}
           />
           <button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={loading || !input.trim()}
             className="px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >

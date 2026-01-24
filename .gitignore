@@ -28,3 +28,6 @@ npm-debug.log*
 
 # Azure
 .azure/
+
+# Claude
+.claude/settings.local.json
