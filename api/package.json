@@ -2,6 +2,7 @@
   "name": "scholarship-finder-api",
   "version": "1.0.0",
   "description": "Azure Functions backend for Scholarship Finder",
+  "main": "dist/functions/*.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
