@@ -87,12 +87,29 @@
 
 ---
 
-## PI2.5: Donor Dashboard
+## PI2.5: Donor Dashboard [COMPLETED]
 
 | Issue | Title | Status |
 |-------|-------|--------|
-| #40 | ScholarshipForm component | Pending |
-| #41 | Donor dashboard page | Pending |
+| #40 | ScholarshipForm component | Done |
+| #41 | Donor dashboard page | Done |
+
+### Changes delivered
+- Created `ScholarshipForm.tsx` component with multi-section layout (Basic Info, Eligibility Criteria, Application Details)
+- Form supports both create and edit modes via `initialData` prop
+- Eligibility fields: searchable states list, categories, education levels, max income, gender, disability, religion, area, courses — all with "Select All" toggles
+- Dynamic add/remove lists for `applicationSteps[]` and `requiredDocuments[]`
+- Client-side validation (name + description required), inline error messages
+- Replaced placeholder `DonorDashboard.tsx` with full donor dashboard
+- Dashboard uses view state machine (`list` / `create` / `edit`)
+- List view: stats row (total/approved/pending), scholarship cards with status badges (green/yellow/red), edit/delete actions
+- Inline delete confirmation ("Delete? Yes / No") within each card
+- Empty state with CTA when no scholarships exist
+- Create/Edit views: "Back to list" navigation + ScholarshipForm integration
+- Error banner with dismiss, loading spinner, disabled states during mutations
+- Added `<LanguageToggle />` to header for language switching
+- All UI strings support 4 languages (EN/HI/TA/TE) via `t()` function
+- Amber accent color scheme (`amber-600` buttons, `amber-500` focus rings) consistent with donor role
 
 ---
 
