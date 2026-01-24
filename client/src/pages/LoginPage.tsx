@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import type { UserRole } from '../context/AuthContext'
@@ -7,25 +7,40 @@ import LanguageToggle from '../components/LanguageToggle'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { t } = useLanguage()
-  const { signUp, signIn, user, role } = useAuth()
+  const { signUp, signIn, user, role, profileComplete } = useAuth()
 
-  const getRoleHome = (r: UserRole | null) => {
+  const getPostLoginRedirect = (r: UserRole | null, isProfileComplete: boolean) => {
+    if (r === 'student' && !isProfileComplete) return '/student/onboarding'
+    if (r === 'student') return '/student'
     if (r === 'donor') return '/donor'
     if (r === 'admin') return '/admin'
     return '/student'
   }
 
-  const [mode, setMode] = useState<'signup' | 'signin'>('signup')
+  const urlRole = searchParams.get('role')
+
+  const [mode, setMode] = useState<'signup' | 'signin'>(urlRole === 'admin' ? 'signin' : 'signup')
+  const [selectedRole, setSelectedRole] = useState<'student' | 'donor'>(
+    urlRole === 'donor' ? 'donor' : 'student'
+  )
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    const r = searchParams.get('role')
+    if (r === 'donor') setSelectedRole('donor')
+    else setSelectedRole('student')
+    if (r === 'admin') setMode('signin')
+  }, [searchParams])
+
   // If already authenticated, redirect to role-appropriate dashboard
   if (user) {
-    navigate(getRoleHome(role))
+    navigate(getPostLoginRedirect(role, profileComplete))
     return null
   }
 
@@ -37,7 +52,7 @@ export default function LoginPage() {
     let result: { error: string | null }
 
     if (mode === 'signup') {
-      result = await signUp(email, password, name)
+      result = await signUp(email, password, name, selectedRole)
     } else {
       result = await signIn(email, password)
     }
@@ -99,9 +114,37 @@ export default function LoginPage() {
               </button>
             </div>
 
+            {/* Role Selector - only in signup mode, not for admin */}
+            {mode === 'signup' && urlRole !== 'admin' && (
+              <div className="flex gap-2 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole('student')}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                    selectedRole === 'student'
+                      ? 'bg-teal-100 text-teal-800 border-2 border-teal-300'
+                      : 'bg-gray-100 text-gray-600 border-2 border-transparent hover:bg-gray-200'
+                  }`}
+                >
+                  {t('Student', 'छात्र', 'மாணவர்', 'విద్యార్థి')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole('donor')}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                    selectedRole === 'donor'
+                      ? 'bg-amber-100 text-amber-800 border-2 border-amber-300'
+                      : 'bg-gray-100 text-gray-600 border-2 border-transparent hover:bg-gray-200'
+                  }`}
+                >
+                  {t('Donor', 'दानदाता', 'நன்கொடையாளர்', 'దాత')}
+                </button>
+              </div>
+            )}
+
             <p className="text-sm text-gray-500 mb-6">
               {mode === 'signup'
-                ? t('Create an account to find scholarships.', 'छात्रवृत्ति खोजने के लिए एक खाता बनाएं।', 'உதவித்தொகைகளைக் கண்டறிய ஒரு கணக்கை உருவாக்கவும்.', 'స్కాలర్‌షిప్‌లను కనుగొనడానికి ఖాతాను సృష్టించండి.')
+                ? t('Create an account to get started.', 'शुरू करने के लिए एक खाता बनाएं।', 'தொடங்க ஒரு கணக்கை உருவாக்கவும்.', 'ప్రారంభించడానికి ఖాతాను సృష్టించండి.')
                 : t('Sign in to your account.', 'अपने खाते में साइन इन करें।', 'உங்கள் கணக்கில் உள்நுழையவும்.', 'మీ ఖాతాలో సైన్ ఇన్ చేయండి.')
               }
             </p>

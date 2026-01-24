@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { EmbeddingRecord, findTopK } from './embeddings.js'
 import { getEmbedding } from './openai.js'
@@ -23,9 +23,16 @@ export interface Scholarship {
   applicationSteps: string[]
   requiredDocuments: string[]
   officialUrl: string
+  type: 'public' | 'private'
+  donorId?: string
+  donorName?: string
+  status: 'approved' | 'pending' | 'rejected'
+  createdAt?: string
+  updatedAt?: string
 }
 
 let scholarships: Scholarship[] | null = null
+let privateScholarships: Scholarship[] | null = null
 let embeddings: EmbeddingRecord[] | null = null
 
 function getDataPath(): string {
@@ -54,11 +61,64 @@ export function loadEmbeddings(): EmbeddingRecord[] {
   return embeddings
 }
 
+export function loadPrivateScholarships(): Scholarship[] {
+  if (!privateScholarships) {
+    const filePath = join(getDataPath(), 'private-scholarships.json')
+    try {
+      const data = readFileSync(filePath, 'utf-8')
+      privateScholarships = JSON.parse(data) as Scholarship[]
+    } catch {
+      privateScholarships = []
+    }
+  }
+  return privateScholarships
+}
+
+export function loadAllScholarships(): Scholarship[] {
+  const pub = loadScholarships().map(s => ({
+    ...s,
+    type: s.type || 'public' as const,
+    status: s.status || 'approved' as const,
+    createdAt: s.createdAt || '2024-01-01T00:00:00.000Z',
+    updatedAt: s.updatedAt || '2024-01-01T00:00:00.000Z'
+  }))
+  const priv = loadPrivateScholarships()
+  return [...pub, ...priv]
+}
+
+export function loadApprovedScholarships(): Scholarship[] {
+  return loadAllScholarships().filter(s => s.status === 'approved')
+}
+
+export function savePrivateScholarship(scholarship: Scholarship): void {
+  const current = loadPrivateScholarships()
+  const existingIndex = current.findIndex(s => s.id === scholarship.id)
+  if (existingIndex >= 0) {
+    current[existingIndex] = scholarship
+  } else {
+    current.push(scholarship)
+  }
+  privateScholarships = current
+  const filePath = join(getDataPath(), 'private-scholarships.json')
+  writeFileSync(filePath, JSON.stringify(current, null, 2), 'utf-8')
+}
+
+export function deletePrivateScholarship(id: string): boolean {
+  const current = loadPrivateScholarships()
+  const idx = current.findIndex(s => s.id === id)
+  if (idx < 0) return false
+  current.splice(idx, 1)
+  privateScholarships = current
+  const filePath = join(getDataPath(), 'private-scholarships.json')
+  writeFileSync(filePath, JSON.stringify(current, null, 2), 'utf-8')
+  return true
+}
+
 export async function searchScholarships(
   query: string,
   topK: number = 5
 ): Promise<Scholarship[]> {
-  const allScholarships = loadScholarships()
+  const allScholarships = loadApprovedScholarships()
   const allEmbeddings = loadEmbeddings()
 
   if (allEmbeddings.length === 0) {
@@ -91,7 +151,7 @@ export interface GuidedFlowFilters {
 }
 
 export function filterScholarships(filters: GuidedFlowFilters): Scholarship[] {
-  const allScholarships = loadScholarships()
+  const allScholarships = loadApprovedScholarships()
 
   return allScholarships.filter(scholarship => {
     const elig = scholarship.eligibility

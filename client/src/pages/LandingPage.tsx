@@ -41,100 +41,77 @@ export default function LandingPage() {
 
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center px-4 pb-12">
-        <div className="max-w-3xl w-full text-center">
+        <div className="max-w-4xl w-full text-center">
           {/* Hero Section */}
-          <div className="mb-10">
+          <div className="mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {t('Find Scholarships You Deserve', 'आपके लायक छात्रवृत्ति खोजें', 'நீங்கள் தகுதியான உதவித்தொகைகளைக் கண்டறியுங்கள்', 'మీకు అర్హమైన స్కాలర్‌షిప్‌లను కనుగొనండి')}
+              {t('Every Student Deserves a Chance', 'हर छात्र एक मौका पाने का हकदार है', 'ஒவ்வொரு மாணவரும் ஒரு வாய்ப்புக்கு தகுதியானவர்', 'ప్రతి విద్యార్థి ఒక అవకాశానికి అర్హుడు')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               {t(
-                'Discover government schemes and scholarships tailored to your eligibility. Get step-by-step guidance to apply — in your preferred language.',
-                'अपनी पात्रता के अनुसार सरकारी योजनाएं और छात्रवृत्तियां खोजें। आवेदन के लिए चरण-दर-चरण मार्गदर्शन प्राप्त करें — अपनी पसंदीदा भाषा में।',
-                'உங்கள் தகுதிக்கு ஏற்ற அரசு திட்டங்களையும் உதவித்தொகைகளையும் கண்டறியுங்கள். விண்ணப்பிக்க படிப்படியான வழிகாட்டுதலைப் பெறுங்கள்.',
-                'మీ అర్హతకు అనుగుణంగా ప్రభుత్వ పథకాలు మరియు స్కాలర్‌షిప్‌లను కనుగొనండి. దరఖాస్తు చేయడానికి దశల వారీ మార్గదర్శకత్వం పొందండి.'
+                'Find scholarships, fund education, or manage the platform.',
+                'छात्रवृत्ति खोजें, शिक्षा को फंड करें, या प्लेटफॉर्म प्रबंधित करें।',
+                'உதவித்தொகைகளைக் கண்டறியுங்கள், கல்விக்கு நிதியளியுங்கள் அல்லது தளத்தை நிர்வகியுங்கள்.',
+                'స్కాలర్‌షిప్‌లను కనుగొనండి, విద్యకు నిధులు అందించండి లేదా ప్లాట్‌ఫారమ్‌ను నిర్వహించండి.'
               )}
             </p>
           </div>
 
-          {/* CTA Button */}
-          <button
-            onClick={() => navigate(user ? '/student' : '/login')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-teal-700 text-white text-lg font-semibold rounded-xl hover:bg-teal-800 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-          >
-            {t('Start Finding Scholarships', 'छात्रवृत्ति खोजना शुरू करें', 'உதவித்தொகைகளைக் கண்டறியத் தொடங்குங்கள்', 'స్కాలర్‌షిప్‌లను కనుగొనడం ప్రారంభించండి')}
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
-
-          {/* Features */}
-          <div className="mt-16 grid md:grid-cols-3 gap-6 text-left">
-            <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Chat with AI', 'AI से चैट करें', 'AI உடன் அரட்டை', 'AI తో చాట్')}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {t(
-                  'Ask questions in natural language and get personalized scholarship recommendations.',
-                  'प्राकृतिक भाषा में प्रश्न पूछें और व्यक्तिगत छात्रवृत्ति अनुशंसाएं प्राप्त करें।',
-                  'இயல்பான மொழியில் கேள்விகளைக் கேளுங்கள், தனிப்பயனாக்கப்பட்ட உதவித்தொகை பரிந்துரைகளைப் பெறுங்கள்.',
-                  'సహజ భాషలో ప్రశ్నలు అడగండి మరియు వ్యక్తిగతీకరించిన స్కాలర్‌షిప్ సిఫార్సులు పొందండి.'
-                )}
-              </p>
-            </div>
-
-            <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Guided Search', 'निर्देशित खोज', 'வழிகாட்டப்பட்ட தேடல்', 'మార్గదర్శక శోధన')}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {t(
-                  'Answer simple questions to find schemes matching your eligibility.',
-                  'अपनी पात्रता से मेल खाने वाली योजनाएं खोजने के लिए सरल प्रश्नों के उत्तर दें।',
-                  'உங்கள் தகுதிக்கு பொருந்தும் திட்டங்களைக் கண்டறிய எளிய கேள்விகளுக்கு பதிலளியுங்கள்.',
-                  'మీ అర్హతకు సరిపోయే పథకాలను కనుగొనడానికి సాధారణ ప్రశ్నలకు సమాధానం ఇవ్వండి.'
-                )}
-              </p>
-            </div>
-
-            <div className="bg-white/70 backdrop-blur rounded-xl p-6 border border-white/50">
-              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {t('Multilingual Support', 'बहुभाषी सहायता', 'பன்மொழி ஆதரவு', 'బహుభాషా మద్దతు')}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {t(
-                  'Use the app in English, Hindi, Tamil, or Telugu — switch anytime.',
-                  'अंग्रेज़ी, हिंदी, तमिल या तेलुगु में ऐप का उपयोग करें — कभी भी स्विच करें।',
-                  'ஆங்கிலம், இந்தி, தமிழ் அல்லது தெலுங்கில் பயன்படுத்துங்கள் — எப்போது வேண்டுமானாலும் மாற்றுங்கள்.',
-                  'ఆంగ్లం, హిందీ, తమిళం లేదా తెలుగులో యాప్ ఉపయోగించండి — ఎప్పుడైనా మార్చండి.'
-                )}
-              </p>
-            </div>
-          </div>
-
-          {/* Admin link */}
-          <div className="mt-12">
+          {/* 3 Role Cards */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Student Card */}
             <button
-              onClick={() => navigate('/admin')}
-              className="text-sm text-gray-500 hover:text-gray-700 underline-offset-2 hover:underline"
+              onClick={() => navigate('/login?role=student')}
+              className="bg-white rounded-2xl p-8 border-2 border-teal-200 hover:border-teal-500 hover:shadow-lg transition-all text-left group"
             >
-              {t('Admin access', 'एडमिन एक्सेस', 'நிர்வாக அணுகல்', 'అడ్మిన్ యాక్సెస్')}
+              <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-teal-200 transition-colors">
+                <svg className="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {t("I'm a Student", 'मैं एक छात्र हूं', 'நான் ஒரு மாணவர்', 'నేను విద్యార్థిని')}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {t("Find scholarships you're eligible for", 'अपनी पात्रता अनुसार छात्रवृत्ति खोजें', 'நீங்கள் தகுதியான உதவித்தொகைகளைக் கண்டறியுங்கள்', 'మీకు అర్హమైన స్కాలర్‌షిప్‌లను కనుగొనండి')}
+              </p>
+            </button>
+
+            {/* Donor Card */}
+            <button
+              onClick={() => navigate('/login?role=donor')}
+              className="bg-white rounded-2xl p-8 border-2 border-amber-200 hover:border-amber-500 hover:shadow-lg transition-all text-left group"
+            >
+              <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
+                <svg className="w-7 h-7 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {t("I'm a Donor", 'मैं एक दानदाता हूं', 'நான் ஒரு நன்கொடையாளர்', 'నేను దాతను')}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {t('Fund scholarships for deserving students', 'योग्य छात्रों के लिए छात्रवृत्ति फंड करें', 'தகுதியான மாணவர்களுக்கு உதவித்தொகை வழங்குங்கள்', 'అర్హమైన విద్యార్థులకు స్కాలర్‌షిప్‌లు అందించండి')}
+              </p>
+            </button>
+
+            {/* Admin Card */}
+            <button
+              onClick={() => navigate('/login?role=admin')}
+              className="bg-white rounded-2xl p-8 border-2 border-slate-200 hover:border-slate-500 hover:shadow-lg transition-all text-left group"
+            >
+              <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-slate-200 transition-colors">
+                <svg className="w-7 h-7 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {t('Admin Access', 'एडमिन एक्सेस', 'நிர்வாக அணுகல்', 'అడ్మిన్ యాక్సెస్')}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {t('Manage scholarships and users', 'छात्रवृत्ति और उपयोगकर्ता प्रबंधित करें', 'உதவித்தொகைகள் மற்றும் பயனர்களை நிர்வகியுங்கள்', 'స్కాలర్‌షిప్‌లు మరియు వినియోగదారులను నిర్వహించండి')}
+              </p>
             </button>
           </div>
         </div>
