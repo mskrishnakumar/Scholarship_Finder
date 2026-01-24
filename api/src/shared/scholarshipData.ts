@@ -29,7 +29,7 @@ let scholarships: Scholarship[] | null = null
 let embeddings: EmbeddingRecord[] | null = null
 
 function getDataPath(): string {
-  return join(__dirname, '..', '..', '..', 'data')
+  return join(__dirname, '..', '..', 'data')
 }
 
 export function loadScholarships(): Scholarship[] {

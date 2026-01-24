@@ -1,0 +1,650 @@
+[
+  {
+    "id": "nsp-sc-st",
+    "name": "Pre-Matric Scholarship for SC/ST Students",
+    "description": "Central government scholarship for SC/ST students studying in classes 9 and 10 to support their education and reduce dropout rates.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC", "ST"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_9", "class_10"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Up to Rs. 3,500 per annum for day scholars and Rs. 7,000 per annum for hostellers. Includes maintenance allowance, book grant, and ad-hoc grant.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit the National Scholarship Portal (NSP)",
+      "Register with a valid mobile number and email",
+      "Fill in personal, academic, and income details",
+      "Upload required documents",
+      "Submit application before the deadline"
+    ],
+    "requiredDocuments": ["Caste certificate", "Income certificate", "Previous year marksheet", "Bank passbook", "Aadhaar card", "School bonafide certificate"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "nsp-obc",
+    "name": "Pre-Matric Scholarship for OBC Students",
+    "description": "Scholarship for OBC students in classes 1 to 10 whose parents' income is within the specified limit, aimed at reducing dropout rates.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_1_to_8", "class_9", "class_10"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 1,000 to Rs. 5,500 per annum depending on day scholar or hosteller status and class level.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit the National Scholarship Portal (NSP)",
+      "Register and create an account",
+      "Fill in the scholarship application form",
+      "Upload OBC certificate and income proof",
+      "Submit before the deadline"
+    ],
+    "requiredDocuments": ["OBC non-creamy layer certificate", "Income certificate", "Previous year marksheet", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "post-matric-sc",
+    "name": "Post-Matric Scholarship for SC Students",
+    "description": "Central scheme providing financial assistance to SC students studying at post-matriculation or post-secondary level to enable them to complete their education.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee reimbursement, maintenance allowance of Rs. 550-1,200/month, study tour charges, thesis typing charges, and book allowance.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit National Scholarship Portal",
+      "Complete fresh/renewal registration",
+      "Fill academic and personal details",
+      "Get application verified by institute",
+      "Submit with all required documents"
+    ],
+    "requiredDocuments": ["SC caste certificate", "Income certificate", "Fee receipt from institution", "Previous year marksheet", "Bank account details", "Aadhaar card", "Passport size photograph"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "post-matric-st",
+    "name": "Post-Matric Scholarship for ST Students",
+    "description": "Financial assistance for ST students studying beyond class 10 in recognized institutions to reduce dropout rates and promote higher education.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["ST"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition and non-refundable fees, maintenance allowance Rs. 550-1,200/month, additional allowances for book bank, thesis, etc.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Register on National Scholarship Portal",
+      "Fill the online application form",
+      "Upload scanned documents",
+      "Get verified by the educational institution",
+      "Track application status online"
+    ],
+    "requiredDocuments": ["ST certificate", "Income certificate", "Marksheet of last qualifying exam", "Fee receipt", "Bank passbook copy", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "minority-merit",
+    "name": "Merit-cum-Means Scholarship for Minorities",
+    "description": "Scholarship for meritorious students from minority communities (Muslim, Christian, Sikh, Buddhist, Jain, Parsi) pursuing professional and technical courses.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["General", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": ["Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Parsi"],
+      "area": "all",
+      "courses": ["engineering", "medical", "management", "law"]
+    },
+    "benefits": "Course fee up to Rs. 20,000 per annum and maintenance allowance of Rs. 1,000/month for hostellers, Rs. 500/month for day scholars.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Apply through National Scholarship Portal",
+      "Fill personal and academic details",
+      "Upload minority community certificate",
+      "Get verified by institution",
+      "Submit before deadline"
+    ],
+    "requiredDocuments": ["Minority community certificate", "Income certificate", "Marksheet (min 50% in previous exam)", "Fee receipt", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "minority-post-matric",
+    "name": "Post-Matric Scholarship for Minorities",
+    "description": "Financial support for minority community students who have passed class 10 and are pursuing further education in recognized institutions.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["General", "OBC"],
+      "maxIncome": 200000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": ["Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Parsi"],
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Admission and tuition fee, maintenance allowance for hostellers and day scholars. 30% reserved for girl students.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Register on National Scholarship Portal",
+      "Complete the application form",
+      "Upload minority and income certificates",
+      "Institution verification",
+      "Submit application"
+    ],
+    "requiredDocuments": ["Minority community certificate", "Income certificate (below 2 lakh)", "Previous year marksheet", "Institution bonafide", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "pragati-girls",
+    "name": "AICTE Pragati Scholarship for Girls",
+    "description": "AICTE scheme to support girl students pursuing technical education (degree/diploma) in AICTE-approved institutions across India.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 800000,
+      "educationLevels": ["undergraduate"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "pharmacy", "architecture", "planning"]
+    },
+    "benefits": "Rs. 50,000 per annum (up to Rs. 30,000 tuition fee waiver + Rs. 2,000/month for 10 months for incidentals).",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Visit AICTE portal or National Scholarship Portal",
+      "Register with valid email and mobile",
+      "Fill in academic and family income details",
+      "Upload required documents",
+      "Submit before the deadline"
+    ],
+    "requiredDocuments": ["Class 12 marksheet", "AICTE-approved institution admission letter", "Income certificate", "Bank account in student's name", "Aadhaar card", "Passport photo"],
+    "officialUrl": "https://www.aicte-india.org/bureaus/swanath"
+  },
+  {
+    "id": "saksham-disability",
+    "name": "AICTE Saksham Scholarship for Disabled Students",
+    "description": "AICTE scheme providing financial support to differently-abled students pursuing technical education in AICTE-approved institutions.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 800000,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": true,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "pharmacy", "architecture", "planning", "management"]
+    },
+    "benefits": "Rs. 50,000 per annum (up to Rs. 30,000 tuition fee + Rs. 2,000/month for incidentals). For up to 4 years of degree or 3 years of diploma.",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Visit AICTE portal",
+      "Register with disability certificate details",
+      "Fill in the application form",
+      "Upload all required documents",
+      "Submit application"
+    ],
+    "requiredDocuments": ["Disability certificate (40% or more)", "Income certificate", "Admission letter from AICTE-approved institution", "Previous marksheet", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://www.aicte-india.org/bureaus/swanath"
+  },
+  {
+    "id": "maharashtra-ews",
+    "name": "Maharashtra EWS Scholarship",
+    "description": "Scholarship for economically weaker section students from Maharashtra pursuing higher education in the state.",
+    "eligibility": {
+      "states": ["Maharashtra"],
+      "categories": ["General"],
+      "maxIncome": 100000,
+      "educationLevels": ["class_11", "class_12", "undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee reimbursement and exam fees for students in government and aided institutions.",
+    "deadline": "January 31",
+    "applicationSteps": [
+      "Visit MahaDBT portal",
+      "Create student profile",
+      "Select the appropriate scholarship scheme",
+      "Fill in details and upload documents",
+      "Submit before the deadline"
+    ],
+    "requiredDocuments": ["Domicile certificate (Maharashtra)", "Income certificate (below 1 lakh)", "Caste certificate if applicable", "Previous marksheet", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://mahadbt.maharashtra.gov.in"
+  },
+  {
+    "id": "karnataka-sc-st",
+    "name": "Karnataka Post-Matric Scholarship for SC/ST",
+    "description": "State scholarship for SC/ST students from Karnataka pursuing post-matric education in recognized institutions within or outside the state.",
+    "eligibility": {
+      "states": ["Karnataka"],
+      "categories": ["SC", "ST"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full fee reimbursement including tuition, exam, and maintenance fees. Hostel charges covered for hostellers.",
+    "deadline": "September 30",
+    "applicationSteps": [
+      "Visit SSP Karnataka portal",
+      "Register with student details",
+      "Fill in scholarship application",
+      "Upload caste and income certificates",
+      "Institution verifies and forwards"
+    ],
+    "requiredDocuments": ["SC/ST certificate issued by Karnataka", "Income certificate", "Previous year marksheet", "Study certificate", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://ssp.karnataka.gov.in"
+  },
+  {
+    "id": "tamilnadu-bc-mbc",
+    "name": "Tamil Nadu BC/MBC Scholarship",
+    "description": "Scholarship for Backward Class and Most Backward Class students from Tamil Nadu pursuing higher education.",
+    "eligibility": {
+      "states": ["Tamil Nadu"],
+      "categories": ["OBC"],
+      "maxIncome": 200000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Tuition fee waiver and monthly maintenance allowance for students in government colleges.",
+    "deadline": "October 15",
+    "applicationSteps": [
+      "Apply through Tamil Nadu e-Scholarship portal",
+      "Fill in community and income details",
+      "Upload required certificates",
+      "Get institution verification",
+      "Submit application online"
+    ],
+    "requiredDocuments": ["Community certificate (BC/MBC)", "Income certificate", "10th and 12th marksheets", "College admission proof", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://www.tn.gov.in/scheme"
+  },
+  {
+    "id": "up-post-matric-obc",
+    "name": "Uttar Pradesh Post-Matric Scholarship for OBC",
+    "description": "Scholarship for OBC students of Uttar Pradesh pursuing education beyond class 10 in recognized institutions.",
+    "eligibility": {
+      "states": ["Uttar Pradesh"],
+      "categories": ["OBC"],
+      "maxIncome": 300000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Fee reimbursement and maintenance allowance based on course type and hosteller/day scholar status.",
+    "deadline": "December 15",
+    "applicationSteps": [
+      "Visit UP Scholarship portal (scholarship.up.gov.in)",
+      "Register as a new student or log in for renewal",
+      "Fill in the application form completely",
+      "Upload documents and photo",
+      "Submit and take printout for institution"
+    ],
+    "requiredDocuments": ["OBC certificate (UP)", "Income certificate", "Previous marksheet", "Fee receipt", "Bank passbook", "Aadhaar card", "Passport photo"],
+    "officialUrl": "https://scholarship.up.gov.in"
+  },
+  {
+    "id": "rajasthan-girls",
+    "name": "Rajasthan Gargi Award for Girls",
+    "description": "Award for meritorious girl students from Rajasthan who scored 75% or above in their board exams and are continuing higher education.",
+    "eligibility": {
+      "states": ["Rajasthan"],
+      "categories": ["all"],
+      "maxIncome": null,
+      "educationLevels": ["class_11", "class_12"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 3,000 for class 10 pass and Rs. 5,000 for class 12 pass students who scored 75%+ marks.",
+    "deadline": "January 31",
+    "applicationSteps": [
+      "Visit Shala Darpan portal",
+      "Register with board exam roll number",
+      "Verify personal and academic details",
+      "Provide bank account details",
+      "Award amount credited directly"
+    ],
+    "requiredDocuments": ["Board exam marksheet (75%+)", "School enrollment proof", "Bank account in student's name", "Aadhaar card", "Bhamashah card"],
+    "officialUrl": "https://rajshaladarpan.nic.in"
+  },
+  {
+    "id": "begum-hazrat-mahal",
+    "name": "Begum Hazrat Mahal National Scholarship",
+    "description": "Scholarship for meritorious girls from minority communities studying in classes 9 to 12, funded by Maulana Azad Education Foundation.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["General", "OBC"],
+      "maxIncome": 200000,
+      "educationLevels": ["class_9", "class_10", "class_11", "class_12"],
+      "gender": "female",
+      "disability": false,
+      "religion": ["Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Parsi"],
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 5,000 for class 9-10 students and Rs. 6,000 for class 11-12 students per annum.",
+    "deadline": "September 30",
+    "applicationSteps": [
+      "Visit the MAEF website or NSP",
+      "Register and fill the application form",
+      "Upload minority and income certificates",
+      "Submit application with school verification",
+      "Track status on the portal"
+    ],
+    "requiredDocuments": ["Minority community certificate", "Income certificate", "Previous year marksheet (min 50%)", "Bank account in student's name", "Aadhaar card", "School verification letter"],
+    "officialUrl": "https://www.maef.nic.in"
+  },
+  {
+    "id": "nsigse-inspire",
+    "name": "INSPIRE Scholarship (SHE) for Science Students",
+    "description": "Department of Science and Technology scholarship for students pursuing BSc/BS/integrated MS courses in natural and basic sciences.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": null,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["science"]
+    },
+    "benefits": "Rs. 80,000 per annum (Rs. 60,000 scholarship + Rs. 20,000 summer research project mentorship).",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit the INSPIRE portal (online-inspire.gov.in)",
+      "Check eligibility criteria (top 1% in board or JEE/NEET rank holders)",
+      "Register and fill application form",
+      "Upload academic records and bank details",
+      "Institute nomination and verification"
+    ],
+    "requiredDocuments": ["Class 12 marksheet (top 1% in board)", "Admission letter in BSc/integrated course", "JEE/NEET rank card (if applicable)", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://online-inspire.gov.in"
+  },
+  {
+    "id": "nmmss",
+    "name": "National Means-cum-Merit Scholarship (NMMSS)",
+    "description": "Central government scheme for meritorious students from economically weaker sections studying in class 9 to 12 in government schools.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 350000,
+      "educationLevels": ["class_9", "class_10", "class_11", "class_12"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 12,000 per annum (Rs. 1,000 per month) for classes 9 to 12.",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Appear for the state-level NMMSS exam in class 8",
+      "Selected students apply through NSP from class 9",
+      "Fill in personal and academic details",
+      "Institution verification required",
+      "Renewal required annually with 55%+ marks"
+    ],
+    "requiredDocuments": ["NMMSS selection letter", "Class 8 marksheet", "Income certificate", "School bonafide certificate", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "pm-scholarship-rpf",
+    "name": "Prime Minister's Scholarship for RPF/RPSF Wards",
+    "description": "Scholarship for children of RPF/RPSF/CISF personnel for pursuing higher professional education.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": null,
+      "educationLevels": ["undergraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "mba", "mca"]
+    },
+    "benefits": "Rs. 2,500/month for boys and Rs. 3,000/month for girls for the duration of the course (4-5 years).",
+    "deadline": "October 15",
+    "applicationSteps": [
+      "Visit the National Scholarship Portal",
+      "Register as ward of RPF/RPSF personnel",
+      "Fill in parent's service details",
+      "Upload academic and service certificates",
+      "Submit before deadline"
+    ],
+    "requiredDocuments": ["Parent's service certificate (RPF/RPSF)", "Previous year marksheet (min 60%)", "Course admission letter", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "ishan-uday-ne",
+    "name": "Ishan Uday Scholarship for North-Eastern Students",
+    "description": "UGC scholarship for students from North-Eastern states pursuing higher education in colleges/universities across India.",
+    "eligibility": {
+      "states": ["Assam", "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Sikkim", "Tripura"],
+      "categories": ["all"],
+      "maxIncome": 450000,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 5,400/month for professional courses and Rs. 3,500/month for other courses for 5 years max.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit NSP portal",
+      "Register with domicile details from NE state",
+      "Fill academic and income information",
+      "Upload NE state domicile certificate",
+      "Submit and await UGC verification"
+    ],
+    "requiredDocuments": ["Domicile certificate of NE state", "Income certificate", "Class 12 marksheet", "College admission proof", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "mp-gaon-ki-beti",
+    "name": "Madhya Pradesh Gaon Ki Beti Scheme",
+    "description": "Scholarship for rural girls from Madhya Pradesh who scored 60%+ in class 12 board exams, to encourage higher education.",
+    "eligibility": {
+      "states": ["Madhya Pradesh"],
+      "categories": ["all"],
+      "maxIncome": null,
+      "educationLevels": ["undergraduate"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "rural",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 5,000 per annum (Rs. 500/month for 10 months) for each year of undergraduate study.",
+    "deadline": "August 31",
+    "applicationSteps": [
+      "Visit MP Scholarship Portal (scholarshipportal.mp.nic.in)",
+      "Register with Samagra ID",
+      "Fill in academic details and class 12 marks",
+      "Upload village/rural area proof",
+      "Submit application through portal"
+    ],
+    "requiredDocuments": ["Class 12 marksheet (60%+)", "Samagra ID", "Village/gram panchayat certificate", "Bank account in student's name", "Aadhaar card", "College admission proof"],
+    "officialUrl": "https://scholarshipportal.mp.nic.in"
+  },
+  {
+    "id": "west-bengal-kanyashree",
+    "name": "West Bengal Kanyashree Prakalpa",
+    "description": "Conditional cash transfer scheme for girls in West Bengal to promote education and prevent child marriage.",
+    "eligibility": {
+      "states": ["West Bengal"],
+      "categories": ["all"],
+      "maxIncome": 120000,
+      "educationLevels": ["class_9", "class_10", "class_11", "class_12", "undergraduate"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Annual scholarship of Rs. 750 (K1) for girls aged 13-18 in school, and one-time grant of Rs. 25,000 (K2) at age 18 if unmarried and in education.",
+    "deadline": "Rolling (apply through school)",
+    "applicationSteps": [
+      "Approach school/institution for Kanyashree form",
+      "Fill in personal and family details",
+      "School headmaster verifies and submits",
+      "District-level approval process",
+      "Amount transferred to bank account"
+    ],
+    "requiredDocuments": ["Age proof (birth certificate)", "School enrollment certificate", "Family income certificate", "Bank account in student's name", "Aadhaar card", "Photograph"],
+    "officialUrl": "https://wbkanyashree.gov.in"
+  },
+  {
+    "id": "top-class-sc",
+    "name": "Top Class Education Scheme for SC Students",
+    "description": "Scheme by Ministry of Social Justice for SC students admitted to premier institutions (IITs, IIMs, NITs, AIIMS, etc.).",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC"],
+      "maxIncome": 600000,
+      "educationLevels": ["undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "management", "law", "science"]
+    },
+    "benefits": "Full tuition fee, living expenses up to Rs. 3,000/month, book grant Rs. 5,000/year, computer/laptop allowance (one-time Rs. 45,000).",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Apply through National Scholarship Portal",
+      "Verify admission in listed premier institution",
+      "Fill in scholarship application with caste and income details",
+      "Upload admission letter and certificates",
+      "Institution verifies enrollment"
+    ],
+    "requiredDocuments": ["SC certificate", "Income certificate (below 6 lakh)", "Admission letter from premier institution", "Previous marksheet", "Bank details", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "gujarat-digital-seva",
+    "name": "Gujarat Digital Seva Setu Scholarship",
+    "description": "Scholarship for students from Gujarat belonging to SC/ST/OBC categories pursuing undergraduate and postgraduate courses.",
+    "eligibility": {
+      "states": ["Gujarat"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Tuition fee and exam fee reimbursement along with maintenance allowance based on course type.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit Digital Gujarat portal",
+      "Create a citizen account",
+      "Select the relevant scholarship scheme",
+      "Fill in caste, income, and academic details",
+      "Upload and submit documents"
+    ],
+    "requiredDocuments": ["Caste certificate (Gujarat)", "Income certificate", "Marksheet of last exam", "Fee receipt", "Bank account details", "Aadhaar card", "Domicile certificate"],
+    "officialUrl": "https://digitalgujarat.gov.in"
+  },
+  {
+    "id": "odisha-prerana",
+    "name": "Odisha Prerana Scholarship for SC/ST",
+    "description": "Merit-based scholarship for SC/ST students of Odisha studying in government residential schools for classes 6-10.",
+    "eligibility": {
+      "states": ["Odisha"],
+      "categories": ["SC", "ST"],
+      "maxIncome": 200000,
+      "educationLevels": ["class_1_to_8", "class_9", "class_10"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 75,000 per annum covering boarding, lodging, and coaching for competitive exams in residential schools.",
+    "deadline": "September 30",
+    "applicationSteps": [
+      "School nominates eligible SC/ST students",
+      "Students appear for selection test",
+      "Selected students enrolled in residential program",
+      "Scholarship benefits provided through school",
+      "Annual renewal based on performance"
+    ],
+    "requiredDocuments": ["SC/ST certificate (Odisha)", "Income certificate", "School enrollment proof", "Previous marksheet", "Parent's Aadhaar", "Student's Aadhaar"],
+    "officialUrl": "https://scholarship.odisha.gov.in"
+  },
+  {
+    "id": "jk-special-scholarship",
+    "name": "J&K Special Scholarship Scheme",
+    "description": "Special scholarship for students from Jammu & Kashmir to pursue undergraduate studies in institutions outside the UT.",
+    "eligibility": {
+      "states": ["Jammu and Kashmir"],
+      "categories": ["all"],
+      "maxIncome": 800000,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science", "commerce"]
+    },
+    "benefits": "Full tuition fee (up to Rs. 3 lakh), hostel and mess charges, and maintenance allowance for the course duration.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Apply through AICTE portal",
+      "Provide J&K domicile details",
+      "Select institution from approved list",
+      "Upload academic and domicile certificates",
+      "AICTE processes and disburses"
+    ],
+    "requiredDocuments": ["J&K domicile certificate", "Class 12 marksheet", "Admission letter from approved institution", "Income certificate", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://www.aicte-india.org"
+  }
+]
