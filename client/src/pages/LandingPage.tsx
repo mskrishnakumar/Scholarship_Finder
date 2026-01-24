@@ -61,7 +61,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {/* Student Card */}
             <button
-              onClick={() => navigate('/login?role=student')}
+              onClick={() => navigate('/login/student')}
               className="bg-white rounded-2xl p-8 border-2 border-teal-200 hover:border-teal-500 hover:shadow-lg transition-all text-left group"
             >
               <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-teal-200 transition-colors">
@@ -80,7 +80,7 @@ export default function LandingPage() {
 
             {/* Donor Card */}
             <button
-              onClick={() => navigate('/login?role=donor')}
+              onClick={() => navigate('/login/donor')}
               className="bg-white rounded-2xl p-8 border-2 border-amber-200 hover:border-amber-500 hover:shadow-lg transition-all text-left group"
             >
               <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
@@ -98,7 +98,7 @@ export default function LandingPage() {
 
             {/* Admin Card */}
             <button
-              onClick={() => navigate('/login?role=admin')}
+              onClick={() => navigate('/login/admin')}
               className="bg-white rounded-2xl p-8 border-2 border-slate-200 hover:border-slate-500 hover:shadow-lg transition-all text-left group"
             >
               <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-slate-200 transition-colors">

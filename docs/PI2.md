@@ -113,12 +113,37 @@
 
 ---
 
-## PI2.6: Admin Dashboard Enhancement
+## PI2.6: Admin Dashboard Enhancement [COMPLETED]
 
 | Issue | Title | Status |
 |-------|-------|--------|
-| #42 | Admin CRUD/approvals | Pending |
-| #43 | Cleanup | Pending |
+| #42 | Admin CRUD/approvals | Done |
+| #43 | Cleanup | Done |
+| #44 | Separate role-specific Sign-up/Sign-in screens with Donor org details | Done |
+
+### Changes delivered
+- Replaced placeholder `AdminDashboard.tsx` with full admin dashboard
+- Two-tab layout: Scholarships and Users management
+- Scholarships tab: view all scholarships (public + private), stats (total/approved/pending/public/donor), status filter (all/pending/approved/rejected)
+- Approve/Reject actions for pending scholarships, re-approve for rejected ones
+- Full CRUD: create (as public/approved), edit, delete with confirmation
+- Uses existing `ScholarshipForm` component for create/edit
+- Users tab: view all registered users with stats (total/students/donors/admins), role filter, table view
+- Type badges (Public/Donor) and Status badges (Approved/Pending/Rejected) on each scholarship
+- Error banner with dismiss, loading spinners, disabled states during mutations
+- Teal color scheme consistent with admin role
+- `<LanguageToggle />` in header for language switching
+- All UI strings support 4 languages (EN/HI/TA/TE) via `t()` function
+- Codebase cleanup: no dead code, unused imports, or TODO placeholders found
+- Replaced shared login page with role-specific login screens (`/login/student`, `/login/donor`, `/login/admin`)
+- Each login screen clearly branded with role badge, role-specific accent colors, and no confusing role toggle
+- Donor signup collects organization details: Organization Name (required), Organization Type (required), Designation, Website, Focus Areas (multi-select), Geographic Preference (state checkboxes)
+- Admin login is sign-in only (no signup option)
+- "Not a student/donor?" switch links between role pages
+- Backward-compatible redirect: `/login?role=X` → `/login/X`
+- Extended `AuthContext.signUp()` to accept `extraData` for donor org fields
+- Extended `UserProfile` interface with donor-specific fields
+- Landing page role cards navigate directly to `/login/<role>`
 
 ---
 

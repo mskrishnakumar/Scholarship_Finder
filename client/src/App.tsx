@@ -3,7 +3,7 @@ import { LanguageProvider } from './context/LanguageContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import type { UserRole } from './context/AuthContext'
 import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
+import LoginPage, { LoginRedirect } from './pages/LoginPage'
 import StudentOnboarding from './pages/StudentOnboarding'
 import StudentDashboard from './pages/StudentDashboard'
 import DonorDashboard from './pages/DonorDashboard'
@@ -27,7 +27,7 @@ function RoleProtectedRoute({ allowedRoles, children }: { allowedRoles: UserRole
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login/student" replace />
   }
 
   if (role && !allowedRoles.includes(role)) {
@@ -44,7 +44,12 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            {/* Role-specific login routes */}
+            <Route path="/login/student" element={<LoginPage pageRole="student" />} />
+            <Route path="/login/donor" element={<LoginPage pageRole="donor" />} />
+            <Route path="/login/admin" element={<LoginPage pageRole="admin" />} />
+            {/* Backward-compat: /login?role=X redirects to /login/X */}
+            <Route path="/login" element={<LoginRedirect />} />
             <Route path="/student/onboarding" element={
               <RoleProtectedRoute allowedRoles={['student']}>
                 <StudentOnboarding />

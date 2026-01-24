@@ -17,6 +17,13 @@ export interface UserProfile {
   religion?: string
   area?: string
   course?: string
+  // Donor-specific fields
+  organizationName?: string
+  organizationType?: string
+  designation?: string
+  organizationWebsite?: string
+  focusAreas?: string[]
+  geographicPreference?: string[]
 }
 
 interface AuthContextType {
@@ -26,7 +33,7 @@ interface AuthContextType {
   role: UserRole | null
   profileComplete: boolean
   loading: boolean
-  signUp: (email: string, password: string, name: string, role?: UserRole) => Promise<{ error: string | null }>
+  signUp: (email: string, password: string, name: string, role?: UserRole, extraData?: Record<string, unknown>) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   updateProfile: (data: Record<string, unknown>) => Promise<{ error: string | null }>
@@ -74,12 +81,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     : null
 
-  const signUp = async (email: string, password: string, name: string, role: UserRole = 'student'): Promise<{ error: string | null }> => {
+  const signUp = async (email: string, password: string, name: string, role: UserRole = 'student', extraData?: Record<string, unknown>): Promise<{ error: string | null }> => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name, role }
+        data: { name, role, ...extraData }
       }
     })
     if (error) {
