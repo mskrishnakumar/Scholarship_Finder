@@ -66,11 +66,16 @@ export async function searchScholarships(
     return allScholarships.slice(0, topK)
   }
 
-  const queryEmbedding = await getEmbedding(query)
-  const topResults = findTopK(queryEmbedding, allEmbeddings, topK)
+  try {
+    const queryEmbedding = await getEmbedding(query)
+    const topResults = findTopK(queryEmbedding, allEmbeddings, topK)
 
-  const resultIds = new Set(topResults.map(r => r.id))
-  return allScholarships.filter(s => resultIds.has(s.id))
+    const resultIds = new Set(topResults.map(r => r.id))
+    return allScholarships.filter(s => resultIds.has(s.id))
+  } catch {
+    // Fallback: return first N scholarships if embedding generation fails
+    return allScholarships.slice(0, topK)
+  }
 }
 
 export interface GuidedFlowFilters {

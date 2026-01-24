@@ -38,10 +38,21 @@ export async function getChatCompletion(
 }
 
 export async function getEmbedding(text: string): Promise<number[]> {
-  const openai = getOpenAIClient()
+  const embeddingEndpoint = process.env.AZURE_OPENAI_EMBEDDING_ENDPOINT || process.env.AZURE_OPENAI_ENDPOINT
+  const embeddingKey = process.env.AZURE_OPENAI_EMBEDDING_KEY || process.env.AZURE_OPENAI_KEY
   const deploymentName = process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT || 'text-embedding-ada-002'
 
-  const response = await openai.embeddings.create({
+  if (!embeddingEndpoint || !embeddingKey) {
+    throw new Error('Embedding endpoint/key not configured')
+  }
+
+  const embeddingClient = new AzureOpenAI({
+    endpoint: embeddingEndpoint,
+    apiKey: embeddingKey,
+    apiVersion: '2024-04-01-preview'
+  })
+
+  const response = await embeddingClient.embeddings.create({
     model: deploymentName,
     input: text
   })
