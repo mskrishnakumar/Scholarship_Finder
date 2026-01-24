@@ -646,5 +646,410 @@
     ],
     "requiredDocuments": ["J&K domicile certificate", "Class 12 marksheet", "Admission letter from approved institution", "Income certificate", "Bank account details", "Aadhaar card"],
     "officialUrl": "https://www.aicte-india.org"
+  },
+  {
+    "id": "csss-central-sector",
+    "name": "Central Sector Scholarship Scheme (CSSS)",
+    "description": "Merit-cum-means scholarship by the Ministry of Education for students who scored above the 80th percentile in Class 12, supporting undergraduate and postgraduate education.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 450000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science", "commerce", "arts", "law", "management"]
+    },
+    "benefits": "Rs. 12,000 per annum for first 3 years of UG, Rs. 20,000 per annum for PG. 50% of scholarships reserved for girls.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit National Scholarship Portal (scholarships.gov.in)",
+      "Complete One-Time Registration (OTR)",
+      "Fill CSSS application form with academic and income details",
+      "Upload Class 12 marksheet, income certificate, bank passbook",
+      "Submit and ensure institutional verification before deadline"
+    ],
+    "requiredDocuments": ["Class 12 marksheet (above 80th percentile)", "Income certificate (below Rs. 4.5 lakh)", "Bank passbook with IFSC", "Aadhaar card", "College admission proof", "Caste/disability certificate if applicable"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "nos-overseas-sc",
+    "name": "National Overseas Scholarship for SC Students",
+    "description": "Scholarship by the Ministry of Social Justice for SC, DNT, and landless agricultural labourers' children to pursue Masters or PhD at top QS-500 ranked universities abroad.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC"],
+      "maxIncome": 800000,
+      "educationLevels": ["postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science", "management", "law", "arts"]
+    },
+    "benefits": "Full tuition fees, USD 15,400/year maintenance allowance, economy airfare, contingency allowance of USD 1,500/year. Duration: 3 years (Masters), 4 years (PhD).",
+    "deadline": "October 14",
+    "applicationSteps": [
+      "Visit the NOS portal (nosmsje.gov.in)",
+      "Register and fill online application",
+      "Upload admission offer from QS Top-500 university",
+      "Submit caste, income, and academic certificates",
+      "Await selection committee decision"
+    ],
+    "requiredDocuments": ["SC/DNT certificate", "Income certificate (below Rs. 8 lakh)", "Unconditional admission offer from QS-500 university", "All academic marksheets", "Valid passport", "Aadhaar card"],
+    "officialUrl": "https://nosmsje.gov.in"
+  },
+  {
+    "id": "pm-yasasvi-obc",
+    "name": "PM YASASVI Scholarship for OBC/EBC/DNT",
+    "description": "Central government scholarship for OBC, EBC, and DNT students in Classes 9-12 studying at Top Class Schools, providing financial support to meritorious students.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_9", "class_10", "class_11", "class_12"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 75,000 per annum for Class 9-10 students; Rs. 1,25,000 per annum for Class 11-12 students. 30% seats reserved for girls.",
+    "deadline": "August 31",
+    "applicationSteps": [
+      "Visit National Scholarship Portal (scholarships.gov.in)",
+      "Register with valid mobile and email",
+      "Fill PM YASASVI application form",
+      "Upload OBC/EBC/DNT certificate and income proof",
+      "Submit before deadline; selection based on merit"
+    ],
+    "requiredDocuments": ["OBC/EBC/DNT caste certificate", "Income certificate (below Rs. 2.5 lakh)", "Previous year marksheet", "School bonafide certificate", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://yet.nta.ac.in"
+  },
+  {
+    "id": "aicte-pg-gate",
+    "name": "AICTE PG Scholarship for GATE/GPAT Qualified",
+    "description": "Monthly stipend for GATE/GPAT qualified students pursuing full-time M.E., M.Tech, M.Arch, or M.Pharm at AICTE-approved institutions.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": null,
+      "educationLevels": ["postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical"]
+    },
+    "benefits": "Rs. 12,400 per month for up to 24 months. Disbursed via Direct Benefit Transfer to Aadhaar-linked bank account.",
+    "deadline": "December 15",
+    "applicationSteps": [
+      "Qualify GATE/GPAT exam with valid score",
+      "Get admission in AICTE-approved M.E./M.Tech/M.Arch/M.Pharm program",
+      "Visit AICTE PG Scholarship portal",
+      "Institute verifies enrollment and GATE score",
+      "Submit application; amount credited via DBT"
+    ],
+    "requiredDocuments": ["Valid GATE/GPAT scorecard", "Admission letter from AICTE-approved institution", "Aadhaar-linked bank passbook", "UG degree certificate", "Aadhaar card", "Institute bonafide certificate"],
+    "officialUrl": "https://pgscholarship.aicte.gov.in"
+  },
+  {
+    "id": "svmcm-west-bengal",
+    "name": "Swami Vivekananda Merit-cum-Means Scholarship (SVMCM)",
+    "description": "West Bengal state scholarship for meritorious students from economically weaker families studying Class 11 to PhD level in regular courses within the state.",
+    "eligibility": {
+      "states": ["West Bengal"],
+      "categories": ["all"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science", "commerce", "arts", "law", "management"]
+    },
+    "benefits": "Rs. 1,000 to Rs. 5,000 per month depending on course level. Research students can receive up to Rs. 8,000/month. Annual support ranges Rs. 12,000 to Rs. 96,000.",
+    "deadline": "February 28",
+    "applicationSteps": [
+      "Visit SVMCM portal (svmcm.wbhed.gov.in)",
+      "Register with valid credentials",
+      "Fill scholarship application with academic details",
+      "Upload marksheet showing minimum 60% marks",
+      "Submit; institute verifies and forwards to department"
+    ],
+    "requiredDocuments": ["Previous year marksheet (min 60%)", "Income certificate (below Rs. 2.5 lakh)", "West Bengal domicile proof", "Admission receipt from WB institution", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://svmcm.wbhed.gov.in"
+  },
+  {
+    "id": "national-fellowship-st",
+    "name": "National Fellowship for Scheduled Tribe Students",
+    "description": "Fellowship by the Ministry of Tribal Affairs for ST students pursuing M.Phil or PhD in Indian universities, providing comprehensive financial support for research.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["ST"],
+      "maxIncome": null,
+      "educationLevels": ["postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["science", "arts", "engineering", "commerce", "law", "management"]
+    },
+    "benefits": "Rs. 31,000/month for first 2 years (JRF), Rs. 35,000/month thereafter (SRF). Annual contingency grant of Rs. 10,000-25,000. University fees reimbursed.",
+    "deadline": "March 31",
+    "applicationSteps": [
+      "Clear UGC-NET/JRF or equivalent qualifying exam",
+      "Get admission for M.Phil/PhD in recognized university",
+      "Apply online through National Fellowship portal",
+      "Upload ST certificate, admission letter, and NET scorecard",
+      "Selected candidates receive fellowship directly"
+    ],
+    "requiredDocuments": ["ST caste certificate", "UGC-NET/JRF qualification proof", "University admission/registration letter", "Academic marksheets", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://fellowshipscheduledtribe.nic.in"
+  },
+  {
+    "id": "merit-cum-means-minority",
+    "name": "Merit-cum-Means Scholarship for Minorities",
+    "description": "Ministry of Minority Affairs scholarship for meritorious students from minority communities (Muslim, Christian, Sikh, Buddhist, Jain, Parsi) in professional/technical courses.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 250000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": ["Muslim", "Christian", "Sikh", "Buddhist", "Jain"],
+      "area": "all",
+      "courses": ["engineering", "medical", "management", "law"]
+    },
+    "benefits": "Full course fee or Rs. 20,000 per annum (whichever is less) plus maintenance allowance of Rs. 1,000/month for hostellers and Rs. 500/month for day scholars.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit National Scholarship Portal (scholarships.gov.in)",
+      "Register and select Merit-cum-Means scholarship",
+      "Fill application with minority community details",
+      "Upload income proof and previous marks (60%+)",
+      "Submit before deadline; selection on merit basis"
+    ],
+    "requiredDocuments": ["Minority community certificate (self-declaration)", "Income certificate (below Rs. 2.5 lakh)", "Previous exam marksheet (60%+)", "Admission letter for professional course", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://scholarships.gov.in"
+  },
+  {
+    "id": "free-coaching-dnt",
+    "name": "Free Coaching for DNT/NT/SNT Students (SEED Scheme)",
+    "description": "Ministry of Social Justice initiative providing quality coaching for competitive exams (NEET, JEE, CLAT, NDA, Banking) to students from DNT, NT, and SNT communities.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "law", "management"]
+    },
+    "benefits": "Free coaching at empanelled institutes, Rs. 3,000/month stipend for hostel students, Rs. 1,500/month for day scholars. Coaching for NEET, JEE, CLAT, NDA, Banking exams.",
+    "deadline": "September 30",
+    "applicationSteps": [
+      "Visit the SEED scheme portal",
+      "Register with DNT/NT/SNT community certificate",
+      "Select preferred coaching institute from empanelled list",
+      "Upload community certificate and income proof",
+      "Await selection based on merit and community quota"
+    ],
+    "requiredDocuments": ["DNT/NT/SNT community certificate", "Income certificate (below Rs. 2.5 lakh)", "Class 10/12 marksheet", "Aadhaar card", "Bank passbook", "Passport-size photographs"],
+    "officialUrl": "https://socialjustice.gov.in"
+  },
+  {
+    "id": "pm-usp-jk-ladakh",
+    "name": "PM-USP Special Scholarship for J&K and Ladakh",
+    "description": "5,000 fresh scholarships every year for youth from J&K and Ladakh to pursue undergraduate studies at institutions outside the UT in various professional courses.",
+    "eligibility": {
+      "states": ["Jammu and Kashmir"],
+      "categories": ["all"],
+      "maxIncome": 800000,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science", "commerce", "management", "law"]
+    },
+    "benefits": "Full tuition fee (up to Rs. 3 lakh/year), hostel and mess charges (Rs. 1 lakh/year), and maintenance allowance for the course duration.",
+    "deadline": "October 31",
+    "applicationSteps": [
+      "Visit AICTE scholarship portal",
+      "Register with J&K/Ladakh domicile details",
+      "Select institution from approved list outside J&K",
+      "Upload domicile, academic, and admission documents",
+      "AICTE processes applications and disburses funds"
+    ],
+    "requiredDocuments": ["J&K/Ladakh domicile certificate", "Class 12 marksheet", "Admission letter from approved institution outside J&K", "Income certificate", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://www.aicte-india.org"
+  },
+  {
+    "id": "assam-pragyan-bharati",
+    "name": "Pragyan Bharati Scholarship (Assam)",
+    "description": "Assam state scholarship providing financial assistance to meritorious students from economically weaker sections pursuing higher secondary and undergraduate education.",
+    "eligibility": {
+      "states": ["Assam"],
+      "categories": ["all"],
+      "maxIncome": 200000,
+      "educationLevels": ["class_11", "class_12", "undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 10,000 one-time grant for HS students, Rs. 10,000 to Rs. 30,000 for degree students depending on the course.",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Visit Assam scholarship portal (directorateofhighereducation.assam.gov.in)",
+      "Register and fill application form",
+      "Enter academic details and upload marksheets",
+      "Upload income certificate and domicile proof",
+      "Submit; verification by institute and district office"
+    ],
+    "requiredDocuments": ["Assam domicile certificate", "Previous exam marksheet", "Income certificate (below Rs. 2 lakh)", "Bank passbook", "Aadhaar card", "Admission receipt"],
+    "officialUrl": "https://directorateofhighereducation.assam.gov.in"
+  },
+  {
+    "id": "rajasthan-ambedkar-sc-st",
+    "name": "Dr. Ambedkar Post-Matric Scholarship (Rajasthan)",
+    "description": "Rajasthan state scholarship for SC/ST/OBC/EBC students pursuing post-matric education, covering tuition fees and maintenance allowance for economically weaker students.",
+    "eligibility": {
+      "states": ["Rajasthan"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee reimbursement plus maintenance allowance of Rs. 1,200-2,500/month depending on course level and hosteller/day scholar status.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit SJE Rajasthan portal (sje.rajasthan.gov.in)",
+      "Register with Jan Aadhaar/Aadhaar details",
+      "Fill scholarship form with academic and caste details",
+      "Upload caste certificate, income proof, and fee receipt",
+      "Institute verifies; department processes disbursement"
+    ],
+    "requiredDocuments": ["SC/ST/OBC caste certificate (Rajasthan)", "Income certificate (below Rs. 2.5 lakh)", "Fee receipt from institution", "Previous year marksheet", "Jan Aadhaar card", "Bank passbook"],
+    "officialUrl": "https://sje.rajasthan.gov.in"
+  },
+  {
+    "id": "up-scholarship-general",
+    "name": "UP Post-Matric Scholarship (General/OBC/SC/ST)",
+    "description": "Uttar Pradesh state scholarship covering fee reimbursement for all category students from economically weaker sections pursuing post-matric education.",
+    "eligibility": {
+      "states": ["Uttar Pradesh"],
+      "categories": ["SC", "ST", "OBC", "General"],
+      "maxIncome": 300000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee reimbursement and maintenance allowance. Amount varies by course level — up to Rs. 10,000/month for professional courses.",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Visit UP Scholarship portal (scholarship.up.gov.in)",
+      "Register as Fresh or Renewal student",
+      "Fill application form with personal and academic details",
+      "Upload photo, caste certificate, income proof, fee receipt",
+      "Submit; institute forwards to district and state for verification"
+    ],
+    "requiredDocuments": ["Caste certificate (UP)", "Income certificate (below Rs. 3 lakh)", "Fee receipt from institution", "Previous marksheet", "Bank passbook with IFSC", "Aadhaar card", "Passport-size photo"],
+    "officialUrl": "https://scholarship.up.gov.in"
+  },
+  {
+    "id": "kerala-egrantz-sc-st",
+    "name": "Kerala e-Grantz Scholarship for SC/ST Students",
+    "description": "Kerala state scholarship providing full fee concession and stipend to SC/ST students pursuing higher education in recognized institutions within Kerala.",
+    "eligibility": {
+      "states": ["other"],
+      "categories": ["SC", "ST"],
+      "maxIncome": null,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full fee concession (no income limit for SC/ST), lump sum grant of Rs. 1,500-5,000 for books, and hostel stipend for residential students.",
+    "deadline": "March 31",
+    "applicationSteps": [
+      "Visit e-Grantz portal (egrantz.kerala.gov.in)",
+      "Register with One-Time registration",
+      "Select scholarship type (SC/ST fee concession)",
+      "Upload caste certificate and admission details",
+      "Institute verifies; funds disbursed to student account"
+    ],
+    "requiredDocuments": ["SC/ST caste certificate (Kerala)", "Admission receipt from Kerala institution", "Previous marksheet", "Bank passbook", "Aadhaar card", "Income certificate (optional for SC/ST)"],
+    "officialUrl": "https://egrantz.kerala.gov.in"
+  },
+  {
+    "id": "jharkhand-ejaarti",
+    "name": "Jharkhand e-Kalyan Post-Matric Scholarship",
+    "description": "Jharkhand state scholarship for SC/ST/OBC students providing tuition fee reimbursement and living allowance for students pursuing higher education.",
+    "eligibility": {
+      "states": ["other"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee reimbursement plus maintenance allowance of Rs. 750-1,200/month. Additional book grant for professional courses.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit e-Kalyan portal (ekalyan.cgg.gov.in)",
+      "Register with Aadhaar and mobile number",
+      "Fill post-matric scholarship form",
+      "Upload caste certificate, income proof, and fee receipt",
+      "Institute verifies; department processes via DBT"
+    ],
+    "requiredDocuments": ["SC/ST/OBC caste certificate (Jharkhand)", "Income certificate (below Rs. 2.5 lakh)", "Fee receipt", "Previous marksheet", "Bank passbook (Aadhaar-linked)", "Aadhaar card"],
+    "officialUrl": "https://ekalyan.cgg.gov.in"
+  },
+  {
+    "id": "hp-irdp-scholarship",
+    "name": "Himachal Pradesh IRDP Post-Matric Scholarship",
+    "description": "Himachal Pradesh scholarship for SC/ST/OBC and BPL students providing financial support for post-matric education including professional courses.",
+    "eligibility": {
+      "states": ["other"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 200000,
+      "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["all"]
+    },
+    "benefits": "Full tuition fee and non-refundable fees reimbursement. Maintenance allowance of Rs. 1,000-2,000/month based on course level.",
+    "deadline": "November 30",
+    "applicationSteps": [
+      "Visit HP e-Scholarship portal (hpepass.cgg.gov.in)",
+      "Register as new student or renew existing application",
+      "Fill form with domicile, caste, and academic details",
+      "Upload required certificates and fee receipts",
+      "Institute and district welfare officer verify; amount disbursed via DBT"
+    ],
+    "requiredDocuments": ["HP domicile certificate", "SC/ST/OBC caste certificate", "BPL/Income certificate (below Rs. 2 lakh)", "Fee receipt from institution", "Previous marksheet", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://hpepass.cgg.gov.in"
   }
 ]
