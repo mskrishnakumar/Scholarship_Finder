@@ -230,7 +230,9 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('Password', 'पासवर्ड', 'கடவுச்சொல்', 'పాస్‌వర్డ్')}
+                  {mode === 'signup'
+                    ? t('Create Password', 'पासवर्ड बनाएं', 'கடவுச்சொல்லை உருவாக்கு', 'పాస్‌వర్డ్ సృష్టించండి')
+                    : t('Password', 'पासवर्ड', 'கடவுச்சொல்', 'పాస్‌వర్డ్')}
                 </label>
                 <input
                   id="password"
@@ -238,10 +240,22 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 outline-none transition-shadow text-sm ${pageRole === 'donor' ? 'focus:ring-amber-500 focus:border-amber-500' : 'focus:ring-teal-600 focus:border-teal-600'}`}
-                  placeholder={t('Enter your password', 'अपना पासवर्ड दर्ज करें', 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்', 'మీ పాస్‌వర్డ్ నమోదు చేయండి')}
+                  placeholder={mode === 'signup'
+                    ? t('Create a new password', 'एक नया पासवर्ड बनाएं', 'புதிய கடவுச்சொல்லை உருவாக்கவும்', 'కొత్త పాస్‌వర్డ్ సృష్టించండి')
+                    : t('Enter your password', 'अपना पासवर्ड दर्ज करें', 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்', 'మీ పాస్‌వర్డ్ నమోదు చేయండి')}
                   required
                   minLength={6}
                 />
+                {mode === 'signup' && (
+                  <p className="mt-1.5 text-xs text-gray-500">
+                    {t(
+                      'Create a new password for this account (not your email password). Minimum 6 characters.',
+                      'इस खाते के लिए एक नया पासवर्ड बनाएं (आपका ईमेल पासवर्ड नहीं)। न्यूनतम 6 अक्षर।',
+                      'இந்த கணக்கிற்கு புதிய கடவுச்சொல்லை உருவாக்கவும் (உங்கள் மின்னஞ்சல் கடவுச்சொல் அல்ல). குறைந்தபட்சம் 6 எழுத்துக்கள்.',
+                      'ఈ ఖాతా కోసం కొత్త పాస్‌వర్డ్ సృష్టించండి (మీ ఇమెయిల్ పాస్‌వర్డ్ కాదు). కనీసం 6 అక్షరాలు.'
+                    )}
+                  </p>
+                )}
               </div>
 
               {/* Donor Organization Fields - signup only */}

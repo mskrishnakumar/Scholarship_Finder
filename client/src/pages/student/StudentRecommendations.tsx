@@ -164,21 +164,6 @@ export default function StudentRecommendations() {
               'మీ సిఫారసులు'
             )}
           </h1>
-          <p className="mt-1 text-text-secondary">
-            {totalMatches > 0
-              ? t(
-                  `Found ${totalMatches} scholarship${totalMatches !== 1 ? 's' : ''} matching your profile`,
-                  `आपकी प्रोफ़ाइल से मेल खाती ${totalMatches} छात्रवृत्ति${totalMatches !== 1 ? 'यां' : ''} मिलीं`,
-                  `உங்கள் சுயவிவரத்துடன் பொருந்தும் ${totalMatches} உதவித்தொகை${totalMatches !== 1 ? 'கள்' : ''} கண்டறியப்பட்டன`,
-                  `మీ ప్రొఫైల్‌తో సరిపోలే ${totalMatches} స్కాలర్‌షిప్${totalMatches !== 1 ? 'లు' : ''} కనుగొనబడ్డాయి`
-                )
-              : t(
-                  'No scholarships found matching your profile',
-                  'आपकी प्रोफ़ाइल से मेल खाती कोई छात्रवृत्ति नहीं मिली',
-                  'உங்கள் சுயவிவரத்துடன் பொருந்தும் உதவித்தொகைகள் கிடைக்கவில்லை',
-                  'మీ ప్రొఫైల్‌తో సరిపోలే స్కాలర్‌షిప్‌లు కనుగొనబడలేదు'
-                )}
-          </p>
         </div>
         <Button
           variant="secondary"
@@ -189,16 +174,48 @@ export default function StudentRecommendations() {
         </Button>
       </div>
 
+      {/* Prominent Results Count Banner */}
+      {totalMatches > 0 && (
+        <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-4 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-2xl font-bold">
+                {t(
+                  `Found ${totalMatches} Scholarship${totalMatches !== 1 ? 's' : ''}!`,
+                  `${totalMatches} छात्रवृत्ति${totalMatches !== 1 ? 'यां' : ''} मिलीं!`,
+                  `${totalMatches} உதவித்தொகை${totalMatches !== 1 ? 'கள்' : ''} கிடைத்தன!`,
+                  `${totalMatches} స్కాలర్‌షిప్${totalMatches !== 1 ? 'లు' : ''} దొరికాయి!`
+                )}
+              </p>
+              <p className="text-teal-100 text-sm">
+                {t(
+                  'Based on your profile details',
+                  'आपकी प्रोफ़ाइल के आधार पर',
+                  'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
+                  'మీ ప్రొఫైల్ వివరాల ఆధారంగా'
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Results */}
       {recommendations.length > 0 ? (
         <div className="space-y-4">
-          {recommendations.map((scholarship) => (
+          {recommendations.map((scholarship, index) => (
             <ScholarshipCard
               key={scholarship.id}
               scholarship={scholarship}
               t={t}
               matchScore={scholarship.matchScore}
               matchReasons={scholarship.matchReasons}
+              index={index + 1}
             />
           ))}
         </div>

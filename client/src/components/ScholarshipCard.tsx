@@ -6,21 +6,29 @@ interface ScholarshipCardProps {
   t: (en: string, hi?: string, ta?: string, te?: string) => string
   matchScore?: number
   matchReasons?: string[]
+  index?: number
 }
 
-export default function ScholarshipCard({ scholarship, t, matchScore, matchReasons }: ScholarshipCardProps) {
+export default function ScholarshipCard({ scholarship, t, matchScore, matchReasons, index }: ScholarshipCardProps) {
   const [expanded, setExpanded] = useState(false)
   const stepsToShow = expanded ? scholarship.applicationSteps : scholarship.applicationSteps.slice(0, 2)
   const hasMore = scholarship.applicationSteps.length > 2
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden animate-[fadeIn_0.3s_ease-out] shadow-sm hover:shadow-md transition-shadow">
       <div className="border-l-4 border-teal-600 p-4">
         <div className="flex items-start justify-between gap-2">
-          <h4 className="font-semibold text-teal-800 text-sm">{scholarship.name}</h4>
+          <div className="flex items-start gap-3">
+            {index !== undefined && (
+              <div className="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                {index}
+              </div>
+            )}
+            <h4 className="font-semibold text-teal-800 text-sm pt-1">{scholarship.name}</h4>
+          </div>
           {matchScore !== undefined && (
-            <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800">
-              {matchScore}%
+            <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800">
+              {matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'మ్యాచ్')}
             </span>
           )}
         </div>

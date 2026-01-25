@@ -66,6 +66,7 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
       <NavLink
         key={item.id}
         to={item.path}
+        end={item.end}
         className={({ isActive }) =>
           `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
             isActive ? getActiveClasses() : getInactiveClasses()

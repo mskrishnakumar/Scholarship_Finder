@@ -149,17 +149,25 @@ interface ScholarshipRecommendationCardProps {
   onSave: () => void;
   onApply: () => void;
   isSaved: boolean;
+  index?: number;
 }
 
-function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSaved }: ScholarshipRecommendationCardProps) {
+function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSaved, index }: ScholarshipRecommendationCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="border-l-4 border-teal-600 p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h4 className="font-semibold text-teal-800 text-sm flex-1">{scholarship.name}</h4>
-          <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800">
+          <div className="flex items-start gap-3 flex-1">
+            {index !== undefined && (
+              <div className="flex-shrink-0 w-7 h-7 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                {index}
+              </div>
+            )}
+            <h4 className="font-semibold text-teal-800 text-sm pt-0.5">{scholarship.name}</h4>
+          </div>
+          <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800">
             {scholarship.matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'మ్యాచ్')}
           </span>
         </div>
@@ -431,28 +439,18 @@ export default function StudentSearch() {
     <div className="h-full">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary">
-              {t('Find Scholarships', 'छात्रवृत्ति खोजें', 'உதவித்தொகைகளைக் கண்டறியவும்', 'స్కాలర్‌షిప్‌లను కనుగొనండి')}
-            </h1>
-            <p className="mt-1 text-text-secondary">
-              {t(
-                'Fill in your details to find matching scholarships',
-                'मिलती-जुलती छात्रवृत्तियां खोजने के लिए अपना विवरण भरें',
-                'பொருத்தமான உதவித்தொகைகளைக் கண்டறிய உங்கள் விவரங்களை நிரப்பவும்',
-                'సరిపోలే స్కాలర్‌షిప్‌లను కనుగొనడానికి మీ వివరాలను నమోదు చేయండి'
-              )}
-            </p>
-          </div>
-          {hasProfileData && (
-            <Button variant="secondary" size="sm" onClick={handleAutoPopulate}>
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              {t('Auto-fill from Profile', 'प्रोफ़ाइल से भरें', 'சுயவிவரத்திலிருந்து நிரப்பு', 'ప్రొఫైల్ నుండి నింపండి')}
-            </Button>
-          )}
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary">
+            {t('Find Scholarships', 'छात्रवृत्ति खोजें', 'உதவித்தொகைகளைக் கண்டறியவும்', 'స్కాలర్‌షిప్‌లను కనుగొనండి')}
+          </h1>
+          <p className="mt-1 text-text-secondary">
+            {t(
+              'Fill in your details to find matching scholarships',
+              'मिलती-जुलती छात्रवृत्तियां खोजने के लिए अपना विवरण भरें',
+              'பொருத்தமான உதவித்தொகைகளைக் கண்டறிய உங்கள் விவரங்களை நிரப்பவும்',
+              'సరిపోలే స్కాలర్‌షిప్‌లను కనుగొనడానికి మీ వివరాలను నమోదు చేయండి'
+            )}
+          </p>
         </div>
 
         {/* Progress bar */}
@@ -474,6 +472,21 @@ export default function StudentSearch() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left column - Form */}
         <div className="lg:col-span-5 space-y-4">
+          {/* Auto-fill from Profile button - positioned above form */}
+          {hasProfileData && (
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleAutoPopulate}
+              className="w-full bg-teal-600 hover:bg-teal-700"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {t('Auto-fill from Profile', 'प्रोफ़ाइल से भरें', 'சுயவிவரத்திலிருந்து நிரப்பு', 'ప్రొఫైల్ నుండి నింపండి')}
+            </Button>
+          )}
+
           {/* Personal Details Section */}
           <FormSection
             title={t('Personal Details', 'व्यक्तिगत विवरण', 'தனிப்பட்ட விவரங்கள்', 'వ్యక్తిగత వివరాలు')}
@@ -616,11 +629,25 @@ export default function StudentSearch() {
                 subtitle={
                   loading
                     ? t('Searching...', 'खोज रहे हैं...', 'தேடுகிறது...', 'శోధిస్తోంది...')
-                    : recommendations.length > 0
-                    ? t(`Found ${recommendations.length} scholarships`, `${recommendations.length} छात्रवृत्तियां मिलीं`, `${recommendations.length} உதவித்தொகைகள் கிடைத்தன`, `${recommendations.length} స్కాలర్‌షిప్‌లు దొరికాయి`)
                     : t('Fill in your details to see matches', 'मैच देखने के लिए अपना विवरण भरें', 'பொருத்தங்களைக் காண உங்கள் விவரங்களை நிரப்பவும்', 'సరిపోలికలను చూడటానికి మీ వివరాలను నమోదు చేయండి')
                 }
               />
+              {/* Prominent count display */}
+              {recommendations.length > 0 && !loading && (
+                <div className="mt-3 bg-teal-50 border border-teal-200 rounded-lg p-3 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    {recommendations.length}
+                  </div>
+                  <span className="text-teal-800 font-medium text-sm">
+                    {t(
+                      `Scholarship${recommendations.length !== 1 ? 's' : ''} found!`,
+                      `छात्रवृत्ति${recommendations.length !== 1 ? 'यां' : ''} मिलीं!`,
+                      `உதவித்தொகை${recommendations.length !== 1 ? 'கள்' : ''} கிடைத்தன!`,
+                      `స్కాలర్‌షిప్${recommendations.length !== 1 ? 'లు' : ''} దొరికాయి!`
+                    )}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="p-4 max-h-[calc(100vh-220px)] overflow-y-auto">
@@ -649,7 +676,7 @@ export default function StudentSearch() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {recommendations.map((scholarship) => (
+                  {recommendations.map((scholarship, index) => (
                     <ScholarshipRecommendationCard
                       key={scholarship.id}
                       scholarship={scholarship}
@@ -657,6 +684,7 @@ export default function StudentSearch() {
                       onSave={() => handleSave(scholarship)}
                       onApply={() => handleApply(scholarship)}
                       isSaved={savedIds.has(scholarship.id)}
+                      index={index + 1}
                     />
                   ))}
                 </div>

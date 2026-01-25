@@ -10,6 +10,7 @@ import {
   ChartBarIcon,
   UsersIcon,
   ClockIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline'
 import type { ComponentType, SVGProps } from 'react'
 
@@ -22,6 +23,7 @@ export interface MenuItem {
   path: string
   icon: ComponentType<SVGProps<SVGSVGElement>>
   badge?: number | string
+  end?: boolean // For NavLink end prop - exact path matching
 }
 
 export interface MenuConfig {
@@ -39,6 +41,7 @@ export const studentMenuConfig: MenuConfig = {
       labelTe: 'డాష్‌బోర్డ్',
       path: '/student',
       icon: HomeIcon,
+      end: true, // Exact match only - won't highlight for /student/search etc
     },
     {
       id: 'search',
@@ -48,6 +51,15 @@ export const studentMenuConfig: MenuConfig = {
       labelTe: 'స్కాలర్‌షిప్‌లు కనుగొనండి',
       path: '/student/search',
       icon: MagnifyingGlassIcon,
+    },
+    {
+      id: 'chat',
+      label: 'Chat Assistant',
+      labelHi: 'चैट सहायक',
+      labelTa: 'அரட்டை உதவியாளர்',
+      labelTe: 'చాట్ అసిస్టెంట్',
+      path: '/student/chat',
+      icon: ChatBubbleLeftRightIcon,
     },
     {
       id: 'saved',
@@ -100,6 +112,7 @@ export const donorMenuConfig: MenuConfig = {
       labelTe: 'డాష్‌బోర్డ్',
       path: '/donor',
       icon: HomeIcon,
+      end: true,
     },
     {
       id: 'create',
@@ -158,9 +171,10 @@ export const adminMenuConfig: MenuConfig = {
       label: 'Dashboard',
       labelHi: 'डैशबोर्ड',
       labelTa: 'டாஷ்போர்டு',
-      labelTe: 'డాష్‌బోర్డ్',
+      labelTe: 'డாష్‌బోర్డ్',
       path: '/admin',
       icon: HomeIcon,
+      end: true,
     },
     {
       id: 'scholarships',
