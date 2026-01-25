@@ -1,4 +1,8 @@
 export { default as Sidebar } from './Sidebar'
 export type { SidebarProps } from './Sidebar'
+export { default as Header } from './Header'
+export type { HeaderProps } from './Header'
+export { default as DashboardLayout } from './DashboardLayout'
+export type { DashboardLayoutProps } from './DashboardLayout'
 export { getMenuConfig, studentMenuConfig, donorMenuConfig, adminMenuConfig } from './menuConfig'
 export type { MenuItem, MenuConfig } from './menuConfig'
