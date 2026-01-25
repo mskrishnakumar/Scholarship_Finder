@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+@theme {
+  /* Primary - Teal (Student/Admin) */
+  --color-primary: #14B8A6;
+  --color-primary-dark: #0D9488;
+  --color-primary-light: #CCFBF1;
+
+  /* Accent - Amber (Donor) */
+  --color-accent: #F59E0B;
+  --color-accent-dark: #D97706;
+  --color-accent-light: #FEF3C7;
+
+  /* Text */
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+
+  /* Layout */
+  --spacing-sidebar: 240px;
+  --spacing-sidebar-collapsed: 64px;
+  --spacing-topbar: 64px;
+
+  /* Border Radius */
+  --radius-card: 12px;
+  --radius-input: 8px;
+  --radius-badge: 6px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
