@@ -1,12 +1,12 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { supabaseAdmin } from '../shared/supabaseAdmin.js'
+import { getSupabaseAdmin } from '../shared/supabaseAdmin.js'
 import { requireRole, AuthError } from '../shared/auth.js'
 
 async function listUsers(request: HttpRequest, _context: InvocationContext): Promise<HttpResponseInit> {
   try {
     requireRole(request, ['admin'])
 
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers()
+    const { data, error } = await getSupabaseAdmin().auth.admin.listUsers()
     if (error) {
       return { status: 500, jsonBody: { error: error.message } }
     }
