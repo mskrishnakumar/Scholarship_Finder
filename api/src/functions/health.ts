@@ -16,5 +16,6 @@ async function health(request: HttpRequest, context: InvocationContext): Promise
 app.http('health', {
   methods: ['GET'],
   authLevel: 'anonymous',
+  route: 'health',
   handler: health
 })
