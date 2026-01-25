@@ -1,0 +1,8 @@
+# Ignore these files when deploying to Azure Functions
+*.ts
+src/
+.git*
+.vscode/
+local.settings.json
+tsconfig.json
+*.md

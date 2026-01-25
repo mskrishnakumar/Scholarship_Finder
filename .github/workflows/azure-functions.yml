@@ -33,6 +33,15 @@ jobs:
           cd api
           npm run build
 
+      - name: Verify build output
+        run: |
+          echo "=== API folder contents ==="
+          ls -la api/
+          echo "=== dist folder contents ==="
+          ls -la api/dist/
+          echo "=== dist/functions contents ==="
+          ls -la api/dist/functions/
+
       - name: 'Login to Azure'
         uses: azure/login@v2
         with:
