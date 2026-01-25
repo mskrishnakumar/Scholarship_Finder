@@ -2,9 +2,18 @@
   "platform": {
     "apiRuntime": "node:20"
   },
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".mjs": "application/javascript",
+    ".css": "text/css",
+    ".json": "application/json",
+    ".svg": "image/svg+xml",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2"
+  },
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/api/*", "*.{css,js,svg,png,jpg,jpeg,gif,ico,woff,woff2}"]
+    "exclude": ["/api/*", "*.{css,js,mjs,svg,png,jpg,jpeg,gif,ico,woff,woff2,json}"]
   },
   "routes": [
     {
