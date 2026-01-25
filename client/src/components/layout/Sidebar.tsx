@@ -99,6 +99,18 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200">
+        {/* Collapse toggle button */}
+        <button
+          onClick={onToggleCollapse}
+          className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
+          title={isCollapsed ? t('Expand', 'विस्तार करें', 'விரிவாக்கு', 'విస్తరించు') : t('Collapse', 'संक्षिप्त करें', 'சுருக்கு', 'కుదించు')}
+        >
+          {isCollapsed ? (
+            <ChevronRightIcon className="w-5 h-5" />
+          ) : (
+            <ChevronLeftIcon className="w-5 h-5" />
+          )}
+        </button>
         <div
           className={`w-8 h-8 ${getLogoBackground()} rounded-lg flex items-center justify-center shrink-0`}
         >
@@ -154,29 +166,11 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
 
       {/* Footer */}
       <div className="border-t border-gray-200 px-3 py-3">
-        {/* Collapse toggle */}
-        <button
-          onClick={onToggleCollapse}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-gray-500 hover:bg-gray-50 hover:text-gray-800 rounded-lg transition-colors mb-2"
-          title={isCollapsed ? t('Expand', 'विस्तार करें', 'விரிவாக்கு', 'విస్తరించు') : t('Collapse', 'संक्षिप्त करें', 'சுருக்கு', 'కుదించు')}
-        >
-          {isCollapsed ? (
-            <ChevronRightIcon className="w-5 h-5" />
-          ) : (
-            <>
-              <ChevronLeftIcon className="w-5 h-5" />
-              <span className="text-sm font-medium">
-                {t('Collapse', 'संक्षिप्त करें', 'சுருக்கு', 'కుదించు')}
-              </span>
-            </>
-          )}
-        </button>
-
         {/* Logout button */}
         <button
           onClick={handleLogout}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${getInactiveClasses()}`}
-          title={isCollapsed ? t('Logout', 'लॉगआउट', 'வெளியேறு', 'లాగ్అవుట్') : undefined}
+          title={isCollapsed ? t('Logout', 'लॉगआउट', 'வெளியேறு', 'లాగ్అవுట్') : undefined}
         >
           <ArrowRightOnRectangleIcon className="w-5 h-5 shrink-0" />
           {!isCollapsed && (

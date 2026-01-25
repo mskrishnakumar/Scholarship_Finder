@@ -16,6 +16,8 @@ import {
   StudentSearch,
   StudentChat,
   StudentSettings,
+  StudentSaved,
+  StudentApplications,
 } from './pages/student'
 
 // Donor pages
@@ -81,7 +83,7 @@ export default function App() {
             <Route path="/login" element={<LoginRedirect />} />
 
             {/* Student onboarding (standalone, no dashboard layout) */}
-            <Route path="/onboarding" element={
+            <Route path="/student/onboarding" element={
               <RoleProtectedRoute allowedRoles={['student']}>
                 <StudentOnboarding />
               </RoleProtectedRoute>
@@ -97,6 +99,8 @@ export default function App() {
               <Route path="profile" element={<StudentProfile />} />
               <Route path="recommendations" element={<StudentRecommendations />} />
               <Route path="search" element={<StudentSearch />} />
+              <Route path="saved" element={<StudentSaved />} />
+              <Route path="applications" element={<StudentApplications />} />
               <Route path="chat" element={<StudentChat />} />
               <Route path="settings" element={<StudentSettings />} />
             </Route>

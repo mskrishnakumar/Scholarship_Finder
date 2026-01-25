@@ -34,7 +34,7 @@ export default function StudentProfile() {
 
   const handleEditProfile = () => {
     // Navigate to onboarding wizard in edit mode
-    navigate('/onboarding?edit=true');
+    navigate('/student/onboarding?edit=true');
   };
 
   // Map category codes to display names
@@ -91,6 +91,50 @@ export default function StudentProfile() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      {/* Profile Completion Prompt - Shown at top for visibility */}
+      {!profileComplete && (
+        <Card padding="lg" className="bg-amber-50 border border-amber-200">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <svg
+                className="w-6 h-6 text-amber-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-amber-800">
+                {t('Complete Your Profile', 'अपनी प्रोफ़ाइल पूर्ण करें', 'உங்கள் சுயவிவரத்தை நிறைவு செய்யுங்கள்', 'మీ ప్రొఫైల్‌ను పూర్తి చేయండి')}
+              </h3>
+              <p className="mt-1 text-sm text-amber-700">
+                {t(
+                  'A complete profile helps us find better scholarship matches for you.',
+                  'एक पूर्ण प्रोफ़ाइल हमें आपके लिए बेहतर छात्रवृत्ति मिलान खोजने में मदद करती है।',
+                  'முழுமையான சுயவிவரம் உங்களுக்கு சிறந்த உதவித்தொகை பொருத்தங்களைக் கண்டறிய உதவுகிறது.',
+                  'పూర్తి ప్రొఫైల్ మీకు మెరుగైన స్కాలర్‌షిప్ సరిపోలికలను కనుగొనడంలో సహాయపడుతుంది.'
+                )}
+              </p>
+              <Button
+                variant="primary"
+                size="sm"
+                className="mt-3"
+                onClick={handleEditProfile}
+              >
+                {t('Complete Now', 'अभी पूर्ण करें', 'இப்போது நிறைவு செய்', 'ఇప్పుడు పూర్తి చేయండి')}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* Profile Header */}
       <Card padding="lg">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -232,49 +276,6 @@ export default function StudentProfile() {
         </div>
       </Card>
 
-      {/* Profile Completion Prompt */}
-      {!profileComplete && (
-        <Card padding="lg" className="bg-amber-50 border border-amber-200">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0">
-              <svg
-                className="w-6 h-6 text-amber-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-amber-800">
-                {t('Complete Your Profile', 'अपनी प्रोफ़ाइल पूर्ण करें', 'உங்கள் சுயவிவரத்தை நிறைவு செய்யுங்கள்', 'మీ ప్రొఫైల్‌ను పూర్తి చేయండి')}
-              </h3>
-              <p className="mt-1 text-sm text-amber-700">
-                {t(
-                  'A complete profile helps us find better scholarship matches for you.',
-                  'एक पूर्ण प्रोफ़ाइल हमें आपके लिए बेहतर छात्रवृत्ति मिलान खोजने में मदद करती है।',
-                  'முழுமையான சுயவிவரம் உங்களுக்கு சிறந்த உதவித்தொகை பொருத்தங்களைக் கண்டறிய உதவுகிறது.',
-                  'పూర్తి ప్రొఫైల్ మీకు మెరుగైన స్కాలర్‌షిప్ సరిపోలికలను కనుగొనడంలో సహాయపడుతుంది.'
-                )}
-              </p>
-              <Button
-                variant="primary"
-                size="sm"
-                className="mt-3"
-                onClick={handleEditProfile}
-              >
-                {t('Complete Now', 'अभी पूर्ण करें', 'இப்போது நிறைவு செய்', 'ఇప్పుడు పూర్తి చేయండి')}
-              </Button>
-            </div>
-          </div>
-        </Card>
-      )}
     </div>
   );
 }
