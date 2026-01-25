@@ -68,6 +68,8 @@ export interface StudentProfileData {
   income?: string
   gender?: string
   disability?: boolean
+  religion?: string
+  area?: string
   course?: string
 }
 

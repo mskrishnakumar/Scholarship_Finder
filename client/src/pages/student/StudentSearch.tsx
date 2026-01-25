@@ -259,6 +259,8 @@ export default function StudentSearch() {
     income: '',
     gender: '',
     disability: undefined,
+    religion: '',
+    area: '',
     course: '',
   });
 
@@ -306,6 +308,8 @@ export default function StudentSearch() {
         income: profile.income || '',
         gender: profile.gender || '',
         disability: profile.disability,
+        religion: profile.religion || '',
+        area: profile.area || '',
         course: profile.course || '',
       });
     }
@@ -511,9 +515,9 @@ export default function StudentSearch() {
               />
               <Dropdown
                 label={t('Area', 'क्षेत्र', 'பகுதி', 'ప్రాంతం')}
-                value={formData.disability === true ? 'true' : formData.disability === false ? 'false' : ''}
+                value={formData.area || ''}
                 options={AREA_OPTIONS}
-                onChange={(v) => updateField('disability', v === 'urban' ? false : v === 'rural' ? true : undefined)}
+                onChange={(v) => updateField('area', v)}
                 language={language}
               />
             </div>
@@ -582,9 +586,9 @@ export default function StudentSearch() {
               />
               <Dropdown
                 label={t('Religion', 'धर्म', 'மதம்', 'మతం')}
-                value={''}
+                value={formData.religion || ''}
                 options={RELIGION_OPTIONS}
-                onChange={() => {}}
+                onChange={(v) => updateField('religion', v)}
                 language={language}
               />
               <Dropdown

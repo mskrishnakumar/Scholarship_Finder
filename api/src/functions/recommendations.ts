@@ -1,6 +1,12 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { loadApprovedScholarships, Scholarship } from '../shared/scholarshipData.js'
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-user-id, x-user-role'
+}
+
 interface StudentProfile {
   state?: string
   category?: string
@@ -128,6 +134,14 @@ function scoreScholarship(scholarship: Scholarship, profile: StudentProfile): { 
 async function recommendations(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log('Recommendations endpoint called')
 
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return {
+      status: 204,
+      headers: CORS_HEADERS
+    }
+  }
+
   try {
     const body = await request.json() as StudentProfile
 
@@ -155,6 +169,7 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
 
     return {
       status: 200,
+      headers: CORS_HEADERS,
       jsonBody: {
         recommendations: scored,
         totalMatches: scored.length
@@ -164,13 +179,14 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
     context.error('Recommendations endpoint error:', error)
     return {
       status: 500,
+      headers: CORS_HEADERS,
       jsonBody: { error: 'Internal server error', details: error.message }
     }
   }
 }
 
 app.http('recommendations', {
-  methods: ['POST'],
+  methods: ['POST', 'OPTIONS'],
   authLevel: 'anonymous',
   handler: recommendations
 })
