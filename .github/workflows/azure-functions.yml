@@ -33,9 +33,13 @@ jobs:
           cd api
           npm run build
 
-      - name: Deploy to Azure Functions
+      - name: 'Login to Azure'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         with:
           app-name: 'scholarship-finder-api-b7h5ceeta6g4esde'
           package: './api'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONS_PUBLISH_PROFILE }}
