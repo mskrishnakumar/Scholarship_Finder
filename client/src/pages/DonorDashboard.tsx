@@ -104,7 +104,6 @@ export default function DonorDashboard() {
 
   const approvedCount = scholarships.filter(s => s.status === 'approved').length
   const pendingCount = scholarships.filter(s => s.status === 'pending').length
-  const rejectedCount = scholarships.filter(s => s.status === 'rejected').length
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">

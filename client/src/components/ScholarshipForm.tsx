@@ -310,7 +310,6 @@ export default function ScholarshipForm({ initialData, onSubmit, onCancel, loadi
             isAllSelected={isAllSelected('categories')}
             toggleCheckbox={toggleCheckbox}
             loading={loading}
-            t={t}
           />
 
           {/* Education Levels */}
@@ -323,7 +322,6 @@ export default function ScholarshipForm({ initialData, onSubmit, onCancel, loadi
             isAllSelected={isAllSelected('educationLevels')}
             toggleCheckbox={toggleCheckbox}
             loading={loading}
-            t={t}
           />
 
           {/* Max Income */}
@@ -378,7 +376,6 @@ export default function ScholarshipForm({ initialData, onSubmit, onCancel, loadi
             isAllSelected={isAllSelected('religion')}
             toggleCheckbox={toggleCheckbox}
             loading={loading}
-            t={t}
           />
 
           {/* Area */}
@@ -404,7 +401,6 @@ export default function ScholarshipForm({ initialData, onSubmit, onCancel, loadi
             isAllSelected={isAllSelected('courses')}
             toggleCheckbox={toggleCheckbox}
             loading={loading}
-            t={t}
           />
         </div>
       </div>
@@ -539,7 +535,7 @@ function RadioOption({ value, label, checked, onChange, disabled }: {
   )
 }
 
-function CheckboxGroupField({ label, options, selected, field, allLabel, isAllSelected, toggleCheckbox, loading, t }: {
+function CheckboxGroupField({ label, options, selected, field, allLabel, isAllSelected, toggleCheckbox, loading }: {
   label: string
   options: OnboardingOption[]
   selected: string[]
@@ -548,7 +544,6 @@ function CheckboxGroupField({ label, options, selected, field, allLabel, isAllSe
   isAllSelected: boolean
   toggleCheckbox: (field: 'states' | 'categories' | 'educationLevels' | 'religion' | 'courses', value: string) => void
   loading: boolean
-  t: (en: string, hi?: string, ta?: string, te?: string) => string
 }) {
   return (
     <div>

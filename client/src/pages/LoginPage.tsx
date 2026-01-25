@@ -344,14 +344,14 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
                     </label>
                     <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-2 space-y-1">
                       {INDIAN_STATES.map(state => (
-                        <label key={state} className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 rounded cursor-pointer">
+                        <label key={state.en} className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 rounded cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={geoPref.includes(state)}
-                            onChange={() => toggleGeoPref(state)}
+                            checked={geoPref.includes(state.en)}
+                            onChange={() => toggleGeoPref(state.en)}
                             className="w-3.5 h-3.5 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
                           />
-                          <span className="text-xs text-gray-700">{state}</span>
+                          <span className="text-xs text-gray-700">{state.en}</span>
                         </label>
                       ))}
                     </div>
