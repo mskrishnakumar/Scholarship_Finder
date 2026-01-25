@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../context/LanguageContext'
 import { useAuth } from '../../context/AuthContext'
 import { Card } from '../../components/common/Card'
-import { Button } from '../../components/common/Button'
 import ScholarshipForm from '../../components/ScholarshipForm'
 import {
   getScholarships,

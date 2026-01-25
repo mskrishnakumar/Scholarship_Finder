@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
   MagnifyingGlassIcon,
   PencilIcon,
@@ -32,7 +31,6 @@ type ViewMode = 'list' | 'create' | 'edit' | 'view'
 type StatusFilter = 'all' | ScholarshipStatus
 
 export default function AdminScholarships() {
-  const navigate = useNavigate()
   const { t } = useLanguage()
   const { user } = useAuth()
 

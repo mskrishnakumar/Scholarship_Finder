@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLanguage, Language } from '../../context/LanguageContext'
+import { useLanguage, type Language } from '../../context/LanguageContext'
 import { Card, CardHeader } from '../../components/common/Card'
 import { Button } from '../../components/common/Button'
 import {

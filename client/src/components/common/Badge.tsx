@@ -1,4 +1,4 @@
-import { HTMLAttributes, forwardRef } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 
 export type BadgeStatus = 'pending' | 'approved' | 'rejected';
 export type BadgeVariant = 'default' | 'primary' | 'accent' | 'success' | 'warning' | 'error';

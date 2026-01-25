@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 import { useAuth } from '../../context/AuthContext'
-import { Card, CardHeader } from '../../components/common/Card'
+import { Card } from '../../components/common/Card'
 import { Button } from '../../components/common/Button'
 import {
   BuildingOfficeIcon,
@@ -56,7 +56,7 @@ export default function DonorOrganization() {
         name: profile.name,
         description: '',
         website: '',
-        email: profile.email || '',
+        email: '',
         phone: '',
       }
       setFormData(initial)

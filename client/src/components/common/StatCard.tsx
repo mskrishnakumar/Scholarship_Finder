@@ -1,4 +1,4 @@
-import { HTMLAttributes, forwardRef } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 
 export interface StatCardProps extends HTMLAttributes<HTMLDivElement> {
   icon: React.ComponentType<{ className?: string }>;
