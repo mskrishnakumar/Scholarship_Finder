@@ -5,9 +5,36 @@ import type { UserRole } from './context/AuthContext'
 import LandingPage from './pages/LandingPage'
 import LoginPage, { LoginRedirect } from './pages/LoginPage'
 import StudentOnboarding from './pages/StudentOnboarding'
-import StudentDashboard from './pages/StudentDashboard'
-import DonorDashboard from './pages/DonorDashboard'
-import AdminDashboard from './pages/AdminDashboard'
+import NotFound from './pages/NotFound'
+import DashboardLayout from './components/layout/DashboardLayout'
+
+// Student pages
+import {
+  StudentDashboard,
+  StudentProfile,
+  StudentRecommendations,
+  StudentSearch,
+  StudentChat,
+  StudentSettings,
+} from './pages/student'
+
+// Donor pages
+import {
+  DonorDashboard,
+  DonorScholarships,
+  DonorScholarshipForm,
+  DonorOrganization,
+  DonorSettings,
+} from './pages/donor'
+
+// Admin pages
+import {
+  AdminDashboard,
+  AdminScholarships,
+  AdminPending,
+  AdminUsers,
+  AdminSettings,
+} from './pages/admin'
 
 const ROLE_HOME: Record<UserRole, string> = {
   student: '/student',
@@ -43,33 +70,66 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Public routes */}
             <Route path="/" element={<LandingPage />} />
+
             {/* Role-specific login routes */}
             <Route path="/login/student" element={<LoginPage pageRole="student" />} />
             <Route path="/login/donor" element={<LoginPage pageRole="donor" />} />
             <Route path="/login/admin" element={<LoginPage pageRole="admin" />} />
             {/* Backward-compat: /login?role=X redirects to /login/X */}
             <Route path="/login" element={<LoginRedirect />} />
-            <Route path="/student/onboarding" element={
+
+            {/* Student onboarding (standalone, no dashboard layout) */}
+            <Route path="/onboarding" element={
               <RoleProtectedRoute allowedRoles={['student']}>
                 <StudentOnboarding />
               </RoleProtectedRoute>
             } />
+
+            {/* Student routes with DashboardLayout */}
             <Route path="/student" element={
               <RoleProtectedRoute allowedRoles={['student']}>
-                <StudentDashboard />
+                <DashboardLayout role="student" />
               </RoleProtectedRoute>
-            } />
+            }>
+              <Route index element={<StudentDashboard />} />
+              <Route path="profile" element={<StudentProfile />} />
+              <Route path="recommendations" element={<StudentRecommendations />} />
+              <Route path="search" element={<StudentSearch />} />
+              <Route path="chat" element={<StudentChat />} />
+              <Route path="settings" element={<StudentSettings />} />
+            </Route>
+
+            {/* Donor routes with DashboardLayout */}
             <Route path="/donor" element={
               <RoleProtectedRoute allowedRoles={['donor']}>
-                <DonorDashboard />
+                <DashboardLayout role="donor" />
               </RoleProtectedRoute>
-            } />
+            }>
+              <Route index element={<DonorDashboard />} />
+              <Route path="scholarships" element={<DonorScholarships />} />
+              <Route path="scholarships/new" element={<DonorScholarshipForm />} />
+              <Route path="scholarships/:id" element={<DonorScholarshipForm />} />
+              <Route path="organization" element={<DonorOrganization />} />
+              <Route path="settings" element={<DonorSettings />} />
+            </Route>
+
+            {/* Admin routes with DashboardLayout */}
             <Route path="/admin" element={
               <RoleProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <DashboardLayout role="admin" />
               </RoleProtectedRoute>
-            } />
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="scholarships" element={<AdminScholarships />} />
+              <Route path="pending" element={<AdminPending />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+
+            {/* 404 catch-all */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

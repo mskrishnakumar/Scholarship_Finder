@@ -1,5 +1,26 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
+// --- Health Check ---
+
+export interface HealthCheckResponse {
+  status: string
+  timestamp: string
+  environment?: string
+}
+
+export async function checkHealth(): Promise<HealthCheckResponse> {
+  const res = await fetch(`${API_BASE}/health`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  if (!res.ok) {
+    throw new Error('Health check failed')
+  }
+  return res.json()
+}
+
+// --- Chat Types ---
+
 interface ChatResponse {
   message: string
   conversationId: string
