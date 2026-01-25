@@ -9,8 +9,7 @@ import {
   ClipboardDocumentListIcon,
   ChartBarIcon,
   UsersIcon,
-  ShieldCheckIcon,
-  BellIcon,
+  ClockIcon,
 } from '@heroicons/react/24/outline'
 import type { ComponentType, SVGProps } from 'react'
 
@@ -182,22 +181,13 @@ export const adminMenuConfig: MenuConfig = {
       icon: UsersIcon,
     },
     {
-      id: 'approvals',
-      label: 'Approvals',
-      labelHi: 'अनुमोदन',
-      labelTa: 'அங்கீகாரங்கள்',
-      labelTe: 'ఆమోదాలు',
-      path: '/admin/approvals',
-      icon: ShieldCheckIcon,
-    },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      labelHi: 'सूचनाएं',
-      labelTa: 'அறிவிப்புகள்',
-      labelTe: 'నోటిఫికేషన్లు',
-      path: '/admin/notifications',
-      icon: BellIcon,
+      id: 'pending',
+      label: 'Pending Approval',
+      labelHi: 'लंबित अनुमोदन',
+      labelTa: 'நிலுவையில் உள்ள அங்கீகாரம்',
+      labelTe: 'పెండింగ్ ఆమోదం',
+      path: '/admin/pending',
+      icon: ClockIcon,
     },
   ],
   secondary: [

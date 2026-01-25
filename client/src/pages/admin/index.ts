@@ -1,0 +1,5 @@
+export { default as AdminDashboard } from './AdminDashboard'
+export { default as AdminScholarships } from './AdminScholarships'
+export { default as AdminPending } from './AdminPending'
+export { default as AdminUsers } from './AdminUsers'
+export { default as AdminSettings } from './AdminSettings'
