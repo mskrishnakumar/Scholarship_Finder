@@ -44,15 +44,24 @@ export default function LandingPage() {
         <div className="max-w-4xl w-full text-center">
           {/* Hero Section */}
           <div className="mb-12">
+            {/* AI-Powered and BETA badges */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-teal-100 text-teal-800">
+                {t('AI-Powered', 'AI-संचालित', 'AI-இயக்கப்படும்', 'AI-ఆధారిత')}
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                BETA
+              </span>
+            </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               {t('Every Student Deserves a Chance', 'हर छात्र एक मौका पाने का हकदार है', 'ஒவ்வொரு மாணவரும் ஒரு வாய்ப்புக்கு தகுதியானவர்', 'ప్రతి విద్యార్థి ఒక అవకాశానికి అర్హుడు')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               {t(
-                'Find scholarships, fund education, or manage the platform.',
-                'छात्रवृत्ति खोजें, शिक्षा को फंड करें, या प्लेटफॉर्म प्रबंधित करें।',
-                'உதவித்தொகைகளைக் கண்டறியுங்கள், கல்விக்கு நிதியளியுங்கள் அல்லது தளத்தை நிர்வகியுங்கள்.',
-                'స్కాలర్‌షిప్‌లను కనుగొనండి, విద్యకు నిధులు అందించండి లేదా ప్లాట్‌ఫారమ్‌ను నిర్వహించండి.'
+                'An AI-powered platform that matches students with scholarships they qualify for. Built by volunteers, powered by AI. This is our beta - help us make it better!',
+                'एक AI-संचालित प्लेटफॉर्म जो छात्रों को उनकी योग्यता के अनुसार छात्रवृत्ति से जोड़ता है। स्वयंसेवकों द्वारा निर्मित, AI द्वारा संचालित। यह हमारा बीटा है - इसे बेहतर बनाने में मदद करें!',
+                'மாணவர்களை அவர்கள் தகுதியான உதவித்தொகைகளுடன் இணைக்கும் AI-இயக்கப்படும் தளம். தன்னார்வலர்களால் உருவாக்கப்பட்டது, AI மூலம் இயக்கப்படுகிறது. இது எங்கள் பீட்டா - இதை மேம்படுத்த உதவுங்கள்!',
+                'విద్యార్థులను వారు అర్హమైన స్కాలర్‌షిప్‌లతో అనుసంధానించే AI-ఆధారిత ప్లాట్‌ఫారమ్. వాలంటీర్లచే నిర్మించబడింది, AI ద్వారా నడుస్తుంది. ఇది మా బీటా - దీన్ని మెరుగుపరచడంలో సహాయపడండి!'
               )}
             </p>
           </div>
@@ -114,12 +123,113 @@ export default function LandingPage() {
               </p>
             </button>
           </div>
+
+          {/* Why Mission Possible? Section */}
+          <div className="mt-16">
+            <h3 className="text-xl font-semibold text-gray-700 mb-8">
+              {t('Why Mission Possible?', 'मिशन पॉसिबल क्यों?', 'மிஷன் பாசிபிள் ஏன்?', 'మిషన్ పాసిబుల్ ఎందుకు?')}
+            </h3>
+            <div className="grid md:grid-cols-4 gap-4">
+              {/* AI-Powered Matching */}
+              <div className="bg-white/70 rounded-xl p-5 text-center">
+                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">
+                  {t('AI-Powered Matching', 'AI-संचालित मिलान', 'AI-இயக்கப்படும் பொருத்தம்', 'AI-ఆధారిత మ్యాచింగ్')}
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {t(
+                    'Smart algorithms analyze your profile to find scholarships you qualify for',
+                    'स्मार्ट एल्गोरिदम आपकी प्रोफ़ाइल का विश्लेषण करके योग्य छात्रवृत्ति खोजते हैं',
+                    'ஸ்மார்ட் அல்காரிதம்கள் உங்கள் சுயவிவரத்தை பகுப்பாய்வு செய்து தகுதியான உதவித்தொகைகளைக் கண்டறியும்',
+                    'స్మార్ట్ అల్గారిథమ్‌లు మీ ప్రొఫైల్‌ను విశ్లేషించి మీరు అర్హమైన స్కాలర్‌షిప్‌లను కనుగొంటాయి'
+                  )}
+                </p>
+              </div>
+
+              {/* 50+ Scholarships */}
+              <div className="bg-white/70 rounded-xl p-5 text-center">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">
+                  {t('50+ Scholarships', '50+ छात्रवृत्तियां', '50+ உதவித்தொகைகள்', '50+ స్కాలర్‌షిప్‌లు')}
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {t(
+                    'Growing database of scholarships across India, from government to private',
+                    'सरकारी से लेकर निजी तक, पूरे भारत में छात्रवृत्तियों का बढ़ता डेटाबेस',
+                    'அரசு முதல் தனியார் வரை, இந்தியா முழுவதும் உதவித்தொகைகளின் வளரும் தரவுத்தளம்',
+                    'ప్రభుత్వం నుండి ప్రైవేట్ వరకు, భారతదేశం అంతటా స్కాలర్‌షిప్‌ల పెరుగుతున్న డేటాబేస్'
+                  )}
+                </p>
+              </div>
+
+              {/* Volunteer-Built */}
+              <div className="bg-white/70 rounded-xl p-5 text-center">
+                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">
+                  {t('Volunteer-Built', 'स्वयंसेवकों द्वारा निर्मित', 'தன்னார்வலர்களால் உருவாக்கப்பட்டது', 'వాలంటీర్లచే నిర్మించబడింది')}
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {t(
+                    'Created by a dedicated team passionate about education access',
+                    'शिक्षा तक पहुंच के प्रति समर्पित टीम द्वारा निर्मित',
+                    'கல்வி அணுகலில் ஆர்வமுள்ள அர்ப்பணிப்புள்ள குழுவால் உருவாக்கப்பட்டது',
+                    'విద్యా ప్రాప్యత పట్ల అంకితభావం కలిగిన బృందంచే సృష్టించబడింది'
+                  )}
+                </p>
+              </div>
+
+              {/* Your Feedback Matters */}
+              <div className="bg-white/70 rounded-xl p-5 text-center">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-1">
+                  {t('Your Feedback Matters', 'आपकी प्रतिक्रिया मायने रखती है', 'உங்கள் கருத்து முக்கியம்', 'మీ అభిప్రాయం ముఖ్యం')}
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {t(
+                    'Help us improve! Share bugs, ideas, or just say hello',
+                    'हमें बेहतर बनाने में मदद करें! बग, विचार साझा करें या बस नमस्ते कहें',
+                    'மேம்படுத்த உதவுங்கள்! பிழைகள், யோசனைகளைப் பகிரவும் அல்லது வணக்கம் சொல்லுங்கள்',
+                    'మెరుగుపరచడంలో సహాయపడండి! బగ్‌లు, ఆలోచనలు పంచుకోండి లేదా హలో చెప్పండి'
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-gray-500">
-        {t('Empowering students to find their path', 'छात्रों को उनका मार्ग खोजने में सशक्त बनाना', 'மாணவர்களுக்கு வழி காட்டுதல்', 'విద్యార్థులకు వారి మార్గం కనుగొనడంలో సహాయం')}
+      <footer className="py-6 text-center text-sm text-gray-500 border-t border-gray-200/50">
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <span>{t('Beta v0.1', 'बीटा v0.1', 'பீட்டா v0.1', 'బీటా v0.1')}</span>
+          <span className="text-gray-300">|</span>
+          <span>{t('Built by volunteers', 'स्वयंसेवकों द्वारा निर्मित', 'தன்னார்வலர்களால் உருவாக்கப்பட்டது', 'వాలంటీర్లచే నిర్మించబడింది')}</span>
+          <span className="text-gray-300">|</span>
+          <a
+            href="https://github.com/mskrishnakumar/Scholarship_Finder/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-teal-600 hover:text-teal-700 hover:underline"
+          >
+            {t('Share Feedback', 'प्रतिक्रिया दें', 'கருத்து தெரிவிக்கவும்', 'అభిప్రాయం పంచుకోండి')}
+          </a>
+        </div>
       </footer>
     </div>
   )
