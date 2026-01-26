@@ -36,6 +36,7 @@ interface AuthContextType {
   loading: boolean
   signUp: (email: string, password: string, name: string, role?: UserRole, extraData?: Record<string, unknown>) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
+  signInWithGoogle: (role?: UserRole) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   updateProfile: (data: Record<string, unknown>) => Promise<{ error: string | null }>
 }
@@ -108,8 +109,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null }
   }
 
+  const signInWithGoogle = async (role: UserRole = 'student'): Promise<{ error: string | null }> => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?role=${role}`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    })
+    if (error) {
+      return { error: error.message }
+    }
+    return { error: null }
+  }
+
   const signOut = async () => {
-    await supabase.auth.signOut()
+    // Sign out from all tabs/windows with scope: 'global'
+    const { error } = await supabase.auth.signOut({ scope: 'global' })
+    if (error) {
+      console.error('Sign out error:', error)
+    }
+    // Clear local state (onAuthStateChange will also trigger, but this ensures immediate update)
     setUser(null)
     setSession(null)
   }
@@ -125,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, role, profileComplete, donorProfileComplete, loading, signUp, signIn, signOut, updateProfile }}>
+    <AuthContext.Provider value={{ user, session, profile, role, profileComplete, donorProfileComplete, loading, signUp, signIn, signInWithGoogle, signOut, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

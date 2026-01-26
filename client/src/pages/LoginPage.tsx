@@ -12,13 +12,14 @@ interface LoginPageProps {
 export default function LoginPage({ pageRole }: LoginPageProps) {
   const navigate = useNavigate()
   const { t } = useLanguage()
-  const { signUp, signIn, user, role, profileComplete } = useAuth()
+  const { signUp, signIn, signInWithGoogle, user, role, profileComplete } = useAuth()
 
   const [mode, setMode] = useState<'signup' | 'signin'>(pageRole === 'admin' ? 'signin' : 'signup')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // Donor org field - only organization name at signup
@@ -34,6 +35,17 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
 
   if (user) {
     return <Navigate to={getPostLoginRedirect(role, profileComplete)} replace />
+  }
+
+  const handleGoogleSignIn = async () => {
+    setError(null)
+    setGoogleLoading(true)
+    const result = await signInWithGoogle(pageRole)
+    if (result.error) {
+      setError(result.error)
+      setGoogleLoading(false)
+    }
+    // If successful, user will be redirected to Google OAuth
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -152,6 +164,71 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
               </h2>
             )}
 
+            {/* Google OAuth - only for students (not admin or donor) */}
+            {pageRole === 'student' && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={googleLoading}
+                  className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 py-2.5 px-4 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {googleLoading ? (
+                    <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      />
+                    </svg>
+                  )}
+                  {t('Continue with Google', 'Google से जारी रखें', 'Google உடன் தொடரவும்', 'Google తో కొనసాగించండి')}
+                </button>
+
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-4 bg-white text-gray-500">
+                      {t('or', 'या', 'அல்லது', 'లేదా')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Email/Password section header */}
+                <p className="text-sm text-gray-600 text-center mb-4">
+                  {mode === 'signup'
+                    ? t(
+                        'Create a Scholarship Finder account',
+                        'Scholarship Finder खाता बनाएं',
+                        'Scholarship Finder கணக்கை உருவாக்கவும்',
+                        'Scholarship Finder ఖాతాను సృష్టించండి'
+                      )
+                    : t(
+                        'Sign in with your Scholarship Finder account',
+                        'अपने Scholarship Finder खाते से साइन इन करें',
+                        'உங்கள் Scholarship Finder கணக்கில் உள்நுழையவும்',
+                        'మీ Scholarship Finder ఖాతాతో సైన్ ఇన్ చేయండి'
+                      )
+                  }
+                </p>
+              </>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name - signup only */}
               {mode === 'signup' && (
@@ -209,10 +286,10 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
                 {mode === 'signup' && (
                   <p className="mt-1.5 text-xs text-gray-500">
                     {t(
-                      'Create a new password for this account (not your email password). Minimum 6 characters.',
-                      'इस खाते के लिए एक नया पासवर्ड बनाएं (आपका ईमेल पासवर्ड नहीं)। न्यूनतम 6 अक्षर।',
-                      'இந்த கணக்கிற்கு புதிய கடவுச்சொல்லை உருவாக்கவும் (உங்கள் மின்னஞ்சல் கடவுச்சொல் அல்ல). குறைந்தபட்சம் 6 எழுத்துக்கள்.',
-                      'ఈ ఖాతా కోసం కొత్త పాస్‌వర్డ్ సృష్టించండి (మీ ఇమెయిల్ పాస్‌వర్డ్ కాదు). కనీసం 6 అక్షరాలు.'
+                      'This password is only for Scholarship Finder (not your Google or email password). Minimum 6 characters.',
+                      'यह पासवर्ड केवल Scholarship Finder के लिए है (आपका Google या ईमेल पासवर्ड नहीं)। न्यूनतम 6 अक्षर।',
+                      'இந்த கடவுச்சொல் Scholarship Finder க்கு மட்டுமே (உங்கள் Google அல்லது மின்னஞ்சல் கடவுச்சொல் அல்ல). குறைந்தபட்சம் 6 எழுத்துக்கள்.',
+                      'ఈ పాస్‌వర్డ్ Scholarship Finder కోసం మాత్రమే (మీ Google లేదా ఇమెయిల్ పాస్‌వర్డ్ కాదు). కనీసం 6 అక్షరాలు.'
                     )}
                   </p>
                 )}

@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import type { UserRole } from './context/AuthContext'
 import LandingPage from './pages/LandingPage'
 import LoginPage, { LoginRedirect } from './pages/LoginPage'
+import AuthCallback from './pages/AuthCallback'
 import StudentOnboarding from './pages/StudentOnboarding'
 import NotFound from './pages/NotFound'
 import DashboardLayout from './components/layout/DashboardLayout'
@@ -81,6 +82,9 @@ export default function App() {
             <Route path="/login/admin" element={<LoginPage pageRole="admin" />} />
             {/* Backward-compat: /login?role=X redirects to /login/X */}
             <Route path="/login" element={<LoginRedirect />} />
+
+            {/* OAuth callback route */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
             {/* Student onboarding (standalone, no dashboard layout) */}
             <Route path="/student/onboarding" element={
