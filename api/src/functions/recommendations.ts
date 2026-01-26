@@ -121,13 +121,16 @@ function scoreScholarship(scholarship: Scholarship, profile: StudentProfile): { 
   const reasons: string[] = []
   const elig = scholarship.eligibility
 
-  // State match (+15)
+  // State match (+25 for state-specific, +10 for 'all' states)
+  // State-specific scholarships get higher priority to surface local opportunities
   if (profile.state) {
-    if (elig.states.includes('all') || elig.states.includes(profile.state)) {
-      score += 15
-      if (!elig.states.includes('all')) {
-        reasons.push(`Available in ${profile.state}`)
-      }
+    if (elig.states.includes(profile.state) && !elig.states.includes('all')) {
+      // State-specific scholarship - higher bonus
+      score += 25
+      reasons.push(`Specifically for ${profile.state}`)
+    } else if (elig.states.includes('all') || elig.states.includes(profile.state)) {
+      // Available nationwide or includes the state
+      score += 10
     }
   }
 
