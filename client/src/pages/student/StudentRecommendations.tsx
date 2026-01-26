@@ -159,7 +159,7 @@ export default function StudentRecommendations() {
             {t('Something went wrong', 'कुछ गलत हो गया', 'ஏதோ தவறு ஏற்பட்டது', 'ఏదో తప్పు జరిగింది')}
           </h2>
           <p className="text-text-secondary mb-6">{error}</p>
-          <Button variant="primary" onClick={fetchRecommendations} isLoading={loading}>
+          <Button variant="primary" onClick={() => fetchRecommendations()} isLoading={loading}>
             {t('Try Again', 'पुनः प्रयास करें', 'மீண்டும் முயற்சிக்கவும்', 'మళ్ళీ ప్రయత్నించండి')}
           </Button>
         </Card>
@@ -183,7 +183,7 @@ export default function StudentRecommendations() {
         </div>
         <Button
           variant="secondary"
-          onClick={fetchRecommendations}
+          onClick={() => fetchRecommendations()}
           isLoading={loading}
         >
           {t('Refresh', 'रिफ्रेश', 'புதுப்பி', 'రిఫ్రెష్')}
