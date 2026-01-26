@@ -87,3 +87,22 @@
 **Context:** Need a clear entry point that separates student and admin experiences.
 **Decision:** Create a landing page with distinct Student and Admin login options, backed by Supabase auth.
 **Rationale:** Different roles have different needs (students search scholarships, admins manage data). A clear landing page with role selection sets expectations and routes users to the appropriate experience.
+
+---
+
+## ADR-011: Google OAuth for Student Authentication
+
+**Status:** Accepted
+**Context:** Students may find email/password signup friction-heavy, especially on mobile devices. Many students already have Google accounts.
+**Decision:** Add Google OAuth as an authentication option for students, alongside the existing email/password method.
+**Rationale:**
+- Reduces signup friction for students (one-click sign-in)
+- Most students already have Google accounts
+- Supabase provides built-in OAuth support with minimal code changes
+- Google OAuth is not offered for Donors/Admins as these require more deliberate account creation
+
+**Implementation Notes:**
+- Uses Supabase's `signInWithOAuth` with Google provider
+- Callback page (`/auth/callback`) handles role assignment for new users
+- New Google users are assigned `role: 'student'` and redirected to onboarding
+- Returning users are redirected directly to dashboard

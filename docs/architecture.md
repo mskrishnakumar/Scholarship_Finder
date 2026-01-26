@@ -49,8 +49,8 @@
 
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Supabase                                  │
-│  - Authentication (Email/Password)                               │
-│  - Roles: Student, Admin                                         │
+│  - Authentication (Email/Password + Google OAuth for Students)   │
+│  - Roles: Student, Donor, Admin                                  │
 │  - Session management                                            │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -78,11 +78,21 @@
 ## Authentication Flow
 
 1. User lands on the landing page
-2. Chooses Student or Admin login
-3. Supabase handles authentication (email/password)
-4. JWT token stored in client, sent with API requests
-5. Azure Functions validate the token for protected routes
-6. Admin role grants access to scholarship data management (future)
+2. Chooses Student, Donor, or Admin login
+3. Supabase handles authentication:
+   - Students: Google OAuth or Email/Password
+   - Donors: Email/Password
+   - Admins: Email/Password
+4. For Google OAuth (students only):
+   - User redirected to Google consent screen
+   - After approval, redirected to `/auth/callback`
+   - Callback page sets role and redirects to onboarding (new) or dashboard (returning)
+5. JWT token stored in client, user ID/role sent with API requests via headers
+6. Azure Functions validate headers for protected routes
+7. Role-based access:
+   - Students: Search scholarships, chat, recommendations
+   - Donors: Create/manage private scholarships
+   - Admins: Approve scholarships, manage users
 
 ## Embedding Strategy
 
