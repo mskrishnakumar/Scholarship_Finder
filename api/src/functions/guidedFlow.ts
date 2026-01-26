@@ -224,7 +224,7 @@ async function guidedFlow(request: HttpRequest, context: InvocationContext): Pro
     if (answers.area) filters.area = answers.area
     if (answers.course && answers.course !== 'other') filters.course = answers.course
 
-    const matchingScholarships = filterScholarships(filters)
+    const matchingScholarships = await filterScholarships(filters)
 
     return {
       status: 200,

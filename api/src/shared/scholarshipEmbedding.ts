@@ -12,12 +12,15 @@
  * - File-based persistence with append support
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs'
-import { join } from 'path'
 import { createHash } from 'crypto'
 import { Scholarship } from './scholarshipData.js'
 import { EmbeddingRecord } from './embeddings.js'
 import { getEmbedding } from './openai.js'
+import {
+  saveEmbeddingToTable,
+  loadEmbeddingsFromTable,
+  deleteEmbeddingFromTable
+} from './tableStorage.js'
 
 // Current embedding schema version - increment when text format changes
 export const EMBEDDING_VERSION = '1.1.0'
@@ -166,34 +169,17 @@ export function generateTextHash(text: string): string {
 }
 
 /**
- * Gets the path to the embeddings file.
+ * Loads all embeddings from Table Storage.
  */
-function getEmbeddingsPath(): string {
-  return join(__dirname, '..', '..', 'data', 'embeddings.json')
+export async function loadEmbeddingsFromStorage(): Promise<EmbeddingRecord[]> {
+  return await loadEmbeddingsFromTable() as EmbeddingRecord[]
 }
 
 /**
- * Loads all embeddings from file.
+ * Saves a single embedding to Table Storage.
  */
-export function loadEmbeddingsFromFile(): EmbeddingRecord[] {
-  const filePath = getEmbeddingsPath()
-  if (!existsSync(filePath)) {
-    return []
-  }
-  try {
-    const data = readFileSync(filePath, 'utf-8')
-    return JSON.parse(data) as EmbeddingRecord[]
-  } catch {
-    return []
-  }
-}
-
-/**
- * Saves all embeddings to file.
- */
-export function saveEmbeddingsToFile(embeddings: EmbeddingRecord[]): void {
-  const filePath = getEmbeddingsPath()
-  writeFileSync(filePath, JSON.stringify(embeddings, null, 2), 'utf-8')
+export async function saveEmbeddingToStorage(embedding: EmbeddingRecord): Promise<void> {
+  await saveEmbeddingToTable(embedding)
 }
 
 /**
@@ -225,7 +211,7 @@ export async function generateScholarshipEmbedding(
 }
 
 /**
- * Generates embedding for a scholarship and appends it to the embeddings file.
+ * Generates embedding for a scholarship and saves it to Table Storage.
  * If an embedding already exists for this ID, it will be replaced.
  */
 export async function generateAndSaveScholarshipEmbedding(
@@ -234,35 +220,17 @@ export async function generateAndSaveScholarshipEmbedding(
   const record = await generateScholarshipEmbedding(scholarship)
   if (!record) return null
 
-  // Load existing embeddings
-  const embeddings = loadEmbeddingsFromFile()
-
-  // Remove existing embedding for this ID if present
-  const existingIndex = embeddings.findIndex(e => e.id === scholarship.id)
-  if (existingIndex >= 0) {
-    embeddings[existingIndex] = record
-  } else {
-    embeddings.push(record)
-  }
-
-  // Save back to file
-  saveEmbeddingsToFile(embeddings)
+  // Save to Table Storage (upsert handles replacement)
+  await saveEmbeddingToStorage(record)
 
   return record
 }
 
 /**
- * Removes embedding for a scholarship from the embeddings file.
+ * Removes embedding for a scholarship from Table Storage.
  */
-export function removeScholarshipEmbedding(scholarshipId: string): boolean {
-  const embeddings = loadEmbeddingsFromFile()
-  const index = embeddings.findIndex(e => e.id === scholarshipId)
-
-  if (index < 0) return false
-
-  embeddings.splice(index, 1)
-  saveEmbeddingsToFile(embeddings)
-  return true
+export async function removeScholarshipEmbedding(scholarshipId: string): Promise<boolean> {
+  return await deleteEmbeddingFromTable(scholarshipId)
 }
 
 /**

@@ -42,7 +42,7 @@ async function createScholarship(request: HttpRequest, _context: InvocationConte
       updatedAt: now
     }
 
-    savePrivateScholarship(scholarship)
+    await savePrivateScholarship(scholarship)
 
     // Generate embedding on-demand if scholarship is approved
     // This runs async and doesn't block the response
@@ -63,7 +63,7 @@ async function createScholarship(request: HttpRequest, _context: InvocationConte
 async function listScholarships(request: HttpRequest, _context: InvocationContext): Promise<HttpResponseInit> {
   try {
     const user = requireRole(request, ['donor', 'admin'])
-    let results = loadAllScholarships()
+    let results = await loadAllScholarships()
 
     const typeFilter = request.query.get('type')
     const statusFilter = request.query.get('status')
@@ -89,7 +89,7 @@ async function updateScholarship(request: HttpRequest, _context: InvocationConte
   try {
     const user = requireRole(request, ['donor', 'admin'])
     const id = request.params.id
-    const all = loadAllScholarships()
+    const all = await loadAllScholarships()
     const existing = all.find(s => s.id === id)
 
     if (!existing) return { status: 404, jsonBody: { error: 'Not found' } }
@@ -106,7 +106,7 @@ async function updateScholarship(request: HttpRequest, _context: InvocationConte
       updatedAt: new Date().toISOString()
     }
 
-    savePrivateScholarship(updated)
+    await savePrivateScholarship(updated)
 
     // Regenerate embedding if scholarship is approved (content may have changed)
     if (updated.status === 'approved') {
@@ -126,7 +126,7 @@ async function removeScholarship(request: HttpRequest, _context: InvocationConte
   try {
     const user = requireRole(request, ['donor', 'admin'])
     const id = request.params.id
-    const all = loadAllScholarships()
+    const all = await loadAllScholarships()
     const existing = all.find(s => s.id === id)
 
     if (!existing) return { status: 404, jsonBody: { error: 'Not found' } }
@@ -134,10 +134,10 @@ async function removeScholarship(request: HttpRequest, _context: InvocationConte
       return { status: 403, jsonBody: { error: 'Forbidden' } }
     }
 
-    deletePrivateScholarship(id)
+    await deletePrivateScholarship(id)
 
     // Remove embedding when scholarship is deleted
-    removeScholarshipEmbedding(id)
+    await removeScholarshipEmbedding(id)
 
     return { status: 204 }
   } catch (err) {
@@ -150,7 +150,7 @@ async function updateStatus(request: HttpRequest, _context: InvocationContext): 
   try {
     requireRole(request, ['admin'])
     const id = request.params.id
-    const all = loadAllScholarships()
+    const all = await loadAllScholarships()
     const existing = all.find(s => s.id === id)
 
     if (!existing) return { status: 404, jsonBody: { error: 'Not found' } }
@@ -161,7 +161,7 @@ async function updateStatus(request: HttpRequest, _context: InvocationContext): 
     }
 
     const updated: Scholarship = { ...existing, status: body.status, updatedAt: new Date().toISOString() }
-    savePrivateScholarship(updated)
+    await savePrivateScholarship(updated)
 
     // Generate embedding when scholarship is newly approved
     if (body.status === 'approved' && existing.status !== 'approved') {
@@ -171,7 +171,9 @@ async function updateStatus(request: HttpRequest, _context: InvocationContext): 
     }
     // Remove embedding if scholarship is rejected or moved to pending
     else if (body.status !== 'approved' && existing.status === 'approved') {
-      removeScholarshipEmbedding(updated.id)
+      removeScholarshipEmbedding(updated.id).catch(err => {
+        console.error(`Failed to remove embedding for scholarship ${updated.id}:`, err)
+      })
     }
 
     return { status: 200, jsonBody: updated }

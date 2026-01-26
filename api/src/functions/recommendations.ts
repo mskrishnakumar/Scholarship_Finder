@@ -352,7 +352,7 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
     const body = await request.json() as RecommendationRequest
     const useSemanticMatching = body.useSemanticMatching ?? false
 
-    const allScholarships = loadApprovedScholarships()
+    const allScholarships = await loadApprovedScholarships()
 
     // Load embeddings and build lookup map
     let embeddingMap = new Map<string, number[]>()
