@@ -976,7 +976,7 @@
     "name": "Kerala e-Grantz Scholarship for SC/ST Students",
     "description": "Kerala state scholarship providing full fee concession and stipend to SC/ST students pursuing higher education in recognized institutions within Kerala.",
     "eligibility": {
-      "states": ["other"],
+      "states": ["Kerala"],
       "categories": ["SC", "ST"],
       "maxIncome": null,
       "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
@@ -1003,7 +1003,7 @@
     "name": "Jharkhand e-Kalyan Post-Matric Scholarship",
     "description": "Jharkhand state scholarship for SC/ST/OBC students providing tuition fee reimbursement and living allowance for students pursuing higher education.",
     "eligibility": {
-      "states": ["other"],
+      "states": ["Jharkhand"],
       "categories": ["SC", "ST", "OBC"],
       "maxIncome": 250000,
       "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate"],
@@ -1030,7 +1030,7 @@
     "name": "Himachal Pradesh IRDP Post-Matric Scholarship",
     "description": "Himachal Pradesh scholarship for SC/ST/OBC and BPL students providing financial support for post-matric education including professional courses.",
     "eligibility": {
-      "states": ["other"],
+      "states": ["Himachal Pradesh"],
       "categories": ["SC", "ST", "OBC"],
       "maxIncome": 200000,
       "educationLevels": ["class_11", "class_12", "undergraduate", "postgraduate", "professional"],
