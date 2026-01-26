@@ -13,11 +13,13 @@ import {
   ClockIcon,
   PlusCircleIcon,
   ListBulletIcon,
+  ExclamationTriangleIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline'
 
 export default function DonorDashboard() {
   const { t } = useLanguage()
-  const { user } = useAuth()
+  const { user, donorProfileComplete } = useAuth()
 
   const [scholarships, setScholarships] = useState<ScholarshipFull[]>([])
   const [loading, setLoading] = useState(true)
@@ -77,6 +79,46 @@ export default function DonorDashboard() {
             </svg>
           </button>
         </div>
+      )}
+
+      {/* Profile Completion Reminder Card */}
+      {!donorProfileComplete && (
+        <Card padding="lg">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <ExclamationTriangleIcon className="w-6 h-6 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900 mb-1">
+                {t(
+                  'Complete Your Organization Profile',
+                  'अपनी संगठन प्रोफ़ाइल पूरी करें',
+                  'உங்கள் நிறுவன சுயவிவரத்தை பூர்த்தி செய்யுங்கள்',
+                  'మీ సంస్థ ప్రొఫైల్‌ను పూర్తి చేయండి'
+                )}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                {t(
+                  'Please complete your organization profile before adding scholarships. This helps students learn more about your organization.',
+                  'छात्रवृत्ति जोड़ने से पहले कृपया अपनी संगठन प्रोफ़ाइल पूरी करें। इससे छात्रों को आपके संगठन के बारे में अधिक जानने में मदद मिलती है।',
+                  'உதவித்தொகைகளைச் சேர்ப்பதற்கு முன் உங்கள் நிறுவன சுயவிவரத்தை பூர்த்தி செய்யவும். இது மாணவர்கள் உங்கள் நிறுவனத்தைப் பற்றி மேலும் அறிய உதவுகிறது.',
+                  'స్కాలర్‌షిప్‌లను జోడించడానికి ముందు మీ సంస్థ ప్రొఫైల్‌ను పూర్తి చేయండి. ఇది విద్యార్థులు మీ సంస్థ గురించి మరింత తెలుసుకోవడానికి సహాయపడుతుంది.'
+                )}
+              </p>
+              <Link to="/donor/organization">
+                <Button>
+                  <UserCircleIcon className="w-5 h-5 mr-2" />
+                  {t(
+                    'Complete Profile',
+                    'प्रोफ़ाइल पूरी करें',
+                    'சுயவிவரத்தை பூர்த்தி செய்',
+                    'ప్రొఫైల్ పూర్తి చేయండి'
+                  )}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
       )}
 
       {/* Stats Cards */}

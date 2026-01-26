@@ -4,25 +4,6 @@ import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import type { UserRole } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
-import { INDIAN_STATES } from '../constants/states'
-
-const ORG_TYPES = [
-  { value: 'corporate', labelKey: ['Corporate', 'कॉर्पोरेट', 'கார்ப்பரேட்', 'కార్పొరేట్'] },
-  { value: 'ngo', labelKey: ['NGO / Foundation', 'एनजीओ / फाउंडेशन', 'என்ஜிஓ / அறக்கட்டளை', 'ఎన్జీవో / ఫౌండేషన్'] },
-  { value: 'individual', labelKey: ['Individual Philanthropist', 'व्यक्तिगत परोपकारी', 'தனிநபர் பரோபகாரி', 'వ్యక్తిగత దాత'] },
-  { value: 'trust', labelKey: ['Trust', 'ट्रस्ट', 'அறக்கட்டளை', 'ట్రస్ట్'] },
-  { value: 'government', labelKey: ['Government Body', 'सरकारी निकाय', 'அரசு அமைப்பு', 'ప్రభుత్వ సంస్థ'] }
-]
-
-const FOCUS_AREAS = [
-  { value: 'SC', labelKey: ['SC', 'अनुसूचित जाति', 'எஸ்சி', 'ఎస్సీ'] },
-  { value: 'ST', labelKey: ['ST', 'अनुसूचित जनजाति', 'எஸ்டி', 'ఎస్టీ'] },
-  { value: 'OBC', labelKey: ['OBC', 'अन्य पिछड़ा वर्ग', 'ஓபிசி', 'ఓబీసీ'] },
-  { value: 'Minority', labelKey: ['Minority', 'अल्पसंख्यक', 'சிறுபான்மையினர்', 'మైనారిటీ'] },
-  { value: 'General', labelKey: ['General', 'सामान्य', 'பொது', 'జనరల్'] },
-  { value: 'Disability', labelKey: ['Disability', 'विकलांगता', 'மாற்றுத்திறன்', 'వికలాంగులు'] },
-  { value: 'Women', labelKey: ['Women', 'महिला', 'பெண்கள்', 'మహిళలు'] }
-]
 
 interface LoginPageProps {
   pageRole: UserRole
@@ -40,13 +21,8 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Donor org fields
+  // Donor org field - only organization name at signup
   const [orgName, setOrgName] = useState('')
-  const [orgType, setOrgType] = useState('')
-  const [designation, setDesignation] = useState('')
-  const [orgWebsite, setOrgWebsite] = useState('')
-  const [focusAreas, setFocusAreas] = useState<string[]>([])
-  const [geoPref, setGeoPref] = useState<string[]>([])
 
   const getPostLoginRedirect = (r: UserRole | null, isProfileComplete: boolean) => {
     if (r === 'student' && !isProfileComplete) return '/student/onboarding'
@@ -75,17 +51,9 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
           setSubmitting(false)
           return
         }
-        if (!orgType) {
-          setError(t('Organization type is required', 'संगठन का प्रकार आवश्यक है', 'நிறுவன வகை தேவை', 'సంస్థ రకం అవసరం'))
-          setSubmitting(false)
-          return
-        }
         extraData.organizationName = orgName.trim()
-        extraData.organizationType = orgType
-        if (designation.trim()) extraData.designation = designation.trim()
-        if (orgWebsite.trim()) extraData.organizationWebsite = orgWebsite.trim()
-        if (focusAreas.length > 0) extraData.focusAreas = focusAreas
-        if (geoPref.length > 0) extraData.geographicPreference = geoPref
+        // donorProfileComplete will be set to true when they fill out the full profile in the portal
+        extraData.donorProfileComplete = false
       }
       result = await signUp(email, password, name, pageRole, extraData)
     } else {
@@ -96,14 +64,6 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
     if (result.error) {
       setError(result.error)
     }
-  }
-
-  const toggleFocusArea = (val: string) => {
-    setFocusAreas(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
-  }
-
-  const toggleGeoPref = (val: string) => {
-    setGeoPref(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
   }
 
   const roleLabel = pageRole === 'student'
@@ -258,118 +218,28 @@ export default function LoginPage({ pageRole }: LoginPageProps) {
                 )}
               </div>
 
-              {/* Donor Organization Fields - signup only */}
+              {/* Donor Organization Name - signup only */}
               {mode === 'signup' && pageRole === 'donor' && (
-                <div className="border-t border-gray-200 pt-4 mt-4 space-y-4">
-                  <h3 className="text-sm font-semibold text-gray-800">
-                    {t('Organization Details', 'संगठन विवरण', 'நிறுவன விவரங்கள்', 'సంస్థ వివరాలు')}
-                  </h3>
-
-                  {/* Organization Name */}
-                  <div>
-                    <label htmlFor="orgName" className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('Organization Name', 'संगठन का नाम', 'நிறுவனத்தின் பெயர்', 'సంస్థ పేరు')} *
-                    </label>
-                    <input
-                      id="orgName"
-                      type="text"
-                      value={orgName}
-                      onChange={e => setOrgName(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-shadow text-sm"
-                      placeholder={t('Enter organization name', 'संगठन का नाम दर्ज करें', 'நிறுவனத்தின் பெயரை உள்ளிடவும்', 'సంస్థ పేరును నమోదు చేయండి')}
-                    />
-                  </div>
-
-                  {/* Organization Type */}
-                  <div>
-                    <label htmlFor="orgType" className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('Organization Type', 'संगठन का प्रकार', 'நிறுவன வகை', 'సంస్థ రకం')} *
-                    </label>
-                    <select
-                      id="orgType"
-                      value={orgType}
-                      onChange={e => setOrgType(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-shadow text-sm bg-white"
-                    >
-                      <option value="">{t('Select type...', 'प्रकार चुनें...', 'வகையைத் தேர்ந்தெடுக்கவும்...', 'రకాన్ని ఎంచుకోండి...')}</option>
-                      {ORG_TYPES.map(o => (
-                        <option key={o.value} value={o.value}>{t(o.labelKey[0], o.labelKey[1], o.labelKey[2], o.labelKey[3])}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Designation */}
-                  <div>
-                    <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('Your Designation', 'आपका पदनाम', 'உங்கள் பதவி', 'మీ హోదా')}
-                    </label>
-                    <input
-                      id="designation"
-                      type="text"
-                      value={designation}
-                      onChange={e => setDesignation(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-shadow text-sm"
-                      placeholder={t('e.g. CSR Manager, Trustee', 'जैसे सीएसआर मैनेजर, ट्रस्टी', 'எ.கா. CSR மேலாளர், அறங்காவலர்', 'ఉదా. CSR మేనేజర్, ట్రస్టీ')}
-                    />
-                  </div>
-
-                  {/* Organization Website */}
-                  <div>
-                    <label htmlFor="orgWebsite" className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('Organization Website', 'संगठन वेबसाइट', 'நிறுவன இணையதளம்', 'సంస్థ వెబ్‌సైట్')}
-                    </label>
-                    <input
-                      id="orgWebsite"
-                      type="url"
-                      value={orgWebsite}
-                      onChange={e => setOrgWebsite(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-shadow text-sm"
-                      placeholder="https://example.org"
-                    />
-                  </div>
-
-                  {/* Focus Areas */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('Focus Areas', 'फोकस क्षेत्र', 'கவன பகுதிகள்', 'ఫోకస్ ఏరియాలు')}
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {FOCUS_AREAS.map(fa => (
-                        <button
-                          key={fa.value}
-                          type="button"
-                          onClick={() => toggleFocusArea(fa.value)}
-                          className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                            focusAreas.includes(fa.value)
-                              ? 'bg-amber-100 border-amber-300 text-amber-800'
-                              : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                          }`}
-                        >
-                          {t(fa.labelKey[0], fa.labelKey[1], fa.labelKey[2], fa.labelKey[3])}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Geographic Preference */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('Geographic Preference', 'भौगोलिक प्राथमिकता', 'புவியியல் விருப்பம்', 'భౌగోళిక ప్రాధాన్యత')}
-                    </label>
-                    <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-2 space-y-1">
-                      {INDIAN_STATES.map(state => (
-                        <label key={state.en} className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 rounded cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={geoPref.includes(state.en)}
-                            onChange={() => toggleGeoPref(state.en)}
-                            className="w-3.5 h-3.5 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                          />
-                          <span className="text-xs text-gray-700">{state.en}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+                <div>
+                  <label htmlFor="orgName" className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('Organization Name', 'संगठन का नाम', 'நிறுவனத்தின் பெயர்', 'సంస్థ పేరు')} *
+                  </label>
+                  <input
+                    id="orgName"
+                    type="text"
+                    value={orgName}
+                    onChange={e => setOrgName(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-shadow text-sm"
+                    placeholder={t('Enter organization name', 'संगठन का नाम दर्ज करें', 'நிறுவனத்தின் பெயரை உள்ளிடவும்', 'సంస్థ పేరును నమోదు చేయండి')}
+                  />
+                  <p className="mt-1.5 text-xs text-gray-500">
+                    {t(
+                      'You can complete your full organization profile after signing up.',
+                      'साइन अप के बाद आप अपनी पूरी संगठन प्रोफ़ाइल पूरी कर सकते हैं।',
+                      'பதிவு செய்த பிறகு உங்கள் முழு நிறுவன விவரங்களை பூர்த்தி செய்யலாம்.',
+                      'సైన్ అప్ చేసిన తర్వాత మీ పూర్తి సంస్థ ప్రొఫైల్‌ను పూర్తి చేయవచ్చు.'
+                    )}
+                  </p>
                 </div>
               )}
 

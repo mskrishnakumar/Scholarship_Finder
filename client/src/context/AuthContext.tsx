@@ -32,6 +32,7 @@ interface AuthContextType {
   profile: UserProfile | null
   role: UserRole | null
   profileComplete: boolean
+  donorProfileComplete: boolean
   loading: boolean
   signUp: (email: string, password: string, name: string, role?: UserRole, extraData?: Record<string, unknown>) => Promise<{ error: string | null }>
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const role: UserRole | null = user?.user_metadata?.role || (user ? 'student' : null)
   const profileComplete: boolean = user?.user_metadata?.profileComplete ?? false
+  const donorProfileComplete: boolean = user?.user_metadata?.donorProfileComplete ?? false
 
   const profile: UserProfile | null = user?.user_metadata
     ? {
@@ -123,7 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, role, profileComplete, loading, signUp, signIn, signOut, updateProfile }}>
+    <AuthContext.Provider value={{ user, session, profile, role, profileComplete, donorProfileComplete, loading, signUp, signIn, signOut, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )
