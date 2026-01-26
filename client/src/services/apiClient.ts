@@ -300,16 +300,25 @@ export interface RecommendedScholarship {
   requiredDocuments: string[]
   officialUrl: string
   matchScore: number
+  eligibilityScore?: number
+  semanticScore?: number
   matchReasons: string[]
+  eligibilityWarnings?: string[]
+}
+
+export interface RecommendationsRequest extends StudentProfileData {
+  useSemanticMatching?: boolean
 }
 
 export interface RecommendationsResponse {
   recommendations: RecommendedScholarship[]
+  semanticSuggestions?: RecommendedScholarship[]
   totalMatches: number
+  matchingStrategy: 'rule-based' | 'hybrid'
 }
 
 export async function getRecommendations(
-  profile: StudentProfileData
+  profile: RecommendationsRequest
 ): Promise<RecommendationsResponse> {
   const res = await fetch(`${API_BASE}/recommendations`, {
     method: 'POST',

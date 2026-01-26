@@ -12,14 +12,18 @@ export default function StudentRecommendations() {
   const { user, profile, profileComplete } = useAuth();
 
   const [recommendations, setRecommendations] = useState<RecommendedScholarship[]>([]);
+  const [semanticSuggestions, setSemanticSuggestions] = useState<RecommendedScholarship[]>([]);
   const [totalMatches, setTotalMatches] = useState(0);
+  const [matchingStrategy, setMatchingStrategy] = useState<'rule-based' | 'hybrid'>('rule-based');
+  const [useSemanticMatching, setUseSemanticMatching] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
 
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = async (withSemantic?: boolean) => {
     if (!user) return;
 
+    const semanticEnabled = withSemantic ?? useSemanticMatching;
     setLoading(true);
     setError(null);
 
@@ -32,11 +36,16 @@ export default function StudentRecommendations() {
         gender: user.user_metadata?.gender,
         disability: user.user_metadata?.disability,
         course: user.user_metadata?.course,
+        religion: user.user_metadata?.religion,
+        area: user.user_metadata?.area,
+        useSemanticMatching: semanticEnabled,
       };
 
       const response = await getRecommendations(profileData);
       setRecommendations(response.recommendations);
+      setSemanticSuggestions(response.semanticSuggestions || []);
       setTotalMatches(response.totalMatches);
+      setMatchingStrategy(response.matchingStrategy);
       setHasFetched(true);
     } catch (err) {
       setError(
@@ -50,6 +59,13 @@ export default function StudentRecommendations() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Toggle semantic matching and refetch
+  const handleSemanticToggle = () => {
+    const newValue = !useSemanticMatching;
+    setUseSemanticMatching(newValue);
+    fetchRecommendations(newValue);
   };
 
   useEffect(() => {
@@ -174,6 +190,65 @@ export default function StudentRecommendations() {
         </Button>
       </div>
 
+      {/* AI Matching Toggle */}
+      <Card padding="md" className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-purple-900">
+                {t(
+                  'AI-Powered Semantic Matching',
+                  'AI-संचालित सिमेंटिक मैचिंग',
+                  'AI-இயக்கப்படும் சொற்பொருள் பொருத்தம்',
+                  'AI-ఆధారిత సెమాంటిక్ మ్యాచింగ్'
+                )}
+              </h3>
+              <p className="text-xs text-purple-700 mt-0.5">
+                {t(
+                  'Uses embeddings to find scholarships that match your profile semantically',
+                  'आपकी प्रोफ़ाइल से अर्थपूर्ण रूप से मेल खाने वाली छात्रवृत्तियों को खोजने के लिए एम्बेडिंग का उपयोग करता है',
+                  'உங்கள் சுயவிவரத்துடன் சொற்பொருள் ரீதியாக பொருந்தும் உதவித்தொகைகளைக் கண்டறிய எம்பெடிங்குகளைப் பயன்படுத்துகிறது',
+                  'మీ ప్రొఫైల్‌తో అర్థపరంగా సరిపోలే స్కాలర్‌షిప్‌లను కనుగొనడానికి ఎంబెడ్డింగ్‌లను ఉపయోగిస్తుంది'
+                )}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={handleSemanticToggle}
+            disabled={loading}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 ${
+              useSemanticMatching ? 'bg-purple-600' : 'bg-gray-200'
+            }`}
+            role="switch"
+            aria-checked={useSemanticMatching}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                useSemanticMatching ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
+        {matchingStrategy === 'hybrid' && (
+          <div className="mt-2 flex items-center gap-2 text-xs text-purple-600">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            {t(
+              'Hybrid matching active (70% eligibility + 30% semantic)',
+              'हाइब्रिड मैचिंग सक्रिय (70% पात्रता + 30% सिमेंटिक)',
+              'கலப்பு பொருத்தம் செயலில் (70% தகுதி + 30% சொற்பொருள்)',
+              'హైబ్రిడ్ మ్యాచింగ్ యాక్టివ్ (70% అర్హత + 30% సెమాంటిక్)'
+            )}
+          </div>
+        )}
+      </Card>
+
       {/* Prominent Results Count Banner */}
       {totalMatches > 0 && (
         <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-4 text-white shadow-lg">
@@ -199,6 +274,11 @@ export default function StudentRecommendations() {
                   'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
                   'మీ ప్రొఫైల్ వివరాల ఆధారంగా'
                 )}
+                {matchingStrategy === 'hybrid' && (
+                  <span className="ml-2 bg-white/20 px-2 py-0.5 rounded text-xs">
+                    + AI
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -216,6 +296,9 @@ export default function StudentRecommendations() {
               matchScore={scholarship.matchScore}
               matchReasons={scholarship.matchReasons}
               index={index + 1}
+              showSemanticScore={useSemanticMatching}
+              eligibilityScore={scholarship.eligibilityScore}
+              semanticScore={scholarship.semanticScore}
             />
           ))}
         </div>
@@ -269,6 +352,65 @@ export default function StudentRecommendations() {
             </div>
           </Card>
         )
+      )}
+
+      {/* Semantic Suggestions - "You Might Also Like" */}
+      {semanticSuggestions.length > 0 && (
+        <div className="space-y-4 mt-8">
+          <div className="flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+              <svg className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-text-primary">
+                {t(
+                  'You Might Also Like',
+                  'आपको यह भी पसंद आ सकता है',
+                  'உங்களுக்கு இதுவும் பிடிக்கும்',
+                  'మీకు ఇది కూడా నచ్చవచ్చు'
+                )}
+              </h2>
+              <p className="text-sm text-text-secondary">
+                {t(
+                  'AI-discovered scholarships based on your profile (check eligibility)',
+                  'आपकी प्रोफ़ाइल के आधार पर AI द्वारा खोजी गई छात्रवृत्तियां (पात्रता जांचें)',
+                  'உங்கள் சுயவிவரத்தின் அடிப்படையில் AI கண்டறிந்த உதவித்தொகைகள் (தகுதியை சரிபார்க்கவும்)',
+                  'మీ ప్రొఫైల్ ఆధారంగా AI కనుగొన్న స్కాలర్‌షిప్‌లు (అర్హతను తనిఖీ చేయండి)'
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {semanticSuggestions.map((scholarship) => (
+              <div key={scholarship.id} className="relative">
+                {/* Eligibility warnings banner */}
+                {scholarship.eligibilityWarnings && scholarship.eligibilityWarnings.length > 0 && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-t-lg px-4 py-2 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span className="text-xs text-amber-800">
+                      {t('Check eligibility:', 'पात्रता जांचें:', 'தகுதியை சரிபார்க்கவும்:', 'అర్హతను తనిఖీ చేయండి:')}{' '}
+                      {scholarship.eligibilityWarnings.join(' | ')}
+                    </span>
+                  </div>
+                )}
+                <ScholarshipCard
+                  scholarship={scholarship}
+                  t={t}
+                  matchScore={scholarship.matchScore}
+                  matchReasons={scholarship.matchReasons}
+                  showSemanticScore={true}
+                  semanticScore={scholarship.semanticScore}
+                  isSemanticSuggestion={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Profile Summary Card */}
