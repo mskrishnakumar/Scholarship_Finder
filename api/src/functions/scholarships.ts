@@ -2,6 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { randomUUID } from 'crypto'
 import { loadAllScholarships, savePrivateScholarship, deletePrivateScholarship, Scholarship } from '../shared/scholarshipData.js'
 import { requireRole, AuthError } from '../shared/auth.js'
+import { generateAndSaveScholarshipEmbedding, removeScholarshipEmbedding } from '../shared/scholarshipEmbedding.js'
 
 async function createScholarship(request: HttpRequest, _context: InvocationContext): Promise<HttpResponseInit> {
   try {
@@ -42,6 +43,15 @@ async function createScholarship(request: HttpRequest, _context: InvocationConte
     }
 
     savePrivateScholarship(scholarship)
+
+    // Generate embedding on-demand if scholarship is approved
+    // This runs async and doesn't block the response
+    if (scholarship.status === 'approved') {
+      generateAndSaveScholarshipEmbedding(scholarship).catch(err => {
+        console.error(`Failed to generate embedding for new scholarship ${scholarship.id}:`, err)
+      })
+    }
+
     return { status: 201, jsonBody: scholarship }
   } catch (err) {
     if (err instanceof AuthError) return { status: err.statusCode, jsonBody: { error: err.message } }
@@ -96,6 +106,14 @@ async function updateScholarship(request: HttpRequest, _context: InvocationConte
     }
 
     savePrivateScholarship(updated)
+
+    // Regenerate embedding if scholarship is approved (content may have changed)
+    if (updated.status === 'approved') {
+      generateAndSaveScholarshipEmbedding(updated).catch(err => {
+        console.error(`Failed to regenerate embedding for scholarship ${updated.id}:`, err)
+      })
+    }
+
     return { status: 200, jsonBody: updated }
   } catch (err) {
     if (err instanceof AuthError) return { status: err.statusCode, jsonBody: { error: err.message } }
@@ -116,6 +134,10 @@ async function removeScholarship(request: HttpRequest, _context: InvocationConte
     }
 
     deletePrivateScholarship(id)
+
+    // Remove embedding when scholarship is deleted
+    removeScholarshipEmbedding(id)
+
     return { status: 204 }
   } catch (err) {
     if (err instanceof AuthError) return { status: err.statusCode, jsonBody: { error: err.message } }
@@ -139,6 +161,18 @@ async function updateStatus(request: HttpRequest, _context: InvocationContext): 
 
     const updated: Scholarship = { ...existing, status: body.status, updatedAt: new Date().toISOString() }
     savePrivateScholarship(updated)
+
+    // Generate embedding when scholarship is newly approved
+    if (body.status === 'approved' && existing.status !== 'approved') {
+      generateAndSaveScholarshipEmbedding(updated).catch(err => {
+        console.error(`Failed to generate embedding for approved scholarship ${updated.id}:`, err)
+      })
+    }
+    // Remove embedding if scholarship is rejected or moved to pending
+    else if (body.status !== 'approved' && existing.status === 'approved') {
+      removeScholarshipEmbedding(updated.id)
+    }
+
     return { status: 200, jsonBody: updated }
   } catch (err) {
     if (err instanceof AuthError) return { status: err.statusCode, jsonBody: { error: err.message } }

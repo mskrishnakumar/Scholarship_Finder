@@ -18,6 +18,11 @@ export function cosineSimilarity(a: number[], b: number[]): number {
 export interface EmbeddingRecord {
   id: string
   embedding: number[]
+  // Versioning metadata
+  model?: string           // e.g., 'text-embedding-ada-002'
+  version?: string         // Schema version e.g., '1.0.0'
+  generatedAt?: string     // ISO timestamp
+  textHash?: string        // Hash of input text to detect stale embeddings
 }
 
 export function findTopK(
