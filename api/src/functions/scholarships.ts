@@ -55,7 +55,8 @@ async function createScholarship(request: HttpRequest, _context: InvocationConte
     return { status: 201, jsonBody: scholarship }
   } catch (err) {
     if (err instanceof AuthError) return { status: err.statusCode, jsonBody: { error: err.message } }
-    return { status: 500, jsonBody: { error: 'Internal server error' } }
+    console.error('createScholarship error:', err)
+    return { status: 500, jsonBody: { error: err instanceof Error ? err.message : 'Internal server error' } }
   }
 }
 
