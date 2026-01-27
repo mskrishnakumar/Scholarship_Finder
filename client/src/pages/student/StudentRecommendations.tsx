@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { Card } from '../../components/common/Card';
@@ -6,6 +6,8 @@ import { Button } from '../../components/common/Button';
 import ScholarshipCard from '../../components/ScholarshipCard';
 import { getRecommendations } from '../../services/apiClient';
 import type { RecommendedScholarship } from '../../services/apiClient';
+
+type ScholarshipFilter = 'all' | 'government' | 'private';
 
 export default function StudentRecommendations() {
   const { t } = useLanguage();
@@ -19,6 +21,22 @@ export default function StudentRecommendations() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<ScholarshipFilter>('all');
+  const [isProfileCollapsed, setIsProfileCollapsed] = useState(false);
+
+  // Filter scholarships by type
+  const filteredRecommendations = useMemo(() => {
+    if (activeFilter === 'all') return recommendations;
+    const filterType = activeFilter === 'government' ? 'public' : 'private';
+    return recommendations.filter(s => s.type === filterType);
+  }, [recommendations, activeFilter]);
+
+  // Count scholarships by type
+  const counts = useMemo(() => ({
+    all: recommendations.length,
+    government: recommendations.filter(s => s.type === 'public').length,
+    private: recommendations.filter(s => s.type === 'private').length,
+  }), [recommendations]);
 
   const fetchRecommendations = async (withSemantic?: boolean) => {
     if (!user) return;
@@ -249,46 +267,124 @@ export default function StudentRecommendations() {
         )}
       </Card>
 
-      {/* Prominent Results Count Banner */}
+      {/* Tabbed Navigation for Government/Private */}
       {totalMatches > 0 && (
-        <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-xl p-4 text-white shadow-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-              </svg>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          {/* Results Summary Header */}
+          <div className="bg-gradient-to-r from-teal-600 to-teal-700 p-4 text-white">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xl font-bold">
+                  {t(
+                    `Found ${totalMatches} Scholarship${totalMatches !== 1 ? 's' : ''}!`,
+                    `${totalMatches} छात्रवृत्ति${totalMatches !== 1 ? 'यां' : ''} मिलीं!`,
+                    `${totalMatches} உதவித்தொகை${totalMatches !== 1 ? 'கள்' : ''} கிடைத்தன!`,
+                    `${totalMatches} స్కాలర్‌షిప్${totalMatches !== 1 ? 'లు' : ''} దొరికాయి!`
+                  )}
+                </p>
+                <p className="text-teal-100 text-sm">
+                  {t(
+                    'Based on your profile details',
+                    'आपकी प्रोफ़ाइल के आधार पर',
+                    'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
+                    'మీ ప్రొఫైల్ వివరాల ఆధారంగా'
+                  )}
+                  {matchingStrategy === 'hybrid' && (
+                    <span className="ml-2 bg-white/20 px-2 py-0.5 rounded text-xs">
+                      + AI
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-bold">
-                {t(
-                  `Found ${totalMatches} Scholarship${totalMatches !== 1 ? 's' : ''}!`,
-                  `${totalMatches} छात्रवृत्ति${totalMatches !== 1 ? 'यां' : ''} मिलीं!`,
-                  `${totalMatches} உதவித்தொகை${totalMatches !== 1 ? 'கள்' : ''} கிடைத்தன!`,
-                  `${totalMatches} స్కాలర్‌షిప్${totalMatches !== 1 ? 'లు' : ''} దొరికాయి!`
-                )}
-              </p>
-              <p className="text-teal-100 text-sm">
-                {t(
-                  'Based on your profile details',
-                  'आपकी प्रोफ़ाइल के आधार पर',
-                  'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
-                  'మీ ప్రొఫైల్ వివరాల ఆధారంగా'
-                )}
-                {matchingStrategy === 'hybrid' && (
-                  <span className="ml-2 bg-white/20 px-2 py-0.5 rounded text-xs">
-                    + AI
-                  </span>
-                )}
-              </p>
-            </div>
+          </div>
+
+          {/* Tab Buttons */}
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
+                activeFilter === 'all'
+                  ? 'text-teal-700 bg-teal-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                {t('All', 'सभी', 'அனைத்தும்', 'అన్నీ')}
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  activeFilter === 'all' ? 'bg-teal-200 text-teal-800' : 'bg-gray-200 text-gray-700'
+                }`}>
+                  {counts.all}
+                </span>
+              </span>
+              {activeFilter === 'all' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveFilter('government')}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
+                activeFilter === 'government'
+                  ? 'text-blue-700 bg-blue-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                {t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')}
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  activeFilter === 'government' ? 'bg-blue-200 text-blue-800' : 'bg-gray-200 text-gray-700'
+                }`}>
+                  {counts.government}
+                </span>
+              </span>
+              {activeFilter === 'government' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveFilter('private')}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
+                activeFilter === 'private'
+                  ? 'text-amber-700 bg-amber-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్')}
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  activeFilter === 'private' ? 'bg-amber-200 text-amber-800' : 'bg-gray-200 text-gray-700'
+                }`}>
+                  {counts.private}
+                </span>
+              </span>
+              {activeFilter === 'private' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600" />
+              )}
+            </button>
           </div>
         </div>
       )}
 
       {/* Results */}
-      {recommendations.length > 0 ? (
+      {filteredRecommendations.length > 0 ? (
         <div className="space-y-4">
-          {recommendations.map((scholarship, index) => (
+          {filteredRecommendations.map((scholarship, index) => (
             <ScholarshipCard
               key={scholarship.id}
               scholarship={scholarship}
@@ -302,6 +398,32 @@ export default function StudentRecommendations() {
             />
           ))}
         </div>
+      ) : activeFilter !== 'all' && recommendations.length > 0 ? (
+        // Show message when filter has no results but other scholarships exist
+        <Card padding="lg" className="text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+            </svg>
+          </div>
+          <h2 className="text-lg font-semibold text-text-primary mb-2">
+            {activeFilter === 'government'
+              ? t('No Government Scholarships', 'कोई सरकारी छात्रवृत्ति नहीं', 'அரசு உதவித்தொகைகள் இல்லை', 'ప్రభుత్వ స్కాలర్‌షిప్‌లు లేవు')
+              : t('No Private Scholarships', 'कोई प्राइवेट छात्रवृत्ति नहीं', 'தனியார் உதவித்தொகைகள் இல்லை', 'ప్రైవేట్ స్కాలర్‌షిప్‌లు లేవు')
+            }
+          </h2>
+          <p className="text-text-secondary mb-4">
+            {t(
+              'No scholarships found in this category for your profile.',
+              'आपकी प्रोफ़ाइल के लिए इस श्रेणी में कोई छात्रवृत्ति नहीं मिली।',
+              'உங்கள் சுயவிவரத்திற்கு இந்த வகையில் உதவித்தொகைகள் இல்லை.',
+              'మీ ప్రొఫైల్ కోసం ఈ వర్గంలో స్కాలర్‌షిప్‌లు లేవు.'
+            )}
+          </p>
+          <Button variant="secondary" onClick={() => setActiveFilter('all')}>
+            {t('View All Scholarships', 'सभी छात्रवृत्तियां देखें', 'அனைத்து உதவித்தொகைகளையும் காண்க', 'అన్ని స్కాలర్‌షిప్‌లు చూడండి')}
+          </Button>
+        </Card>
       ) : (
         hasFetched && (
           <Card padding="lg" className="text-center">
@@ -413,49 +535,118 @@ export default function StudentRecommendations() {
         </div>
       )}
 
-      {/* Profile Summary Card */}
-      <Card padding="md" className="bg-gray-50">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-teal-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-text-primary">
+      {/* Collapsible Profile Summary Card */}
+      <Card padding="none" className="bg-gray-50 overflow-hidden">
+        <button
+          onClick={() => setIsProfileCollapsed(!isProfileCollapsed)}
+          className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-4 h-4 text-teal-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            <span className="text-sm font-medium text-text-primary">
               {t(
-                'Recommendations based on your profile',
-                'आपकी प्रोफ़ाइल के आधार पर सिफारिशें',
-                'உங்கள் சுயவிவரத்தின் அடிப்படையில் பரிந்துரைகள்',
-                'మీ ప్రొఫైల్ ఆధారంగా సిఫారసులు'
+                'Your Profile Summary',
+                'आपकी प्रोफ़ाइल सारांश',
+                'உங்கள் சுயவிவர சுருக்கம்',
+                'మీ ప్రొఫైల్ సారాంశం'
               )}
-            </h3>
-            <p className="mt-1 text-sm text-text-secondary">
-              {[
-                profile?.state,
-                profile?.category?.toUpperCase(),
-                profile?.educationLevel,
-                profile?.course,
-              ]
-                .filter(Boolean)
-                .join(' | ') ||
-                t(
-                  'Complete your profile for better matches',
-                  'बेहतर मिलान के लिए अपनी प्रोफ़ाइल पूर्ण करें',
-                  'சிறந்த பொருத்தங்களுக்கு உங்கள் சுயவிவரத்தை நிறைவு செய்யுங்கள்',
-                  'మెరుగైన సరిపోలికల కోసం మీ ప్రొఫైల్‌ను పూర్తి చేయండి'
-                )}
-            </p>
+            </span>
+          </div>
+          <svg
+            className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+              isProfileCollapsed ? '' : 'rotate-180'
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+
+        {/* Collapsible Content */}
+        <div
+          className={`transition-all duration-200 ease-in-out overflow-hidden ${
+            isProfileCollapsed ? 'max-h-0' : 'max-h-48'
+          }`}
+        >
+          <div className="px-4 pb-4 pt-1 border-t border-gray-200">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+              {profile?.state && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('State', 'राज्य', 'மாநிலம்', 'రాష్ట్రం')}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{profile.state}</p>
+                </div>
+              )}
+              {profile?.category && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Category', 'श्रेणी', 'வகை', 'వర్గం')}</p>
+                  <p className="text-sm font-medium text-gray-900">{profile.category.toUpperCase()}</p>
+                </div>
+              )}
+              {profile?.educationLevel && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Education', 'शिक्षा', 'கல்வி', 'విద్య')}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{profile.educationLevel}</p>
+                </div>
+              )}
+              {profile?.course && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Course', 'कोर्स', 'படிப்பு', 'కోర్సు')}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{profile.course}</p>
+                </div>
+              )}
+              {profile?.gender && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Gender', 'लिंग', 'பாலினம்', 'లింగం')}</p>
+                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.gender}</p>
+                </div>
+              )}
+              {profile?.income && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Income', 'आय', 'வருமானம்', 'ఆదాయం')}</p>
+                  <p className="text-sm font-medium text-gray-900">₹{Number(profile.income).toLocaleString()}</p>
+                </div>
+              )}
+              {profile?.area && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Area', 'क्षेत्र', 'பகுதி', 'ప్రాంతం')}</p>
+                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.area}</p>
+                </div>
+              )}
+              {profile?.religion && (
+                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500">{t('Religion', 'धर्म', 'மதம்', 'మతం')}</p>
+                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.religion}</p>
+                </div>
+              )}
+            </div>
+            <div className="mt-3 flex justify-end">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href = '/student/profile';
+                }}
+              >
+                {t('Edit Profile', 'प्रोफ़ाइल संपादित करें', 'சுயவிவரத்தைத் திருத்து', 'ప్రొఫైల్ సవరించు')}
+              </Button>
+            </div>
           </div>
         </div>
       </Card>

@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
-    "generate-embeddings": "tsc && node dist/scripts/generateEmbeddings.js"
+    "generate-embeddings": "tsc && node dist/scripts/generateEmbeddings.js",
+    "seed-private-scholarships": "tsc && node dist/scripts/seedPrivateScholarships.js"
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.2",
