@@ -4,10 +4,19 @@ import { useAuth } from '../../context/AuthContext';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import ScholarshipCard from '../../components/ScholarshipCard';
-import { getRecommendations } from '../../services/apiClient';
-import type { RecommendedScholarship } from '../../services/apiClient';
+import ProfileSlidePanel from '../../components/ProfileSlidePanel';
+import { getRecommendations, getSavedScholarships, saveScholarship, unsaveScholarship } from '../../services/apiClient';
+import type { RecommendedScholarship, ScholarshipResult } from '../../services/apiClient';
+import {
+  countUrgentScholarships,
+  calculateTotalPotential,
+  formatBenefitAmount,
+  getDaysUntilDeadline,
+  parseBenefitAmount
+} from '../../utils/deadlineUtils';
 
 type ScholarshipFilter = 'all' | 'government' | 'private';
+type SortOption = 'match' | 'deadline' | 'benefit';
 
 export default function StudentRecommendations() {
   const { t } = useLanguage();
@@ -22,20 +31,60 @@ export default function StudentRecommendations() {
   const [error, setError] = useState<string | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
   const [activeFilter, setActiveFilter] = useState<ScholarshipFilter>('all');
-  const [isProfileCollapsed, setIsProfileCollapsed] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('match');
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+
+  // Load saved scholarships on mount
+  useEffect(() => {
+    const loadSavedIds = async () => {
+      if (!user) return;
+      try {
+        const { scholarships } = await getSavedScholarships(user.id, 'student');
+        setSavedIds(new Set(scholarships.map(s => s.id)));
+      } catch (err) {
+        console.error('Failed to load saved scholarships:', err);
+      }
+    };
+    loadSavedIds();
+  }, [user]);
 
   // Filter scholarships by type
   const filteredRecommendations = useMemo(() => {
-    if (activeFilter === 'all') return recommendations;
-    const filterType = activeFilter === 'government' ? 'public' : 'private';
-    return recommendations.filter(s => s.type === filterType);
-  }, [recommendations, activeFilter]);
+    let filtered = recommendations;
+    if (activeFilter !== 'all') {
+      const filterType = activeFilter === 'government' ? 'public' : 'private';
+      filtered = recommendations.filter(s => s.type === filterType);
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'deadline':
+          return getDaysUntilDeadline(a.deadline) - getDaysUntilDeadline(b.deadline);
+        case 'benefit':
+          return parseBenefitAmount(b.benefits) - parseBenefitAmount(a.benefits);
+        case 'match':
+        default:
+          return b.matchScore - a.matchScore;
+      }
+    });
+
+    return sorted;
+  }, [recommendations, activeFilter, sortBy]);
 
   // Count scholarships by type
   const counts = useMemo(() => ({
     all: recommendations.length,
     government: recommendations.filter(s => s.type === 'public').length,
     private: recommendations.filter(s => s.type === 'private').length,
+  }), [recommendations]);
+
+  // Stats calculations
+  const stats = useMemo(() => ({
+    total: recommendations.length,
+    urgent: countUrgentScholarships(recommendations),
+    potential: calculateTotalPotential(recommendations)
   }), [recommendations]);
 
   const fetchRecommendations = async (withSemantic?: boolean) => {
@@ -86,11 +135,57 @@ export default function StudentRecommendations() {
     fetchRecommendations(newValue);
   };
 
+  // Handle save/unsave
+  const handleSave = async (scholarship: ScholarshipResult & { type?: 'public' | 'private' }) => {
+    if (!user) return;
+    try {
+      await saveScholarship({
+        id: scholarship.id,
+        name: scholarship.name,
+        description: scholarship.description,
+        benefits: scholarship.benefits,
+        deadline: scholarship.deadline,
+        officialUrl: scholarship.officialUrl,
+        type: scholarship.type || 'public'
+      }, user.id, 'student');
+      setSavedIds(prev => new Set([...prev, scholarship.id]));
+    } catch (err) {
+      console.error('Failed to save scholarship:', err);
+    }
+  };
+
+  const handleUnsave = async (id: string) => {
+    if (!user) return;
+    try {
+      await unsaveScholarship(id, user.id, 'student');
+      setSavedIds(prev => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    } catch (err) {
+      console.error('Failed to unsave scholarship:', err);
+    }
+  };
+
   useEffect(() => {
     if (user && profileComplete) {
       fetchRecommendations();
     }
   }, [user, profileComplete]);
+
+  // Build compact profile summary
+  const profileSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (profile?.state) parts.push(profile.state);
+    if (profile?.category) parts.push(profile.category.toUpperCase());
+    if (profile?.gender) parts.push(profile.gender.charAt(0).toUpperCase() + profile.gender.slice(1));
+    if (profile?.income) {
+      const incomeNum = parseInt(profile.income);
+      if (incomeNum) parts.push(formatBenefitAmount(incomeNum));
+    }
+    return parts.join(' • ') || t('Complete your profile', 'अपनी प्रोफ़ाइल पूर्ण करें', 'சுயவிவரத்தை நிறைவு செய்', 'ప్రొఫైల్ పూర్తి చేయండి');
+  }, [profile, t]);
 
   // Incomplete profile state
   if (!profileComplete) {
@@ -186,26 +281,37 @@ export default function StudentRecommendations() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-4">
+      {/* Header with Edit Profile Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-text-primary">
             {t(
-              'Your Recommendations',
-              'आपकी सिफारिशें',
-              'உங்கள் பரிந்துரைகள்',
-              'మీ సిఫారసులు'
+              'Find Scholarships',
+              'छात्रवृत्ति खोजें',
+              'உதவித்தொகைகளைக் கண்டறியவும்',
+              'స్కాలర్‌షిప్‌లను కనుగొనండి'
             )}
           </h1>
         </div>
         <Button
           variant="secondary"
-          onClick={() => fetchRecommendations()}
-          isLoading={loading}
+          onClick={() => setIsPanelOpen(true)}
+          className="flex items-center gap-2"
         >
-          {t('Refresh', 'रिफ्रेश', 'புதுப்பி', 'రిఫ్రెష్')}
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          {t('Edit Profile', 'प्रोफ़ाइल संपादित करें', 'சுயவிவரத்தைத் திருத்து', 'ప్రొఫైల్ సవరించు')}
         </Button>
+      </div>
+
+      {/* Compact Profile Summary Bar */}
+      <div className="bg-gray-50 rounded-lg px-4 py-2.5 flex items-center gap-2">
+        <svg className="w-4 h-4 text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <span className="text-sm text-gray-700 font-medium">{profileSummary}</span>
       </div>
 
       {/* AI Matching Toggle */}
@@ -267,39 +373,56 @@ export default function StudentRecommendations() {
         )}
       </Card>
 
-      {/* Tabbed Navigation for Government/Private */}
+      {/* Stats Banner + Sort Dropdown */}
       {totalMatches > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          {/* Results Summary Header */}
+          {/* Stats Banner */}
           <div className="bg-gradient-to-r from-teal-600 to-teal-700 p-4 text-white">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xl font-bold">
-                  {t(
-                    `Found ${totalMatches} Scholarship${totalMatches !== 1 ? 's' : ''}!`,
-                    `${totalMatches} छात्रवृत्ति${totalMatches !== 1 ? 'यां' : ''} मिलीं!`,
-                    `${totalMatches} உதவித்தொகை${totalMatches !== 1 ? 'கள்' : ''} கிடைத்தன!`,
-                    `${totalMatches} స్కాలర్‌షిప్${totalMatches !== 1 ? 'లు' : ''} దొరికాయి!`
-                  )}
-                </p>
-                <p className="text-teal-100 text-sm">
-                  {t(
-                    'Based on your profile details',
-                    'आपकी प्रोफ़ाइल के आधार पर',
-                    'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
-                    'మీ ప్రొఫైల్ వివరాల ఆధారంగా'
-                  )}
-                  {matchingStrategy === 'hybrid' && (
-                    <span className="ml-2 bg-white/20 px-2 py-0.5 rounded text-xs">
-                      + AI
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">{stats.total}</span>
+                  <span className="text-teal-100 text-sm">
+                    {t('matches', 'मैच', 'பொருத்தங்கள்', 'మ్యాచ్‌లు')}
+                  </span>
+                </div>
+                {stats.urgent > 0 && (
+                  <div className="flex items-center gap-1.5 bg-red-500/20 px-2.5 py-1 rounded-full">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-medium">
+                      {stats.urgent} {t('urgent', 'अर्जेंट', 'அவசரம்', 'అత్యవసర')}
                     </span>
-                  )}
-                </p>
+                  </div>
+                )}
+                {stats.potential > 0 && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-teal-100 text-sm">{t('Up to', 'तक', 'வரை', 'వరకు')}</span>
+                    <span className="text-lg font-bold">{formatBenefitAmount(stats.potential)}</span>
+                    <span className="text-teal-100 text-sm">{t('potential', 'संभावित', 'சாத்தியம்', 'సంభావ్య')}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="flex items-center gap-2">
+                <span className="text-teal-100 text-sm">{t('Sort by:', 'क्रमबद्ध:', 'வரிசைப்படுத்து:', 'క్రమం:')}</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="bg-white/20 text-white border-0 rounded-lg px-3 py-1.5 text-sm font-medium focus:ring-2 focus:ring-white/50 focus:outline-none cursor-pointer"
+                >
+                  <option value="match" className="text-gray-900">
+                    {t('Match Score', 'मैच स्कोर', 'பொருத்த மதிப்பெண்', 'మ్యాచ్ స్కోర్')}
+                  </option>
+                  <option value="deadline" className="text-gray-900">
+                    {t('Deadline (Soonest)', 'समय सीमा (जल्द)', 'காலக்கெடு (விரைவில்)', 'గడువు (త్వరలో)')}
+                  </option>
+                  <option value="benefit" className="text-gray-900">
+                    {t('Benefit (Highest)', 'लाभ (उच्चतम)', 'பலன் (அதிகபட்சம்)', 'ప్రయోజనం (అధిక)')}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
@@ -384,17 +507,19 @@ export default function StudentRecommendations() {
       {/* Results */}
       {filteredRecommendations.length > 0 ? (
         <div className="space-y-4">
-          {filteredRecommendations.map((scholarship, index) => (
+          {filteredRecommendations.map((scholarship) => (
             <ScholarshipCard
               key={scholarship.id}
               scholarship={scholarship}
               t={t}
               matchScore={scholarship.matchScore}
               matchReasons={scholarship.matchReasons}
-              index={index + 1}
               showSemanticScore={useSemanticMatching}
               eligibilityScore={scholarship.eligibilityScore}
               semanticScore={scholarship.semanticScore}
+              isSaved={savedIds.has(scholarship.id)}
+              onSave={handleSave}
+              onUnsave={handleUnsave}
             />
           ))}
         </div>
@@ -461,7 +586,7 @@ export default function StudentRecommendations() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button
                 variant="secondary"
-                onClick={() => window.location.href = '/student/profile'}
+                onClick={() => setIsPanelOpen(true)}
               >
                 {t('Update Profile', 'प्रोफ़ाइल अपडेट करें', 'சுயவிவரத்தைப் புதுப்பிக்கவும்', 'ప్రొఫైల్ నవీకరించండి')}
               </Button>
@@ -528,6 +653,9 @@ export default function StudentRecommendations() {
                   showSemanticScore={true}
                   semanticScore={scholarship.semanticScore}
                   isSemanticSuggestion={true}
+                  isSaved={savedIds.has(scholarship.id)}
+                  onSave={handleSave}
+                  onUnsave={handleUnsave}
                 />
               </div>
             ))}
@@ -535,121 +663,12 @@ export default function StudentRecommendations() {
         </div>
       )}
 
-      {/* Collapsible Profile Summary Card */}
-      <Card padding="none" className="bg-gray-50 overflow-hidden">
-        <button
-          onClick={() => setIsProfileCollapsed(!isProfileCollapsed)}
-          className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex-shrink-0 w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-4 h-4 text-teal-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </div>
-            <span className="text-sm font-medium text-text-primary">
-              {t(
-                'Your Profile Summary',
-                'आपकी प्रोफ़ाइल सारांश',
-                'உங்கள் சுயவிவர சுருக்கம்',
-                'మీ ప్రొఫైల్ సారాంశం'
-              )}
-            </span>
-          </div>
-          <svg
-            className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
-              isProfileCollapsed ? '' : 'rotate-180'
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-          </svg>
-        </button>
-
-        {/* Collapsible Content */}
-        <div
-          className={`transition-all duration-200 ease-in-out overflow-hidden ${
-            isProfileCollapsed ? 'max-h-0' : 'max-h-48'
-          }`}
-        >
-          <div className="px-4 pb-4 pt-1 border-t border-gray-200">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-              {profile?.state && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('State', 'राज्य', 'மாநிலம்', 'రాష్ట్రం')}</p>
-                  <p className="text-sm font-medium text-gray-900 truncate">{profile.state}</p>
-                </div>
-              )}
-              {profile?.category && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Category', 'श्रेणी', 'வகை', 'వర్గం')}</p>
-                  <p className="text-sm font-medium text-gray-900">{profile.category.toUpperCase()}</p>
-                </div>
-              )}
-              {profile?.educationLevel && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Education', 'शिक्षा', 'கல்வி', 'విద్య')}</p>
-                  <p className="text-sm font-medium text-gray-900 truncate">{profile.educationLevel}</p>
-                </div>
-              )}
-              {profile?.course && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Course', 'कोर्स', 'படிப்பு', 'కోర్సు')}</p>
-                  <p className="text-sm font-medium text-gray-900 truncate">{profile.course}</p>
-                </div>
-              )}
-              {profile?.gender && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Gender', 'लिंग', 'பாலினம்', 'లింగం')}</p>
-                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.gender}</p>
-                </div>
-              )}
-              {profile?.income && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Income', 'आय', 'வருமானம்', 'ఆదాయం')}</p>
-                  <p className="text-sm font-medium text-gray-900">₹{Number(profile.income).toLocaleString()}</p>
-                </div>
-              )}
-              {profile?.area && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Area', 'क्षेत्र', 'பகுதி', 'ప్రాంతం')}</p>
-                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.area}</p>
-                </div>
-              )}
-              {profile?.religion && (
-                <div className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-xs text-gray-500">{t('Religion', 'धर्म', 'மதம்', 'మతం')}</p>
-                  <p className="text-sm font-medium text-gray-900 capitalize">{profile.religion}</p>
-                </div>
-              )}
-            </div>
-            <div className="mt-3 flex justify-end">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.location.href = '/student/profile';
-                }}
-              >
-                {t('Edit Profile', 'प्रोफ़ाइल संपादित करें', 'சுயவிவரத்தைத் திருத்து', 'ప్రొఫైల్ సవరించు')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Card>
+      {/* Profile Slide Panel */}
+      <ProfileSlidePanel
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+        onSaveSuccess={() => fetchRecommendations()}
+      />
     </div>
   );
 }

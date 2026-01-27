@@ -354,3 +354,74 @@ export async function getUsers(
   }
   return res.json()
 }
+
+// --- Saved Scholarships API ---
+
+export interface SavedScholarship {
+  id: string
+  name: string
+  description: string
+  benefits: string
+  deadline: string
+  officialUrl?: string
+  type: ScholarshipType
+  savedAt: string
+}
+
+export interface SaveScholarshipRequest {
+  id: string
+  name: string
+  description: string
+  benefits: string
+  deadline: string
+  officialUrl?: string
+  type: ScholarshipType
+}
+
+export async function getSavedScholarships(
+  userId: string,
+  userRole: string
+): Promise<{ scholarships: SavedScholarship[]; total: number }> {
+  const res = await fetch(`${API_BASE}/saved-scholarships`, {
+    method: 'GET',
+    headers: getAuthHeaders(userId, userRole)
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Failed to fetch saved scholarships')
+  }
+  return res.json()
+}
+
+export async function saveScholarship(
+  scholarship: SaveScholarshipRequest,
+  userId: string,
+  userRole: string
+): Promise<{ success: boolean }> {
+  const res = await fetch(`${API_BASE}/saved-scholarships/${scholarship.id}`, {
+    method: 'POST',
+    headers: getAuthHeaders(userId, userRole),
+    body: JSON.stringify(scholarship)
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Failed to save scholarship')
+  }
+  return res.json()
+}
+
+export async function unsaveScholarship(
+  scholarshipId: string,
+  userId: string,
+  userRole: string
+): Promise<{ success: boolean }> {
+  const res = await fetch(`${API_BASE}/saved-scholarships/${scholarshipId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(userId, userRole)
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Failed to unsave scholarship')
+  }
+  return res.json()
+}

@@ -283,3 +283,132 @@ export async function deleteEmbeddingFromTable(id: string): Promise<boolean> {
     throw error
   }
 }
+
+// --- User Saved Scholarships Table Storage ---
+
+export interface SavedScholarshipData {
+  id: string
+  name: string
+  description: string
+  benefits: string
+  deadline: string
+  officialUrl?: string
+  type: 'public' | 'private'
+}
+
+export interface SavedScholarshipRecord {
+  scholarshipId: string
+  savedAt: string
+  scholarshipData: SavedScholarshipData
+}
+
+let savedScholarshipsClient: TableClient | null = null
+
+function getSavedScholarshipsClient(): TableClient {
+  if (!savedScholarshipsClient) {
+    const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING
+    if (!connectionString) {
+      throw new Error('AZURE_STORAGE_CONNECTION_STRING must be set')
+    }
+    savedScholarshipsClient = TableClient.fromConnectionString(connectionString, 'UserSavedScholarships')
+  }
+  return savedScholarshipsClient
+}
+
+export async function ensureSavedScholarshipsTableExists(): Promise<void> {
+  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING
+  if (!connectionString) return
+
+  const serviceClient = TableServiceClient.fromConnectionString(connectionString)
+  try {
+    await serviceClient.createTable('UserSavedScholarships')
+  } catch (error: any) {
+    if (error.statusCode !== 409) {
+      throw error
+    }
+  }
+}
+
+export async function saveScholarshipForUser(
+  userId: string,
+  scholarshipId: string,
+  scholarshipData: SavedScholarshipData
+): Promise<void> {
+  await ensureSavedScholarshipsTableExists()
+  const client = getSavedScholarshipsClient()
+
+  const entity = {
+    partitionKey: userId,
+    rowKey: scholarshipId,
+    savedAt: new Date().toISOString(),
+    data: JSON.stringify(scholarshipData)
+  }
+
+  try {
+    await client.upsertEntity(entity, 'Replace')
+  } catch (error) {
+    console.error('Error saving scholarship for user:', error)
+    throw error
+  }
+}
+
+export async function unsaveScholarshipForUser(userId: string, scholarshipId: string): Promise<boolean> {
+  try {
+    const client = getSavedScholarshipsClient()
+    await client.deleteEntity(userId, scholarshipId)
+    return true
+  } catch (error: any) {
+    if (error.statusCode === 404) {
+      return false
+    }
+    console.error('Error removing saved scholarship:', error)
+    throw error
+  }
+}
+
+export async function getSavedScholarshipsForUser(userId: string): Promise<SavedScholarshipRecord[]> {
+  try {
+    await ensureSavedScholarshipsTableExists()
+    const client = getSavedScholarshipsClient()
+
+    const savedScholarships: SavedScholarshipRecord[] = []
+    const entities = client.listEntities({
+      queryOptions: {
+        filter: `PartitionKey eq '${userId}'`
+      }
+    })
+
+    for await (const entity of entities) {
+      try {
+        const scholarshipData = JSON.parse(entity.data as string)
+        savedScholarships.push({
+          scholarshipId: entity.rowKey as string,
+          savedAt: entity.savedAt as string,
+          scholarshipData
+        })
+      } catch {
+        console.error('Failed to parse saved scholarship entity:', entity.rowKey)
+      }
+    }
+
+    // Sort by savedAt descending (most recent first)
+    savedScholarships.sort((a, b) => b.savedAt.localeCompare(a.savedAt))
+    return savedScholarships
+  } catch (error) {
+    console.error('Error loading saved scholarships:', error)
+    return []
+  }
+}
+
+export async function isScholarshipSavedByUser(userId: string, scholarshipId: string): Promise<boolean> {
+  try {
+    const client = getSavedScholarshipsClient()
+    await client.getEntity(userId, scholarshipId)
+    return true
+  } catch (error: any) {
+    if (error.statusCode === 404) {
+      return false
+    }
+    throw error
+  }
+}
