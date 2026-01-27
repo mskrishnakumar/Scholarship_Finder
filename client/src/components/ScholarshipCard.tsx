@@ -2,8 +2,7 @@ import { useState } from 'react'
 import type { ScholarshipResult } from '../services/apiClient'
 import {
   getDaysUntilDeadline,
-  formatDeadlineDisplay,
-  getDeadlineBadgeClasses
+  formatDeadlineDisplay
 } from '../utils/deadlineUtils'
 
 interface ScholarshipCardProps {
@@ -39,15 +38,14 @@ export default function ScholarshipCard({
 
   const daysUntilDeadline = getDaysUntilDeadline(scholarship.deadline)
   const deadlineDisplay = formatDeadlineDisplay(scholarship.deadline, t)
-  const deadlineBadgeClasses = getDeadlineBadgeClasses(scholarship.deadline)
 
-  // Determine border and badge colors based on type
+  // Determine border and badge colors - subtle, muted tones
   const isGovernment = scholarship.type === 'public'
-  const borderColor = isSemanticSuggestion ? 'border-indigo-500' : 'border-teal-600'
-  const matchBadgeBgColor = isSemanticSuggestion ? 'bg-indigo-100 text-indigo-800' : 'bg-teal-100 text-teal-800'
+  const borderColor = isSemanticSuggestion ? 'border-gray-400' : 'border-gray-300'
+  const matchBadgeBgColor = 'bg-gray-100 text-gray-700'
   const typeBadge = isGovernment
-    ? { bg: 'bg-blue-100', text: 'text-blue-700', label: t('Govt', 'सरकारी', 'அரசு', 'ప్రభుత్వ') }
-    : { bg: 'bg-amber-100', text: 'text-amber-700', label: t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్') }
+    ? { bg: 'bg-gray-100', text: 'text-gray-600', label: t('Govt', 'सरकारी', 'அரசு', 'ప్రభుత్వ') }
+    : { bg: 'bg-gray-100', text: 'text-gray-600', label: t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్') }
 
   const handleSaveClick = async () => {
     if (savePending) return
@@ -82,14 +80,18 @@ export default function ScholarshipCard({
         </div>
 
         {/* Key Metrics Row: Benefit, Deadline, Match Reason */}
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-gray-600">
           {/* Benefit Amount */}
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+          <span className="inline-flex items-center px-2 py-1 rounded bg-gray-50 border border-gray-200 font-medium">
             {scholarship.benefits}
           </span>
 
-          {/* Deadline with urgency indicator */}
-          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${deadlineBadgeClasses}`}>
+          {/* Deadline with urgency indicator - only color-code if urgent */}
+          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded border ${
+            daysUntilDeadline >= 0 && daysUntilDeadline <= 7
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : 'bg-gray-50 border-gray-200'
+          }`}>
             {daysUntilDeadline >= 0 && daysUntilDeadline <= 7 && (
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
@@ -100,7 +102,7 @@ export default function ScholarshipCard({
 
           {/* First match reason as a quick insight */}
           {matchReasons && matchReasons.length > 0 && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-teal-50 text-teal-700">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-50 border border-gray-200">
               {matchReasons[0]}
             </span>
           )}
@@ -108,14 +110,14 @@ export default function ScholarshipCard({
 
         {/* Score breakdown for semantic matching */}
         {showSemanticScore && (eligibilityScore !== undefined || semanticScore !== undefined) && (
-          <div className="mt-2 flex gap-1.5 text-xs">
+          <div className="mt-2 flex gap-1.5 text-xs text-gray-500">
             {eligibilityScore !== undefined && (
-              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600" title="Eligibility score">
+              <span className="px-1.5 py-0.5 rounded bg-gray-50 border border-gray-200" title="Eligibility score">
                 E:{eligibilityScore}
               </span>
             )}
             {semanticScore !== undefined && (
-              <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-600" title="Semantic similarity">
+              <span className="px-1.5 py-0.5 rounded bg-gray-50 border border-gray-200" title="Semantic similarity">
                 S:{semanticScore}
               </span>
             )}
@@ -129,10 +131,10 @@ export default function ScholarshipCard({
             <button
               onClick={handleSaveClick}
               disabled={savePending}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
                 isSaved
-                  ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-gray-100 text-gray-700 border-gray-300'
+                  : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
               } disabled:opacity-50`}
             >
               {savePending ? (
@@ -159,7 +161,7 @@ export default function ScholarshipCard({
               href={scholarship.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-teal-700 text-white text-sm font-medium rounded-lg hover:bg-teal-800 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors"
             >
               {t('Apply Now', 'अभी आवेदन करें', 'இப்போது விண்ணப்பிக்கவும்', 'ఇప్పుడు దరఖాస్తు చేయండి')}
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +198,7 @@ export default function ScholarshipCard({
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {matchReasons.map((reason, i) => (
-                    <span key={i} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-teal-50 text-teal-700">
+                    <span key={i} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-gray-100 text-gray-600">
                       {reason}
                     </span>
                   ))}

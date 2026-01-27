@@ -8,7 +8,6 @@ import { getSavedScholarships, unsaveScholarship } from '../../services/apiClien
 import type { SavedScholarship } from '../../services/apiClient';
 import {
   formatDeadlineDisplay,
-  getDeadlineBadgeClasses,
   getDaysUntilDeadline
 } from '../../utils/deadlineUtils';
 
@@ -65,7 +64,7 @@ export default function StudentSaved() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-teal-700 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -143,24 +142,23 @@ export default function StudentSaved() {
           </div>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {savedScholarships.map((scholarship) => {
             const deadlineDisplay = formatDeadlineDisplay(scholarship.deadline, t);
-            const deadlineBadgeClasses = getDeadlineBadgeClasses(scholarship.deadline);
             const daysLeft = getDaysUntilDeadline(scholarship.deadline);
             const isGovernment = scholarship.type === 'public';
             const typeBadge = isGovernment
-              ? { bg: 'bg-blue-100', text: 'text-blue-700', label: t('Govt', 'सरकारी', 'அரசு', 'ప్రభుత్వ') }
-              : { bg: 'bg-amber-100', text: 'text-amber-700', label: t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్') };
+              ? { label: t('Govt', 'सरकारी', 'அரசு', 'ప్రభుత్వ') }
+              : { label: t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్') };
 
             return (
               <Card key={scholarship.id} padding="none" className="overflow-hidden">
-                <div className="border-l-4 border-teal-600 p-5">
+                <div className="border-l-4 border-gray-300 p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       {/* Header with type badge and name */}
                       <div className="flex items-start gap-2 mb-2">
-                        <span className={`shrink-0 px-2 py-0.5 rounded text-xs font-medium ${typeBadge.bg} ${typeBadge.text}`}>
+                        <span className="shrink-0 px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
                           {typeBadge.label}
                         </span>
                         <h3 className="font-semibold text-gray-900">{scholarship.name}</h3>
@@ -169,11 +167,15 @@ export default function StudentSaved() {
                       <p className="text-sm text-gray-600 line-clamp-2">{scholarship.description}</p>
 
                       {/* Metrics row */}
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                      <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-600">
+                        <span className="inline-flex items-center px-2 py-1 rounded bg-gray-50 border border-gray-200 font-medium">
                           {scholarship.benefits}
                         </span>
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${deadlineBadgeClasses}`}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded border ${
+                          daysLeft >= 0 && daysLeft <= 7
+                            ? 'bg-red-50 border-red-200 text-red-700'
+                            : 'bg-gray-50 border-gray-200'
+                        }`}>
                           {daysLeft >= 0 && daysLeft <= 7 && (
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
@@ -194,7 +196,7 @@ export default function StudentSaved() {
                           href={scholarship.officialUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-teal-700 text-white text-sm font-medium rounded-lg hover:bg-teal-800 transition-colors"
+                          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors"
                         >
                           {t('Apply', 'आवेदन करें', 'விண்ணப்பிக்க', 'దరఖాస్తు చేయండి')}
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +207,7 @@ export default function StudentSaved() {
                       <button
                         onClick={() => handleRemove(scholarship.id)}
                         disabled={removingId === scholarship.id}
-                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-gray-500 text-sm font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
                       >
                         {removingId === scholarship.id ? (
                           <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">

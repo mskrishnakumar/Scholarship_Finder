@@ -3,8 +3,14 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { Card, CardHeader } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
-import { getRecommendations } from '../../services/apiClient';
-import type { RecommendedScholarship, StudentProfileData } from '../../services/apiClient';
+import ScholarshipCard from '../../components/ScholarshipCard';
+import {
+  getRecommendations,
+  getSavedScholarships,
+  saveScholarship,
+  unsaveScholarship
+} from '../../services/apiClient';
+import type { RecommendedScholarship, StudentProfileData, ScholarshipResult } from '../../services/apiClient';
 import { INDIAN_STATES } from '../../constants/states';
 import {
   CATEGORY_OPTIONS,
@@ -142,126 +148,6 @@ function StateDropdown({ value, onChange, language, label }: StateDropdownProps)
   );
 }
 
-// Scholarship Card for recommendations
-interface ScholarshipRecommendationCardProps {
-  scholarship: RecommendedScholarship;
-  t: (en: string, hi?: string, ta?: string, te?: string) => string;
-  onSave: () => void;
-  onApply: () => void;
-  isSaved: boolean;
-  index?: number;
-}
-
-function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSaved, index }: ScholarshipRecommendationCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const isPrivate = scholarship.type === 'private';
-  const borderColor = isPrivate ? 'border-purple-600' : 'border-teal-600';
-  const badgeBg = isPrivate ? 'bg-purple-100' : 'bg-teal-100';
-  const badgeText = isPrivate ? 'text-purple-800' : 'text-teal-800';
-  const indexBg = isPrivate ? 'bg-purple-600' : 'bg-teal-600';
-  const titleText = isPrivate ? 'text-purple-800' : 'text-teal-800';
-  const tagBg = isPrivate ? 'bg-purple-50' : 'bg-teal-50';
-  const tagText = isPrivate ? 'text-purple-700' : 'text-teal-700';
-  const btnBg = isPrivate ? 'bg-purple-700 hover:bg-purple-800' : 'bg-teal-700 hover:bg-teal-800';
-  const expandText = isPrivate ? 'text-purple-700 hover:text-purple-900' : 'text-teal-700 hover:text-teal-900';
-
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className={`border-l-4 ${borderColor} p-4`}>
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <div className="flex items-start gap-3 flex-1">
-            {index !== undefined && (
-              <div className={`flex-shrink-0 w-7 h-7 ${indexBg} text-white rounded-full flex items-center justify-center text-xs font-bold`}>
-                {index}
-              </div>
-            )}
-            <div>
-              <h4 className={`font-semibold ${titleText} text-sm pt-0.5`}>{scholarship.name}</h4>
-              {isPrivate && scholarship.donorName && (
-                <p className="text-xs text-purple-600 mt-0.5">by {scholarship.donorName}</p>
-              )}
-            </div>
-          </div>
-          <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${badgeBg} ${badgeText}`}>
-            {scholarship.matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'మ్యాచ్')}
-          </span>
-        </div>
-
-        <p className="text-xs text-gray-600 line-clamp-2">{scholarship.description}</p>
-
-        {scholarship.matchReasons && scholarship.matchReasons.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {scholarship.matchReasons.slice(0, 3).map((reason, i) => (
-              <span key={i} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs ${tagBg} ${tagText}`}>
-                {reason}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-            {scholarship.benefits}
-          </span>
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-            {t('Deadline:', 'अंतिम तिथि:', 'காலக்கெடு:', 'గడువు:')} {scholarship.deadline}
-          </span>
-        </div>
-
-        {expanded && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-700 mb-1">
-              {t('How to Apply:', 'आवेदन कैसे करें:', 'எப்படி விண்ணப்பிப்பது:', 'ఎలా దరఖాస్తు చేయాలి:')}
-            </p>
-            <ol className="list-decimal list-inside text-xs text-gray-600 space-y-0.5">
-              {scholarship.applicationSteps.map((step, i) => (
-                <li key={i}>{step}</li>
-              ))}
-            </ol>
-          </div>
-        )}
-
-        <div className="mt-3 flex items-center gap-2">
-          <button
-            onClick={onSave}
-            className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-              isSaved
-                ? 'bg-amber-100 text-amber-700'
-                : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <svg className="w-4 h-4" fill={isSaved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
-            {isSaved ? t('Saved', 'सहेजा गया', 'சேமிக்கப்பட்டது', 'సేవ్ చేయబడింది') : t('Save', 'सहेजें', 'சேமி', 'సేవ్')}
-          </button>
-          {scholarship.officialUrl && (
-            <a
-              href={scholarship.officialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onApply}
-              className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 ${btnBg} text-white text-sm font-medium rounded-lg transition-colors`}
-            >
-              {t('Apply Now', 'अभी आवेदन करें', 'இப்போது விண்ணப்பிக்கவும்', 'ఇప్పుడు దరఖాస్తు చేయండి')}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          )}
-        </div>
-
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className={`w-full mt-2 text-xs ${expandText}`}
-        >
-          {expanded ? t('Show less', 'कम दिखाएं', 'குறைவாகக் காட்டு', 'తక్కువ చూపించు') : t('Show more', 'और दिखाएं', 'மேலும் காட்டு', 'మరింత చూపించు')}
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function StudentSearch() {
   const { language, t } = useLanguage();
   const { user, profile } = useAuth();
@@ -291,26 +177,19 @@ export default function StudentSearch() {
   const [recommendations, setRecommendations] = useState<RecommendedScholarship[]>([]);
   const [loading, setLoading] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
-  const [appliedIds, setAppliedIds] = useState<Set<string>>(new Set());
 
-  // Load saved scholarships from localStorage
+  // Load saved scholarships from backend API
   useEffect(() => {
-    if (user?.id) {
+    const loadSaved = async () => {
+      if (!user?.id) return;
       try {
-        const saved = localStorage.getItem(`saved_scholarships_${user.id}`);
-        const applied = localStorage.getItem(`scholarship_applications_${user.id}`);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          setSavedIds(new Set(parsed.map((s: { id: string }) => s.id)));
-        }
-        if (applied) {
-          const parsed = JSON.parse(applied);
-          setAppliedIds(new Set(parsed.map((s: { scholarshipId: string }) => s.scholarshipId)));
-        }
+        const { scholarships } = await getSavedScholarships(user.id, 'student');
+        setSavedIds(new Set(scholarships.map(s => s.id)));
       } catch (error) {
-        console.error('Failed to load saved state:', error);
+        console.error('Failed to load saved scholarships:', error);
       }
-    }
+    };
+    loadSaved();
   }, [user?.id]);
 
   // Auto-populate from profile
@@ -387,66 +266,43 @@ export default function StudentSearch() {
     }
   };
 
-  // Save scholarship
-  const handleSave = (scholarship: RecommendedScholarship) => {
+  // Save scholarship using backend API
+  const handleSave = async (scholarship: ScholarshipResult & { type?: 'public' | 'private' }) => {
     if (!user?.id) return;
 
-    const savedKey = `saved_scholarships_${user.id}`;
     try {
-      const existing = localStorage.getItem(savedKey);
-      const saved = existing ? JSON.parse(existing) : [];
-
-      if (savedIds.has(scholarship.id)) {
-        // Remove from saved
-        const updated = saved.filter((s: { id: string }) => s.id !== scholarship.id);
-        localStorage.setItem(savedKey, JSON.stringify(updated));
-        setSavedIds(prev => {
-          const next = new Set(prev);
-          next.delete(scholarship.id);
-          return next;
-        });
-      } else {
-        // Add to saved
-        saved.push({
+      await saveScholarship(
+        {
           id: scholarship.id,
           name: scholarship.name,
-          description: scholarship.description,
+          description: scholarship.description || '',
           benefits: scholarship.benefits,
           deadline: scholarship.deadline,
           officialUrl: scholarship.officialUrl,
-          savedAt: new Date().toISOString(),
-        });
-        localStorage.setItem(savedKey, JSON.stringify(saved));
-        setSavedIds(prev => new Set(prev).add(scholarship.id));
-      }
+          type: scholarship.type || 'public'
+        },
+        user.id,
+        'student'
+      );
+      setSavedIds(prev => new Set(prev).add(scholarship.id));
     } catch (error) {
       console.error('Failed to save scholarship:', error);
     }
   };
 
-  // Track application
-  const handleApply = (scholarship: RecommendedScholarship) => {
-    if (!user?.id || appliedIds.has(scholarship.id)) return;
+  // Unsave scholarship using backend API
+  const handleUnsave = async (scholarshipId: string) => {
+    if (!user?.id) return;
 
-    const appliedKey = `scholarship_applications_${user.id}`;
     try {
-      const existing = localStorage.getItem(appliedKey);
-      const applied = existing ? JSON.parse(existing) : [];
-
-      applied.push({
-        id: `app_${scholarship.id}_${Date.now()}`,
-        scholarshipId: scholarship.id,
-        name: scholarship.name,
-        description: scholarship.description,
-        benefits: scholarship.benefits,
-        appliedAt: new Date().toISOString(),
-        status: 'applied',
-        officialUrl: scholarship.officialUrl,
+      await unsaveScholarship(scholarshipId, user.id, 'student');
+      setSavedIds(prev => {
+        const next = new Set(prev);
+        next.delete(scholarshipId);
+        return next;
       });
-      localStorage.setItem(appliedKey, JSON.stringify(applied));
-      setAppliedIds(prev => new Set(prev).add(scholarship.id));
     } catch (error) {
-      console.error('Failed to track application:', error);
+      console.error('Failed to unsave scholarship:', error);
     }
   };
 
@@ -653,22 +509,14 @@ export default function StudentSearch() {
               />
               {/* Prominent count display */}
               {recommendations.length > 0 && !loading && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <div className="bg-teal-50 border border-teal-200 rounded-lg px-3 py-2 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      {recommendations.filter(s => s.type === 'public').length}
-                    </div>
-                    <span className="text-teal-800 font-medium text-xs">
-                      {t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')}
-                    </span>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-600">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <span className="font-semibold">{recommendations.filter(s => s.type === 'public').length}</span>
+                    <span>{t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')}</span>
                   </div>
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      {recommendations.filter(s => s.type === 'private').length}
-                    </div>
-                    <span className="text-purple-800 font-medium text-xs">
-                      {t('Private', 'निजी', 'தனியார்', 'ప్రైవేట్')}
-                    </span>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <span className="font-semibold">{recommendations.filter(s => s.type === 'private').length}</span>
+                    <span>{t('Private', 'निजी', 'தனியார்', 'ప్రైవేట్')}</span>
                   </div>
                 </div>
               )}
@@ -704,26 +552,26 @@ export default function StudentSearch() {
                   {recommendations.filter(s => s.type === 'public').length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-gray-800">
+                        <h3 className="text-sm font-medium text-gray-700">
                           {t('Government Scholarships', 'सरकारी छात्रवृत्तियां', 'அரசு உதவித்தொகைகள்', 'ప్రభుత్వ స్కాలర్‌షిప్‌లు')}
                         </h3>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-400">
                           ({recommendations.filter(s => s.type === 'public').length})
                         </span>
                       </div>
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {recommendations
                           .filter(s => s.type === 'public')
-                          .map((scholarship, index) => (
-                            <ScholarshipRecommendationCard
+                          .map((scholarship) => (
+                            <ScholarshipCard
                               key={scholarship.id}
                               scholarship={scholarship}
                               t={t}
-                              onSave={() => handleSave(scholarship)}
-                              onApply={() => handleApply(scholarship)}
+                              matchScore={scholarship.matchScore}
+                              matchReasons={scholarship.matchReasons}
                               isSaved={savedIds.has(scholarship.id)}
-                              index={index + 1}
+                              onSave={handleSave}
+                              onUnsave={handleUnsave}
                             />
                           ))}
                       </div>
@@ -734,26 +582,26 @@ export default function StudentSearch() {
                   {recommendations.filter(s => s.type === 'private').length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-gray-800">
+                        <h3 className="text-sm font-medium text-gray-700">
                           {t('Private Scholarships', 'निजी छात्रवृत्तियां', 'தனியார் உதவித்தொகைகள்', 'ప్రైవేట్ స్కాలర్‌షిప్‌లు')}
                         </h3>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-400">
                           ({recommendations.filter(s => s.type === 'private').length})
                         </span>
                       </div>
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {recommendations
                           .filter(s => s.type === 'private')
-                          .map((scholarship, index) => (
-                            <ScholarshipRecommendationCard
+                          .map((scholarship) => (
+                            <ScholarshipCard
                               key={scholarship.id}
                               scholarship={scholarship}
                               t={t}
-                              onSave={() => handleSave(scholarship)}
-                              onApply={() => handleApply(scholarship)}
+                              matchScore={scholarship.matchScore}
+                              matchReasons={scholarship.matchReasons}
                               isSaved={savedIds.has(scholarship.id)}
-                              index={index + 1}
+                              onSave={handleSave}
+                              onUnsave={handleUnsave}
                             />
                           ))}
                       </div>

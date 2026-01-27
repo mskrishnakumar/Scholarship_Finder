@@ -235,7 +235,7 @@ export default function StudentRecommendations() {
   if (loading && !hasFetched) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mb-4" />
+        <div className="w-12 h-12 border-4 border-gray-400 border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-text-secondary">
           {t(
             'Finding scholarships for you...',
@@ -377,17 +377,17 @@ export default function StudentRecommendations() {
       {totalMatches > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           {/* Stats Banner */}
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 p-4 text-white">
+          <div className="bg-gray-800 p-4 text-white">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl font-bold">{stats.total}</span>
-                  <span className="text-teal-100 text-sm">
+                  <span className="text-gray-300 text-sm">
                     {t('matches', 'मैच', 'பொருத்தங்கள்', 'మ్యాచ్‌లు')}
                   </span>
                 </div>
                 {stats.urgent > 0 && (
-                  <div className="flex items-center gap-1.5 bg-red-500/20 px-2.5 py-1 rounded-full">
+                  <div className="flex items-center gap-1.5 bg-red-500/30 px-2.5 py-1 rounded-full">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                     </svg>
@@ -398,16 +398,16 @@ export default function StudentRecommendations() {
                 )}
                 {stats.potential > 0 && (
                   <div className="flex items-center gap-1.5">
-                    <span className="text-teal-100 text-sm">{t('Up to', 'तक', 'வரை', 'వరకు')}</span>
+                    <span className="text-gray-300 text-sm">{t('Up to', 'तक', 'வரை', 'వరకు')}</span>
                     <span className="text-lg font-bold">{formatBenefitAmount(stats.potential)}</span>
-                    <span className="text-teal-100 text-sm">{t('potential', 'संभावित', 'சாத்தியம்', 'సంభావ్య')}</span>
+                    <span className="text-gray-300 text-sm">{t('potential', 'संभावित', 'சாத்தியம்', 'సంభావ్య')}</span>
                   </div>
                 )}
               </div>
 
               {/* Sort Dropdown */}
               <div className="flex items-center gap-2">
-                <span className="text-teal-100 text-sm">{t('Sort by:', 'क्रमबद्ध:', 'வரிசைப்படுத்து:', 'క్రమం:')}</span>
+                <span className="text-gray-300 text-sm">{t('Sort by:', 'क्रमबद्ध:', 'வரிசைப்படுத்து:', 'క్రమం:')}</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
@@ -433,23 +433,20 @@ export default function StudentRecommendations() {
               onClick={() => setActiveFilter('all')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
                 activeFilter === 'all'
-                  ? 'text-teal-700 bg-teal-50'
+                  ? 'text-gray-900 bg-gray-100'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <span className="flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
                 {t('All', 'सभी', 'அனைத்தும்', 'అన్నీ')}
                 <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeFilter === 'all' ? 'bg-teal-200 text-teal-800' : 'bg-gray-200 text-gray-700'
+                  activeFilter === 'all' ? 'bg-gray-300 text-gray-800' : 'bg-gray-200 text-gray-600'
                 }`}>
                   {counts.all}
                 </span>
               </span>
               {activeFilter === 'all' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-800" />
               )}
             </button>
 
@@ -457,23 +454,20 @@ export default function StudentRecommendations() {
               onClick={() => setActiveFilter('government')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
                 activeFilter === 'government'
-                  ? 'text-blue-700 bg-blue-50'
+                  ? 'text-gray-900 bg-gray-100'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <span className="flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
                 {t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')}
                 <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeFilter === 'government' ? 'bg-blue-200 text-blue-800' : 'bg-gray-200 text-gray-700'
+                  activeFilter === 'government' ? 'bg-gray-300 text-gray-800' : 'bg-gray-200 text-gray-600'
                 }`}>
                   {counts.government}
                 </span>
               </span>
               {activeFilter === 'government' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-800" />
               )}
             </button>
 
@@ -481,23 +475,20 @@ export default function StudentRecommendations() {
               onClick={() => setActiveFilter('private')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors relative ${
                 activeFilter === 'private'
-                  ? 'text-amber-700 bg-amber-50'
+                  ? 'text-gray-900 bg-gray-100'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <span className="flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
                 {t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్')}
                 <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  activeFilter === 'private' ? 'bg-amber-200 text-amber-800' : 'bg-gray-200 text-gray-700'
+                  activeFilter === 'private' ? 'bg-gray-300 text-gray-800' : 'bg-gray-200 text-gray-600'
                 }`}>
                   {counts.private}
                 </span>
               </span>
               {activeFilter === 'private' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-800" />
               )}
             </button>
           </div>
