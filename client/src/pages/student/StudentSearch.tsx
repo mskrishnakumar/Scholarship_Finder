@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Card, CardHeader } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import ScholarshipCard from '../../components/ScholarshipCard';
+import VoiceSearch from '../../components/VoiceSearch';
 import {
   getRecommendations,
   getSavedScholarships,
@@ -212,6 +213,19 @@ export default function StudentSearch() {
   // Check if profile has data to auto-populate
   const hasProfileData = profile && (profile.state || profile.category || profile.educationLevel);
 
+  // Handle voice search filters
+  const handleVoiceFilters = useCallback((filters: Partial<StudentProfileData>) => {
+    setFormData(prev => ({ ...prev, ...filters }));
+    // Open relevant sections based on what was detected
+    setOpenSections(prev => ({
+      ...prev,
+      personal: !!(filters.state || filters.gender || filters.area) || prev.personal,
+      education: !!(filters.educationLevel || filters.course) || prev.education,
+      financial: !!filters.income || prev.financial,
+      other: !!(filters.category || filters.religion || filters.disability) || prev.other,
+    }));
+  }, []);
+
   // Fetch recommendations when form changes
   const fetchRecommendations = useCallback(async () => {
     // Only fetch if we have at least one filter set
@@ -347,6 +361,9 @@ export default function StudentSearch() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left column - Form */}
         <div className="lg:col-span-5 space-y-4">
+          {/* Voice Search */}
+          <VoiceSearch onFiltersExtracted={handleVoiceFilters} t={t} />
+
           {/* Auto-fill from Profile button - positioned above form */}
           {hasProfileData && (
             <Button
