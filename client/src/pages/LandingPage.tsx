@@ -1,18 +1,92 @@
+import { useEffect, useState } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import type { UserRole } from '../context/AuthContext'
 import LanguageToggle from '../components/LanguageToggle'
+import { supabase } from '../lib/supabase'
 
 export default function LandingPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
-  const { user, role } = useAuth()
+  const { user, role, loading: authLoading } = useAuth()
+  const [processingOAuth, setProcessingOAuth] = useState(false)
 
   const getRoleHome = (r: UserRole | null) => {
     if (r === 'donor') return '/donor'
     if (r === 'admin') return '/admin'
     return '/student'
+  }
+
+  // Handle OAuth callback tokens that land on root URL
+  // This happens when Supabase redirects to /#access_token=... instead of /auth/callback
+  useEffect(() => {
+    const handleOAuthOnRoot = async () => {
+      const hash = window.location.hash
+      if (hash && hash.includes('access_token=')) {
+        setProcessingOAuth(true)
+        try {
+          // Supabase will automatically pick up tokens from the hash
+          const { data: { session }, error } = await supabase.auth.getSession()
+
+          if (error) {
+            console.error('OAuth error:', error)
+            setProcessingOAuth(false)
+            return
+          }
+
+          if (session) {
+            const existingRole = session.user.user_metadata?.role as UserRole | undefined
+            const profileComplete = session.user.user_metadata?.profileComplete ?? false
+
+            // Clear the hash from URL
+            window.history.replaceState(null, '', window.location.pathname)
+
+            if (existingRole) {
+              // Returning user - redirect based on their role
+              if (existingRole === 'student' && !profileComplete) {
+                navigate('/student/onboarding', { replace: true })
+              } else {
+                navigate(getRoleHome(existingRole), { replace: true })
+              }
+            } else {
+              // New user - set role to student (default for OAuth landing on root)
+              const name = session.user.user_metadata?.full_name ||
+                          session.user.user_metadata?.name ||
+                          session.user.email?.split('@')[0] || ''
+
+              await supabase.auth.updateUser({
+                data: {
+                  role: 'student',
+                  name,
+                  profileComplete: false,
+                }
+              })
+              navigate('/student/onboarding', { replace: true })
+            }
+          }
+        } catch (err) {
+          console.error('OAuth processing error:', err)
+        }
+        setProcessingOAuth(false)
+      }
+    }
+
+    handleOAuthOnRoot()
+  }, [navigate])
+
+  // Show loading while processing OAuth or auth state
+  if (processingOAuth || authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-amber-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-teal-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-gray-600">
+            {processingOAuth ? 'Completing sign in...' : 'Loading...'}
+          </p>
+        </div>
+      </div>
+    )
   }
 
   if (user) {
