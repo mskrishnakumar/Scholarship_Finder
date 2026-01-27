@@ -40,6 +40,20 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
     }
   }
 
+  const getLocalizedNote = (item: MenuItem): string | undefined => {
+    if (!item.note) return undefined
+    switch (language) {
+      case 'hi':
+        return item.noteHi || item.note
+      case 'ta':
+        return item.noteTa || item.note
+      case 'te':
+        return item.noteTe || item.note
+      default:
+        return item.note
+    }
+  }
+
   // Role-based color schemes
   const getActiveClasses = (): string => {
     if (role === 'donor') {
@@ -61,6 +75,7 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
 
   const renderMenuItem = (item: MenuItem) => {
     const Icon = item.icon
+    const note = getLocalizedNote(item)
 
     return (
       <NavLink
@@ -76,9 +91,16 @@ export default function Sidebar({ role, isCollapsed, onToggleCollapse }: Sidebar
       >
         <Icon className="w-5 h-5 shrink-0" />
         {!isCollapsed && (
-          <span className="text-sm font-medium truncate flex-1">
-            {getLocalizedLabel(item)}
-          </span>
+          <div className="flex-1 min-w-0">
+            <span className="text-sm font-medium truncate block">
+              {getLocalizedLabel(item)}
+            </span>
+            {note && (
+              <span className="text-xs text-gray-400 truncate block">
+                {note}
+              </span>
+            )}
+          </div>
         )}
         {!isCollapsed && item.badge !== undefined && (
           <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-medium bg-red-500 text-white rounded-full">

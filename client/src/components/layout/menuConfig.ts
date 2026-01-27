@@ -10,6 +10,7 @@ import {
   UsersIcon,
   ClockIcon,
   ChatBubbleLeftRightIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 import type { ComponentType, SVGProps } from 'react'
 
@@ -23,6 +24,10 @@ export interface MenuItem {
   icon: ComponentType<SVGProps<SVGSVGElement>>
   badge?: number | string
   end?: boolean // For NavLink end prop - exact path matching
+  note?: string // Optional note to display below label
+  noteHi?: string
+  noteTa?: string
+  noteTe?: string
 }
 
 export interface MenuConfig {
@@ -41,6 +46,19 @@ export const studentMenuConfig: MenuConfig = {
       path: '/student',
       icon: HomeIcon,
       end: true, // Exact match only - won't highlight for /student/search etc
+    },
+    {
+      id: 'recommendations',
+      label: 'Recommendations',
+      labelHi: 'सिफारिशें',
+      labelTa: 'பரிந்துரைகள்',
+      labelTe: 'సిఫారసులు',
+      path: '/student/recommendations',
+      icon: SparklesIcon,
+      note: 'Based on your profile',
+      noteHi: 'आपकी प्रोफ़ाइल के आधार पर',
+      noteTa: 'உங்கள் சுயவிவரத்தின் அடிப்படையில்',
+      noteTe: 'మీ ప్రొఫైల్ ఆధారంగా',
     },
     {
       id: 'search',
