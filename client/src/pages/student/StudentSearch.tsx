@@ -154,20 +154,35 @@ interface ScholarshipRecommendationCardProps {
 
 function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSaved, index }: ScholarshipRecommendationCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const isPrivate = scholarship.type === 'private';
+  const borderColor = isPrivate ? 'border-purple-600' : 'border-teal-600';
+  const badgeBg = isPrivate ? 'bg-purple-100' : 'bg-teal-100';
+  const badgeText = isPrivate ? 'text-purple-800' : 'text-teal-800';
+  const indexBg = isPrivate ? 'bg-purple-600' : 'bg-teal-600';
+  const titleText = isPrivate ? 'text-purple-800' : 'text-teal-800';
+  const tagBg = isPrivate ? 'bg-purple-50' : 'bg-teal-50';
+  const tagText = isPrivate ? 'text-purple-700' : 'text-teal-700';
+  const btnBg = isPrivate ? 'bg-purple-700 hover:bg-purple-800' : 'bg-teal-700 hover:bg-teal-800';
+  const expandText = isPrivate ? 'text-purple-700 hover:text-purple-900' : 'text-teal-700 hover:text-teal-900';
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className="border-l-4 border-teal-600 p-4">
+      <div className={`border-l-4 ${borderColor} p-4`}>
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-start gap-3 flex-1">
             {index !== undefined && (
-              <div className="flex-shrink-0 w-7 h-7 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+              <div className={`flex-shrink-0 w-7 h-7 ${indexBg} text-white rounded-full flex items-center justify-center text-xs font-bold`}>
                 {index}
               </div>
             )}
-            <h4 className="font-semibold text-teal-800 text-sm pt-0.5">{scholarship.name}</h4>
+            <div>
+              <h4 className={`font-semibold ${titleText} text-sm pt-0.5`}>{scholarship.name}</h4>
+              {isPrivate && scholarship.donorName && (
+                <p className="text-xs text-purple-600 mt-0.5">by {scholarship.donorName}</p>
+              )}
+            </div>
           </div>
-          <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800">
+          <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${badgeBg} ${badgeText}`}>
             {scholarship.matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'మ్యాచ్')}
           </span>
         </div>
@@ -177,7 +192,7 @@ function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSave
         {scholarship.matchReasons && scholarship.matchReasons.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {scholarship.matchReasons.slice(0, 3).map((reason, i) => (
-              <span key={i} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-teal-50 text-teal-700">
+              <span key={i} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs ${tagBg} ${tagText}`}>
                 {reason}
               </span>
             ))}
@@ -226,7 +241,7 @@ function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSave
               target="_blank"
               rel="noopener noreferrer"
               onClick={onApply}
-              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-teal-700 text-white text-sm font-medium rounded-lg hover:bg-teal-800 transition-colors"
+              className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 ${btnBg} text-white text-sm font-medium rounded-lg transition-colors`}
             >
               {t('Apply Now', 'अभी आवेदन करें', 'இப்போது விண்ணப்பிக்கவும்', 'ఇప్పుడు దరఖాస్తు చేయండి')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,7 +253,7 @@ function ScholarshipRecommendationCard({ scholarship, t, onSave, onApply, isSave
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full mt-2 text-xs text-teal-700 hover:text-teal-900"
+          className={`w-full mt-2 text-xs ${expandText}`}
         >
           {expanded ? t('Show less', 'कम दिखाएं', 'குறைவாகக் காட்டு', 'తక్కువ చూపించు') : t('Show more', 'और दिखाएं', 'மேலும் காட்டு', 'మరింత చూపించు')}
         </button>
@@ -638,18 +653,23 @@ export default function StudentSearch() {
               />
               {/* Prominent count display */}
               {recommendations.length > 0 && !loading && (
-                <div className="mt-3 bg-teal-50 border border-teal-200 rounded-lg p-3 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    {recommendations.length}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="bg-teal-50 border border-teal-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {recommendations.filter(s => s.type === 'public').length}
+                    </div>
+                    <span className="text-teal-800 font-medium text-xs">
+                      {t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')}
+                    </span>
                   </div>
-                  <span className="text-teal-800 font-medium text-sm">
-                    {t(
-                      `Scholarship${recommendations.length !== 1 ? 's' : ''} found!`,
-                      `छात्रवृत्ति${recommendations.length !== 1 ? 'यां' : ''} मिलीं!`,
-                      `உதவித்தொகை${recommendations.length !== 1 ? 'கள்' : ''} கிடைத்தன!`,
-                      `స్కాలర్‌షిప్${recommendations.length !== 1 ? 'లు' : ''} దొరికాయి!`
-                    )}
-                  </span>
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <div className="w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {recommendations.filter(s => s.type === 'private').length}
+                    </div>
+                    <span className="text-purple-800 font-medium text-xs">
+                      {t('Private', 'निजी', 'தனியார்', 'ప్రైవేట్')}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
@@ -679,18 +699,66 @@ export default function StudentSearch() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {recommendations.map((scholarship, index) => (
-                    <ScholarshipRecommendationCard
-                      key={scholarship.id}
-                      scholarship={scholarship}
-                      t={t}
-                      onSave={() => handleSave(scholarship)}
-                      onApply={() => handleApply(scholarship)}
-                      isSaved={savedIds.has(scholarship.id)}
-                      index={index + 1}
-                    />
-                  ))}
+                <div className="space-y-6">
+                  {/* Government Scholarships Section */}
+                  {recommendations.filter(s => s.type === 'public').length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
+                        <h3 className="text-sm font-semibold text-gray-800">
+                          {t('Government Scholarships', 'सरकारी छात्रवृत्तियां', 'அரசு உதவித்தொகைகள்', 'ప్రభుత్వ స్కాలర్‌షిప్‌లు')}
+                        </h3>
+                        <span className="text-xs text-gray-500">
+                          ({recommendations.filter(s => s.type === 'public').length})
+                        </span>
+                      </div>
+                      <div className="space-y-4">
+                        {recommendations
+                          .filter(s => s.type === 'public')
+                          .map((scholarship, index) => (
+                            <ScholarshipRecommendationCard
+                              key={scholarship.id}
+                              scholarship={scholarship}
+                              t={t}
+                              onSave={() => handleSave(scholarship)}
+                              onApply={() => handleApply(scholarship)}
+                              isSaved={savedIds.has(scholarship.id)}
+                              index={index + 1}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Private Scholarships Section */}
+                  {recommendations.filter(s => s.type === 'private').length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                        <h3 className="text-sm font-semibold text-gray-800">
+                          {t('Private Scholarships', 'निजी छात्रवृत्तियां', 'தனியார் உதவித்தொகைகள்', 'ప్రైవేట్ స్కాలర్‌షిప్‌లు')}
+                        </h3>
+                        <span className="text-xs text-gray-500">
+                          ({recommendations.filter(s => s.type === 'private').length})
+                        </span>
+                      </div>
+                      <div className="space-y-4">
+                        {recommendations
+                          .filter(s => s.type === 'private')
+                          .map((scholarship, index) => (
+                            <ScholarshipRecommendationCard
+                              key={scholarship.id}
+                              scholarship={scholarship}
+                              t={t}
+                              onSave={() => handleSave(scholarship)}
+                              onApply={() => handleApply(scholarship)}
+                              isSaved={savedIds.has(scholarship.id)}
+                              index={index + 1}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

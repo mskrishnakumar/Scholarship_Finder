@@ -299,6 +299,8 @@ export interface RecommendedScholarship {
   applicationSteps: string[]
   requiredDocuments: string[]
   officialUrl: string
+  type: ScholarshipType
+  donorName?: string
   matchScore: number
   eligibilityScore?: number
   semanticScore?: number

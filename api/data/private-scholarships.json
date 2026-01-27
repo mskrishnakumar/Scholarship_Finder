@@ -1,1 +1,200 @@
-[]
+[
+  {
+    "id": "tata-trust-merit",
+    "name": "Tata Trust Merit Scholarship",
+    "description": "Private scholarship from Tata Trusts for meritorious students from low-income families pursuing undergraduate education in engineering, medicine, or science fields.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 400000,
+      "educationLevels": ["undergraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "science"]
+    },
+    "benefits": "Up to Rs. 50,000 per year covering tuition fees and books, plus mentorship support from Tata professionals.",
+    "deadline": "August 15",
+    "applicationSteps": [
+      "Visit the Tata Trusts scholarship portal",
+      "Create an account and verify email",
+      "Fill in personal, academic, and financial details",
+      "Upload required documents including income certificate",
+      "Submit application and await shortlisting"
+    ],
+    "requiredDocuments": ["Class 12 marksheet (min 75%)", "Income certificate", "College admission letter", "Bank account details", "Aadhaar card", "Two recommendation letters"],
+    "officialUrl": "https://www.tatatrusts.org/our-work/individual-grants-programme",
+    "type": "private",
+    "donorId": "donor-tata-001",
+    "donorName": "Tata Trusts",
+    "status": "approved",
+    "createdAt": "2025-01-15T10:00:00Z",
+    "updatedAt": "2025-01-15T10:00:00Z"
+  },
+  {
+    "id": "infosys-foundation-women",
+    "name": "Infosys Foundation Scholarship for Women in STEM",
+    "description": "Scholarship by Infosys Foundation to encourage women students pursuing STEM education at undergraduate and postgraduate levels in recognized institutions.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 600000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "science"]
+    },
+    "benefits": "Rs. 75,000 per year for up to 4 years, internship opportunities at Infosys, and access to mentorship programs.",
+    "deadline": "September 30",
+    "applicationSteps": [
+      "Apply through Infosys Foundation website",
+      "Complete the online application form",
+      "Upload academic transcripts and recommendation letters",
+      "Write a 500-word essay on 'Why STEM matters'",
+      "Submit before the deadline"
+    ],
+    "requiredDocuments": ["Academic transcripts", "Two recommendation letters", "Essay submission", "Income certificate", "College enrollment proof", "Aadhaar card"],
+    "officialUrl": "https://www.infosys.org/infosys-foundation",
+    "type": "private",
+    "donorId": "donor-infosys-001",
+    "donorName": "Infosys Foundation",
+    "status": "approved",
+    "createdAt": "2025-01-10T09:00:00Z",
+    "updatedAt": "2025-01-10T09:00:00Z"
+  },
+  {
+    "id": "reliance-rural-scholarship",
+    "name": "Reliance Foundation Rural Scholarship",
+    "description": "Scholarship program by Reliance Foundation for students from rural areas pursuing higher education in any field, aimed at bridging the urban-rural education gap.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 300000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "rural",
+      "courses": ["all"]
+    },
+    "benefits": "Rs. 60,000 per year for tuition and hostel expenses, plus laptop support for first-year students.",
+    "deadline": "July 31",
+    "applicationSteps": [
+      "Register on Reliance Foundation Scholarships portal",
+      "Fill in personal and academic information",
+      "Provide proof of rural residence",
+      "Upload income and admission documents",
+      "Complete video interview if shortlisted"
+    ],
+    "requiredDocuments": ["Rural area certificate from Sarpanch/BDO", "Income certificate", "Previous marksheets", "College admission letter", "Bank passbook", "Aadhaar card"],
+    "officialUrl": "https://www.reliancefoundation.org",
+    "type": "private",
+    "donorId": "donor-reliance-001",
+    "donorName": "Reliance Foundation",
+    "status": "approved",
+    "createdAt": "2025-01-20T11:00:00Z",
+    "updatedAt": "2025-01-20T11:00:00Z"
+  },
+  {
+    "id": "hdfc-edf-scholarship",
+    "name": "HDFC Bank Educational Development Fund",
+    "description": "Scholarship by HDFC Bank for economically disadvantaged students pursuing professional courses in engineering, medicine, law, and management.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["SC", "ST", "OBC"],
+      "maxIncome": 250000,
+      "educationLevels": ["undergraduate", "professional"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "law", "management"]
+    },
+    "benefits": "Full tuition fee coverage up to Rs. 1,00,000 per year and monthly stipend of Rs. 2,000 for living expenses.",
+    "deadline": "October 15",
+    "applicationSteps": [
+      "Visit HDFC Bank CSR portal",
+      "Register with valid email and phone number",
+      "Fill scholarship application with all details",
+      "Upload required certificates and documents",
+      "Submit application for review"
+    ],
+    "requiredDocuments": ["Caste certificate", "Income certificate", "Fee structure from institution", "Admission letter", "Previous year marksheet", "Bank account details", "Aadhaar card"],
+    "officialUrl": "https://www.hdfcbank.com/csr",
+    "type": "private",
+    "donorId": "donor-hdfc-001",
+    "donorName": "HDFC Bank",
+    "status": "approved",
+    "createdAt": "2025-01-05T08:00:00Z",
+    "updatedAt": "2025-01-05T08:00:00Z"
+  },
+  {
+    "id": "azim-premji-scholarship",
+    "name": "Azim Premji Foundation Scholarship for Teachers",
+    "description": "Scholarship for students pursuing B.Ed or M.Ed who wish to become teachers in government schools, especially in rural and underserved areas.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 500000,
+      "educationLevels": ["undergraduate", "postgraduate"],
+      "gender": "all",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["education"]
+    },
+    "benefits": "Rs. 40,000 per year for course duration, placement support in Azim Premji Foundation schools, and professional development workshops.",
+    "deadline": "June 30",
+    "applicationSteps": [
+      "Visit Azim Premji Foundation website",
+      "Download and fill the application form",
+      "Attach all required documents",
+      "Write a statement of purpose (1000 words)",
+      "Submit via email or post"
+    ],
+    "requiredDocuments": ["Graduation marksheet", "B.Ed/M.Ed admission letter", "Statement of purpose", "Income certificate", "Two reference letters", "Aadhaar card"],
+    "officialUrl": "https://azimpremjifoundation.org",
+    "type": "private",
+    "donorId": "donor-azimpremji-001",
+    "donorName": "Azim Premji Foundation",
+    "status": "approved",
+    "createdAt": "2025-01-12T14:00:00Z",
+    "updatedAt": "2025-01-12T14:00:00Z"
+  },
+  {
+    "id": "kotak-kanya-scholarship",
+    "name": "Kotak Kanya Scholarship",
+    "description": "Scholarship by Kotak Mahindra Group for meritorious girl students from underprivileged families pursuing professional graduation courses.",
+    "eligibility": {
+      "states": ["all"],
+      "categories": ["all"],
+      "maxIncome": 320000,
+      "educationLevels": ["undergraduate"],
+      "gender": "female",
+      "disability": false,
+      "religion": "all",
+      "area": "all",
+      "courses": ["engineering", "medical", "law", "science", "commerce"]
+    },
+    "benefits": "Rs. 1,50,000 per year (up to Rs. 1.5 lakh) for entire course duration (max 4 years) directly to institution.",
+    "deadline": "December 31",
+    "applicationSteps": [
+      "Apply through Buddy4Study platform",
+      "Create profile and verify details",
+      "Fill Kotak Kanya Scholarship application",
+      "Upload Class 12 marksheet and income proof",
+      "Submit before deadline"
+    ],
+    "requiredDocuments": ["Class 12 marksheet (min 85%)", "Family income proof (below Rs. 3.2 lakh)", "Admission letter in professional course", "Bank account (student's name)", "Aadhaar card", "Passport photo"],
+    "officialUrl": "https://www.buddy4study.com/scholarship/kotak-kanya-scholarship",
+    "type": "private",
+    "donorId": "donor-kotak-001",
+    "donorName": "Kotak Mahindra Group",
+    "status": "approved",
+    "createdAt": "2025-01-08T10:30:00Z",
+    "updatedAt": "2025-01-08T10:30:00Z"
+  }
+]

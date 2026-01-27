@@ -30,6 +30,8 @@ interface ScoredScholarship {
   applicationSteps: string[]
   requiredDocuments: string[]
   officialUrl: string
+  type: 'public' | 'private'
+  donorName?: string
   matchScore: number
   eligibilityScore?: number
   semanticScore?: number
@@ -329,6 +331,8 @@ function getSemanticSuggestions(
       applicationSteps: scholarship.applicationSteps,
       requiredDocuments: scholarship.requiredDocuments,
       officialUrl: scholarship.officialUrl,
+      type: scholarship.type,
+      donorName: scholarship.donorName,
       matchScore: semanticScore,
       semanticScore,
       matchReasons: [`Semantically similar to your profile (${semanticScore}%)`],
@@ -392,6 +396,8 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
           applicationSteps: scholarship.applicationSteps,
           requiredDocuments: scholarship.requiredDocuments,
           officialUrl: scholarship.officialUrl,
+          type: scholarship.type,
+          donorName: scholarship.donorName,
           matchScore: result.finalScore,
           eligibilityScore: useSemanticMatching ? result.eligibilityScore : undefined,
           semanticScore: useSemanticMatching ? result.semanticScore : undefined,
