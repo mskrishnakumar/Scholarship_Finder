@@ -497,7 +497,7 @@ export default function StudentRecommendations() {
 
       {/* Results */}
       {filteredRecommendations.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredRecommendations.map((scholarship) => (
             <ScholarshipCard
               key={scholarship.id}
