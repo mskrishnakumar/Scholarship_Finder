@@ -306,6 +306,8 @@ export interface RecommendedScholarship {
   semanticScore?: number
   matchReasons: string[]
   eligibilityWarnings?: string[]
+  isEligible: boolean
+  ineligibilityReasons?: string[]
 }
 
 export interface RecommendationsRequest extends StudentProfileData {
@@ -314,6 +316,7 @@ export interface RecommendationsRequest extends StudentProfileData {
 
 export interface RecommendationsResponse {
   recommendations: RecommendedScholarship[]
+  ineligibleScholarships?: RecommendedScholarship[]
   semanticSuggestions?: RecommendedScholarship[]
   totalMatches: number
   matchingStrategy: 'rule-based' | 'hybrid'

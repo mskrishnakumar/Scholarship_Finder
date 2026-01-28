@@ -37,6 +37,8 @@ interface ScoredScholarship {
   semanticScore?: number
   matchReasons: string[]
   eligibilityWarnings?: string[]
+  isEligible: boolean
+  ineligibilityReasons?: string[]
 }
 
 // Simple in-memory cache for profile embeddings
@@ -116,6 +118,51 @@ function getEligibilityWarnings(scholarship: Scholarship, profile: StudentProfil
   }
 
   return warnings
+}
+
+/**
+ * Check strict eligibility - returns reasons why a student is NOT eligible.
+ * Used to show "Not Eligible" badge and ineligibility reasons on cards.
+ */
+function checkEligibility(scholarship: Scholarship, profile: StudentProfile): { isEligible: boolean; reasons: string[] } {
+  const reasons: string[] = []
+  const elig = scholarship.eligibility
+
+  // State check - strict requirement
+  if (profile.state && !elig.states.includes('all') && !elig.states.includes(profile.state)) {
+    reasons.push(`Only for ${elig.states.slice(0, 2).join(', ')}${elig.states.length > 2 ? ` +${elig.states.length - 2} more` : ''} students`)
+  }
+
+  // Category check - strict requirement
+  if (profile.category) {
+    const categories = Array.isArray(elig.categories) ? elig.categories : [elig.categories]
+    if (!categories.includes('all') && !categories.includes(profile.category)) {
+      reasons.push(`Only for ${categories.join('/')} category`)
+    }
+  }
+
+  // Gender check - strict requirement
+  if (profile.gender && elig.gender !== 'all' && elig.gender !== profile.gender) {
+    reasons.push(`Only for ${elig.gender} students`)
+  }
+
+  // Income check - strict requirement
+  if (profile.income && elig.maxIncome !== null) {
+    const incomeNum = parseInt(profile.income, 10)
+    if (incomeNum > elig.maxIncome) {
+      reasons.push(`Income must be below ₹${elig.maxIncome.toLocaleString()}`)
+    }
+  }
+
+  // Education level check
+  if (profile.educationLevel && elig.educationLevels.length > 0 && !elig.educationLevels.includes(profile.educationLevel)) {
+    reasons.push(`For different education level`)
+  }
+
+  return {
+    isEligible: reasons.length === 0,
+    reasons
+  }
 }
 
 function scoreScholarship(scholarship: Scholarship, profile: StudentProfile): { score: number; reasons: string[] } {
@@ -321,6 +368,7 @@ function getSemanticSuggestions(
   // Convert to ScoredScholarship with eligibility warnings
   return withSimilarity.map(({ scholarship, semanticScore }) => {
     const warnings = getEligibilityWarnings(scholarship, profile)
+    const eligibility = checkEligibility(scholarship, profile)
 
     return {
       id: scholarship.id,
@@ -336,7 +384,9 @@ function getSemanticSuggestions(
       matchScore: semanticScore,
       semanticScore,
       matchReasons: [`Semantically similar to your profile (${semanticScore}%)`],
-      eligibilityWarnings: warnings.length > 0 ? warnings : undefined
+      eligibilityWarnings: warnings.length > 0 ? warnings : undefined,
+      isEligible: eligibility.isEligible,
+      ineligibilityReasons: eligibility.reasons.length > 0 ? eligibility.reasons : undefined
     }
   })
 }
@@ -377,7 +427,7 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
     }
 
     // Score all scholarships with hybrid scoring
-    const scored: ScoredScholarship[] = allScholarships
+    const allScored: ScoredScholarship[] = allScholarships
       .map(scholarship => {
         const result = calculateHybridScore(
           scholarship,
@@ -386,6 +436,7 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
           embeddingMap,
           useSemanticMatching && profileEmbedding.length > 0
         )
+        const eligibility = checkEligibility(scholarship, body)
 
         return {
           id: scholarship.id,
@@ -401,15 +452,25 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
           matchScore: result.finalScore,
           eligibilityScore: useSemanticMatching ? result.eligibilityScore : undefined,
           semanticScore: useSemanticMatching ? result.semanticScore : undefined,
-          matchReasons: result.matchReasons
+          matchReasons: result.matchReasons,
+          isEligible: eligibility.isEligible,
+          ineligibilityReasons: eligibility.reasons.length > 0 ? eligibility.reasons : undefined
         }
       })
-      .filter(s => s.matchScore >= SCORING_CONFIG.MIN_RECOMMENDATION_SCORE)
+
+    // Separate eligible and ineligible scholarships
+    const eligible = allScored
+      .filter(s => s.isEligible && s.matchScore >= SCORING_CONFIG.MIN_RECOMMENDATION_SCORE)
       .sort((a, b) => b.matchScore - a.matchScore)
       .slice(0, SCORING_CONFIG.MAX_RECOMMENDATIONS)
 
+    const ineligible = allScored
+      .filter(s => !s.isEligible)
+      .sort((a, b) => b.matchScore - a.matchScore)
+      .slice(0, 10) // Limit ineligible to 10 for demo
+
     // Get semantic suggestions ("You Might Also Like") if semantic matching is enabled
-    const recommendedIds = new Set(scored.map(s => s.id))
+    const recommendedIds = new Set(eligible.map(s => s.id))
     const semanticSuggestions = useSemanticMatching
       ? getSemanticSuggestions(
           allScholarships,
@@ -424,9 +485,10 @@ async function recommendations(request: HttpRequest, context: InvocationContext)
       status: 200,
       headers: CORS_HEADERS,
       jsonBody: {
-        recommendations: scored,
+        recommendations: eligible,
+        ineligibleScholarships: ineligible,
         semanticSuggestions,
-        totalMatches: scored.length,
+        totalMatches: eligible.length,
         matchingStrategy: useSemanticMatching && profileEmbedding.length > 0 ? 'hybrid' : 'rule-based'
       }
     }

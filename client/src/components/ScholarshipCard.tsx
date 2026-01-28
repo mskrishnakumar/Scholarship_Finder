@@ -18,6 +18,8 @@ interface ScholarshipCardProps {
   isSaved?: boolean
   onSave?: (scholarship: ScholarshipResult & { type?: 'public' | 'private' }) => void
   onUnsave?: (id: string) => void
+  isEligible?: boolean
+  ineligibilityReasons?: string[]
 }
 
 export default function ScholarshipCard({
@@ -31,7 +33,9 @@ export default function ScholarshipCard({
   isSemanticSuggestion,
   isSaved = false,
   onSave,
-  onUnsave
+  onUnsave,
+  isEligible = true,
+  ineligibilityReasons
 }: ScholarshipCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [savePending, setSavePending] = useState(false)
@@ -41,11 +45,35 @@ export default function ScholarshipCard({
 
   // Determine border and badge colors - subtle, muted tones
   const isGovernment = scholarship.type === 'public'
-  const borderColor = isSemanticSuggestion ? 'border-gray-400' : 'border-gray-300'
-  const matchBadgeBgColor = 'bg-gray-100 text-gray-700'
   const typeBadge = isGovernment
     ? { bg: 'bg-gray-100', text: 'text-gray-600', label: t('Govt', 'सरकारी', 'அரசு', 'ప్రభుత్వ') }
     : { bg: 'bg-gray-100', text: 'text-gray-600', label: t('Private', 'प्राइवेट', 'தனியார்', 'ప్రైవేట్') }
+
+  // Gradient background based on match score
+  const getGradientClass = () => {
+    if (!isEligible) return 'bg-gradient-to-r from-gray-50 to-gray-100'
+    if (!matchScore) return 'bg-white'
+    if (matchScore >= 70) return 'bg-gradient-to-r from-emerald-50 to-teal-50'
+    if (matchScore >= 50) return 'bg-gradient-to-r from-blue-50 to-cyan-50'
+    return 'bg-gradient-to-r from-gray-50 to-slate-50'
+  }
+
+  // Progress bar color based on match score
+  const getProgressColor = () => {
+    if (!matchScore) return 'bg-gray-300'
+    if (matchScore >= 70) return 'bg-emerald-500'
+    if (matchScore >= 50) return 'bg-blue-500'
+    return 'bg-gray-400'
+  }
+
+  // Border color
+  const borderColor = !isEligible
+    ? 'border-gray-300'
+    : isSemanticSuggestion
+      ? 'border-gray-400'
+      : matchScore && matchScore >= 70
+        ? 'border-emerald-300'
+        : 'border-gray-200'
 
   const handleSaveClick = async () => {
     if (savePending) return
@@ -62,22 +90,55 @@ export default function ScholarshipCard({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 ${isSemanticSuggestion ? 'rounded-b-xl' : 'rounded-xl'} overflow-hidden animate-[fadeIn_0.3s_ease-out] shadow-sm hover:shadow-md transition-shadow`}>
-      <div className={`border-l-4 ${borderColor} p-4`}>
-        {/* Header Row: Type Badge, Name, Match Score */}
+    <div className={`${getGradientClass()} border ${borderColor} ${isSemanticSuggestion ? 'rounded-b-xl' : 'rounded-xl'} overflow-hidden animate-[fadeIn_0.3s_ease-out] shadow-sm hover:shadow-md transition-all ${!isEligible ? 'opacity-75' : ''}`}>
+      <div className={`border-l-4 ${!isEligible ? 'border-gray-400' : borderColor} p-4`}>
+        {/* Header Row: Type Badge, Name, Match Score or Not Eligible */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2 flex-1 min-w-0">
             <span className={`shrink-0 px-2 py-0.5 rounded text-xs font-medium ${typeBadge.bg} ${typeBadge.text}`}>
               {typeBadge.label}
             </span>
-            <h4 className="font-semibold text-gray-900 text-sm leading-tight">{scholarship.name}</h4>
+            <h4 className={`font-semibold text-sm leading-tight ${!isEligible ? 'text-gray-600' : 'text-gray-900'}`}>{scholarship.name}</h4>
           </div>
-          {matchScore !== undefined && (
-            <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-bold ${matchBadgeBgColor}`}>
-              {matchScore}%
+          {!isEligible ? (
+            <span className="shrink-0 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+              {t('Not Eligible', 'अयोग्य', 'தகுதியற்றது', 'అర్హత లేదు')}
             </span>
+          ) : matchScore !== undefined && (
+            <div className="shrink-0 flex flex-col items-end gap-1">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                matchScore >= 70 ? 'bg-emerald-100 text-emerald-700' :
+                matchScore >= 50 ? 'bg-blue-100 text-blue-700' :
+                'bg-gray-100 text-gray-700'
+              }`}>
+                {matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'మ్యాచ్')}
+              </span>
+            </div>
           )}
         </div>
+
+        {/* Match Progress Bar - only for eligible scholarships with match score */}
+        {isEligible && matchScore !== undefined && (
+          <div className="mt-2">
+            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${getProgressColor()}`}
+                style={{ width: `${matchScore}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Ineligibility Reasons */}
+        {!isEligible && ineligibilityReasons && ineligibilityReasons.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {ineligibilityReasons.slice(0, 2).map((reason, i) => (
+              <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-red-50 text-red-600 border border-red-100">
+                {reason}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Key Metrics Row: Benefit, Deadline, Match Reason */}
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-gray-600">

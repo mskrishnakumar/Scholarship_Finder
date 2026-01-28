@@ -50,6 +50,30 @@ function parseDeadlineDate(deadline: string): Date | null {
     }
   }
 
+  // Handle "Month Day" format without year (e.g., "October 31")
+  // Assumes the next upcoming occurrence of this date (this year or next)
+  const monthDay = deadline.match(/^([A-Za-z]+)\s+(\d{1,2})$/);
+  if (monthDay) {
+    const monthNames = ['january', 'february', 'march', 'april', 'may', 'june',
+                        'july', 'august', 'september', 'october', 'november', 'december'];
+    const monthIndex = monthNames.indexOf(monthDay[1].toLowerCase());
+    if (monthIndex !== -1) {
+      const day = parseInt(monthDay[2]);
+      const now = new Date();
+      const currentYear = now.getFullYear();
+
+      // Try this year first
+      let targetDate = new Date(currentYear, monthIndex, day);
+
+      // If the date has already passed this year, use next year
+      if (targetDate < now) {
+        targetDate = new Date(currentYear + 1, monthIndex, day);
+      }
+
+      return targetDate;
+    }
+  }
+
   return null;
 }
 

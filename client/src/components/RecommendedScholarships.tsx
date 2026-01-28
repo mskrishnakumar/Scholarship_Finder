@@ -157,6 +157,8 @@ export default function RecommendedScholarships() {
                 t={t}
                 matchScore={s.matchScore}
                 matchReasons={s.matchReasons}
+                isEligible={s.isEligible}
+                ineligibilityReasons={s.ineligibilityReasons}
               />
             ))}
           </div>

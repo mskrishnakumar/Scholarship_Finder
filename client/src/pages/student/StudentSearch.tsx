@@ -26,30 +26,89 @@ function CompactScholarshipCard({ scholarship, isSaved, onClick, t }: CompactCar
   );
   const isUrgent = daysLeft <= 7 && daysLeft > 0;
   const isClosed = daysLeft <= 0;
+  const isEligible = scholarship.isEligible !== false;
 
   // Extract benefit amount
   const benefitMatch = scholarship.benefits.match(/₹?\s*([\d,]+)/);
   const benefitAmount = benefitMatch ? `₹${benefitMatch[1]}` : scholarship.benefits.slice(0, 30);
 
+  // Gradient background based on match score
+  const getGradientClass = () => {
+    if (!isEligible) return 'bg-gradient-to-br from-gray-50 to-gray-100';
+    if (!scholarship.matchScore) return 'bg-white';
+    if (scholarship.matchScore >= 70) return 'bg-gradient-to-br from-emerald-50 to-teal-50';
+    if (scholarship.matchScore >= 50) return 'bg-gradient-to-br from-blue-50 to-cyan-50';
+    return 'bg-white';
+  };
+
+  // Progress bar color
+  const getProgressColor = () => {
+    if (!scholarship.matchScore) return 'bg-gray-300';
+    if (scholarship.matchScore >= 70) return 'bg-emerald-500';
+    if (scholarship.matchScore >= 50) return 'bg-blue-500';
+    return 'bg-gray-400';
+  };
+
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white rounded-xl border border-gray-200 p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200 group"
+      className={`w-full text-left ${getGradientClass()} rounded-xl border ${
+        !isEligible ? 'border-gray-300' : 'border-gray-200 hover:border-teal-300'
+      } p-4 hover:shadow-md transition-all duration-200 group ${!isEligible ? 'opacity-80' : ''}`}
     >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="font-semibold text-gray-800 text-sm line-clamp-2 group-hover:text-teal-700">
+      {/* Header with name and badge */}
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <h3 className={`font-semibold text-sm line-clamp-2 ${
+          !isEligible ? 'text-gray-600' : 'text-gray-800 group-hover:text-teal-700'
+        }`}>
           {scholarship.name}
         </h3>
-        {isSaved && (
-          <span className="shrink-0 text-teal-600">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-            </svg>
-          </span>
-        )}
+        <div className="shrink-0 flex items-center gap-1">
+          {isSaved && (
+            <span className="text-teal-600">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+              </svg>
+            </span>
+          )}
+          {!isEligible ? (
+            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">
+              {t('Not Eligible', 'अयोग्य', 'தகுதியற்றது', 'అర్హత లేదు')}
+            </span>
+          ) : scholarship.matchScore ? (
+            <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+              scholarship.matchScore >= 70 ? 'bg-emerald-100 text-emerald-700' :
+              scholarship.matchScore >= 50 ? 'bg-blue-100 text-blue-700' :
+              'bg-gray-100 text-gray-700'
+            }`}>
+              {scholarship.matchScore}%
+            </span>
+          ) : null}
+        </div>
       </div>
 
-      <p className="text-teal-700 font-medium text-sm mb-2">{benefitAmount}</p>
+      {/* Match Progress Bar */}
+      {isEligible && scholarship.matchScore && (
+        <div className="mb-2">
+          <div className="w-full bg-gray-200 rounded-full h-1 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${getProgressColor()}`}
+              style={{ width: `${scholarship.matchScore}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Ineligibility Reason */}
+      {!isEligible && scholarship.ineligibilityReasons && scholarship.ineligibilityReasons.length > 0 && (
+        <p className="text-xs text-red-600 mb-2 line-clamp-1">
+          {scholarship.ineligibilityReasons[0]}
+        </p>
+      )}
+
+      <p className={`font-medium text-sm mb-2 ${!isEligible ? 'text-gray-500' : 'text-teal-700'}`}>
+        {benefitAmount}
+      </p>
 
       <div className="flex items-center justify-between">
         <span className={`text-xs flex items-center gap-1 ${
@@ -60,13 +119,13 @@ function CompactScholarshipCard({ scholarship, isSaved, onClick, t }: CompactCar
           </svg>
           {isClosed
             ? t('Closed', 'बंद', 'மூடப்பட்டது', 'మూసివేయబడింది')
-            : `${daysLeft} ${t('days left', 'दिन बाकी', 'நாட்கள் உள்ளன', 'రోజులు మిగిలి ఉన్నాయి')}`
+            : `${daysLeft} ${t('days left', 'दिन बाकी', 'நாட்கள் உள்ளன', 'రோజులు మిగిలి ఉన్నాయి')}`
           }
         </span>
 
-        {scholarship.matchScore && (
-          <span className="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full font-medium">
-            {scholarship.matchScore}% {t('match', 'मैच', 'பொருத்தம்', 'సరిపోలిక')}
+        {isEligible && scholarship.matchScore && (
+          <span className="text-xs text-gray-500">
+            {t('match', 'मैच', 'பொருத்தம்', 'సరిపోలిక')}
           </span>
         )}
       </div>
@@ -111,16 +170,23 @@ function SidePanel({ scholarship, isOpen, onClose, isSaved, onSave, onUnsave, t 
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-              scholarship.type === 'public'
-                ? 'bg-blue-50 text-blue-700'
-                : 'bg-purple-50 text-purple-700'
-            }`}>
-              {scholarship.type === 'public'
-                ? t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')
-                : t('Private', 'निजी', 'தனியார்', 'ప్రైవేట్')
-              }
-            </span>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                scholarship.type === 'public'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'bg-purple-50 text-purple-700'
+              }`}>
+                {scholarship.type === 'public'
+                  ? t('Government', 'सरकारी', 'அரசு', 'ప్రభుత్వ')
+                  : t('Private', 'निजी', 'தனியார்', 'ప్రైవేట్')
+                }
+              </span>
+              {scholarship.isEligible === false && (
+                <span className="text-xs font-bold px-2 py-1 rounded-full bg-red-100 text-red-700">
+                  {t('Not Eligible', 'अयोग्य', 'தகுதியற்றது', 'అర్హత లేదు')}
+                </span>
+              )}
+            </div>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -156,25 +222,52 @@ function SidePanel({ scholarship, isOpen, onClose, isSaved, onSave, onUnsave, t 
             </div>
 
             {/* Match Score */}
-            {scholarship.matchScore && (
+            {scholarship.isEligible !== false && scholarship.matchScore && (
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">
                     {t('Match Score', 'मैच स्कोर', 'பொருத்த மதிப்பெண்', 'సరిపోలిక స్కోర్')}
                   </span>
-                  <span className="text-teal-700 font-bold">{scholarship.matchScore}%</span>
+                  <span className={`font-bold ${
+                    scholarship.matchScore >= 70 ? 'text-emerald-700' :
+                    scholarship.matchScore >= 50 ? 'text-blue-700' :
+                    'text-gray-700'
+                  }`}>{scholarship.matchScore}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className="bg-teal-600 h-2 rounded-full transition-all"
+                    className={`h-2.5 rounded-full transition-all ${
+                      scholarship.matchScore >= 70 ? 'bg-emerald-500' :
+                      scholarship.matchScore >= 50 ? 'bg-blue-500' :
+                      'bg-gray-400'
+                    }`}
                     style={{ width: `${scholarship.matchScore}%` }}
                   />
                 </div>
               </div>
             )}
 
+            {/* Ineligibility Reasons */}
+            {scholarship.isEligible === false && scholarship.ineligibilityReasons && scholarship.ineligibilityReasons.length > 0 && (
+              <div className="bg-red-50 rounded-lg p-3 border border-red-100">
+                <h4 className="text-sm font-medium text-red-700 mb-2">
+                  {t('Why you may not be eligible:', 'आप पात्र क्यों नहीं हैं:', 'நீங்கள் ஏன் தகுதியற்றவர்:', 'మీరు ఎందుకు అర్హులు కాదు:')}
+                </h4>
+                <ul className="space-y-1">
+                  {scholarship.ineligibilityReasons.map((reason, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-red-600">
+                      <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                      {reason}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Match Reasons */}
-            {scholarship.matchReasons && scholarship.matchReasons.length > 0 && (
+            {scholarship.isEligible !== false && scholarship.matchReasons && scholarship.matchReasons.length > 0 && (
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-2">
                   {t('Why you match:', 'आप क्यों योग्य हैं:', 'நீங்கள் ஏன் பொருந்துகிறீர்கள்:', 'మీరు ఎందుకు సరిపోతారు:')}
@@ -258,6 +351,7 @@ export default function StudentSearch() {
 
   // Results state
   const [recommendations, setRecommendations] = useState<RecommendedScholarship[]>([]);
+  const [ineligibleScholarships, setIneligibleScholarships] = useState<RecommendedScholarship[]>([]);
   const [loading, setLoading] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
 
@@ -308,6 +402,8 @@ export default function StudentSearch() {
 
       // Filter by search query if present
       let results = response.recommendations;
+      let ineligible = response.ineligibleScholarships || [];
+
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         results = results.filter(s =>
@@ -315,9 +411,15 @@ export default function StudentSearch() {
           s.description?.toLowerCase().includes(query) ||
           s.benefits.toLowerCase().includes(query)
         );
+        ineligible = ineligible.filter(s =>
+          s.name.toLowerCase().includes(query) ||
+          s.description?.toLowerCase().includes(query) ||
+          s.benefits.toLowerCase().includes(query)
+        );
       }
 
       setRecommendations(results);
+      setIneligibleScholarships(ineligible);
     } catch (error) {
       console.error('Failed to fetch recommendations:', error);
     } finally {
@@ -394,10 +496,15 @@ export default function StudentSearch() {
     setIsPanelOpen(true);
   };
 
-  // Filter by tab
+  // Filter by tab - eligible scholarships
   const governmentScholarships = recommendations.filter(s => s.type === 'public');
   const privateScholarships = recommendations.filter(s => s.type === 'private');
   const displayedScholarships = activeTab === 'government' ? governmentScholarships : privateScholarships;
+
+  // Filter ineligible scholarships by tab
+  const ineligibleGovt = ineligibleScholarships.filter(s => s.type === 'public');
+  const ineligiblePrivate = ineligibleScholarships.filter(s => s.type === 'private');
+  const displayedIneligible = activeTab === 'government' ? ineligibleGovt : ineligiblePrivate;
 
   const hasFilters = searchQuery || selectedState || selectedEducation;
 
@@ -556,17 +663,52 @@ export default function StudentSearch() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayedScholarships.map((scholarship) => (
-            <CompactScholarshipCard
-              key={scholarship.id}
-              scholarship={scholarship}
-              isSaved={savedIds.has(scholarship.id)}
-              onClick={() => openScholarshipDetails(scholarship)}
-              t={t}
-            />
-          ))}
-        </div>
+        <>
+          {/* Eligible Scholarships Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayedScholarships.map((scholarship) => (
+              <CompactScholarshipCard
+                key={scholarship.id}
+                scholarship={scholarship}
+                isSaved={savedIds.has(scholarship.id)}
+                onClick={() => openScholarshipDetails(scholarship)}
+                t={t}
+              />
+            ))}
+          </div>
+
+          {/* Ineligible Scholarships Section */}
+          {displayedIneligible.length > 0 && (
+            <div className="mt-8">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-px flex-1 bg-gray-200" />
+                <h3 className="text-sm font-medium text-gray-500 px-2">
+                  {t('Other Scholarships', 'अन्य छात्रवृत्ति', 'பிற உதவித்தொகைகள்', 'ఇతర స్కాలర్‌షిప్‌లు')}
+                </h3>
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+              <p className="text-xs text-gray-500 mb-4 text-center">
+                {t(
+                  'These scholarships may not match your current profile',
+                  'ये छात्रवृत्तियाँ आपकी वर्तमान प्रोफ़ाइल से मेल नहीं खाती हैं',
+                  'இந்த உதவித்தொகைகள் உங்கள் தற்போதைய சுயவிவரத்துடன் பொருந்தாது',
+                  'ఈ స్కాలర్‌షిప్‌లు మీ ప్రస్తుత ప్రొఫైల్‌తో సరిపోలకపోవచ్చు'
+                )}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {displayedIneligible.map((scholarship) => (
+                  <CompactScholarshipCard
+                    key={scholarship.id}
+                    scholarship={scholarship}
+                    isSaved={savedIds.has(scholarship.id)}
+                    onClick={() => openScholarshipDetails(scholarship)}
+                    t={t}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Side Panel */}
