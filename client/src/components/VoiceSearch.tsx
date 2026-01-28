@@ -53,7 +53,9 @@ declare global {
 
 interface VoiceSearchProps {
   onFiltersExtracted: (filters: Partial<StudentProfileData>) => void;
+  onTranscript?: (transcript: string) => void;
   t: (en: string, hi: string, ta: string, te: string) => string;
+  compact?: boolean;
 }
 
 // Parse speech and extract filter values
@@ -166,7 +168,7 @@ function parseVoiceInput(transcript: string): Partial<StudentProfileData> {
   return filters;
 }
 
-export default function VoiceSearch({ onFiltersExtracted, t }: VoiceSearchProps) {
+export default function VoiceSearch({ onFiltersExtracted, onTranscript, t, compact = false }: VoiceSearchProps) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -207,10 +209,12 @@ export default function VoiceSearch({ onFiltersExtracted, t }: VoiceSearchProps)
         }
       }
 
-      setTranscript(finalTranscript || interimTranscript);
+      const currentTranscript = finalTranscript || interimTranscript;
+      setTranscript(currentTranscript);
 
       // When we have final results, parse and apply filters
       if (finalTranscript) {
+        onTranscript?.(finalTranscript);
         const filters = parseVoiceInput(finalTranscript);
         if (Object.keys(filters).length > 0) {
           onFiltersExtracted(filters);
@@ -240,6 +244,43 @@ export default function VoiceSearch({ onFiltersExtracted, t }: VoiceSearchProps)
     return null; // Don't render if not supported
   }
 
+  // Compact mode - just a button
+  if (compact) {
+    return (
+      <button
+        onClick={startListening}
+        disabled={isListening}
+        title={isListening
+          ? t('Listening...', 'सुन रहा हूं...', 'கேட்கிறேன்...', 'వింటున్నాను...')
+          : t('Search by Voice', 'आवाज़ से खोजें', 'குரல் மூலம் தேடுங்கள்', 'వాయిస్ ద్వారా శోధించండి')
+        }
+        className={`
+          flex items-center justify-center p-3 rounded-xl font-medium
+          transition-all duration-200
+          ${isListening
+            ? 'bg-red-500 text-white animate-pulse'
+            : 'bg-teal-600 text-white hover:bg-teal-700'
+          }
+        `}
+      >
+        <svg
+          className={`w-5 h-5 ${isListening ? 'animate-pulse' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+          />
+        </svg>
+      </button>
+    );
+  }
+
+  // Full mode with transcript display
   return (
     <div className="relative">
       <button
